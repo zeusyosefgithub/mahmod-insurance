@@ -15,6 +15,7 @@ export default function NavBar(){
         "ההגדרות שלי",
         "להתנתק",
       ];
+ 
 
     return(
         <Navbar dir="rtl" onMenuOpenChange={setIsMenuOpen}>
@@ -35,13 +36,23 @@ export default function NavBar(){
           </Link>
         </NavbarItem> */}
         <NavbarItem>
+          <Link href="/">
+            דף הבית
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
           <Link href="/add">
             הוספה
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="/" aria-current="page">
-            בדיקות
+        <NavbarItem>
+          <Link href="/checks">
+            פירטים
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link href="/settings">
+            הגדרות 
           </Link>
         </NavbarItem>
         {/* <NavbarItem>

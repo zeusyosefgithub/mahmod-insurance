@@ -25,12 +25,12 @@ export default function ModalCar(props) {
 
     return (
         <>
-            <Modal className="test-fontt" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+            <Modal className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
                         <ModalHeader className="flex justify-center">בחירת רכב מהרישמה</ModalHeader>
                         <ModalBody>
-                            <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto h-72">
+                            <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
                                 <table className="w-full text-center">
                                     <tbody>
                                         <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg">

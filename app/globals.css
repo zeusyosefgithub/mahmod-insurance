@@ -189,3 +189,11 @@ body {
   margin-top: -1px;
   font-size: 9px;
 }
+
+.sizeingForDivsModals{
+  height: 35rem;
+}
+
+.sizeForModals{
+  height: 45rem;
+}

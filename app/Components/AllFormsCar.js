@@ -1,0 +1,123 @@
+import { Button } from "@nextui-org/react";
+import { GoArrowRight } from "react-icons/go";
+import { TbSteeringWheel } from "react-icons/tb";
+import { FaUserFriends } from "react-icons/fa";
+import { SiGoogleforms } from "react-icons/si";
+import { useState } from "react";
+import ShowForm from "./ShowForm";
+import GetData from "../FireBase/GetData";
+
+
+
+export default function AllFormsCar(props) {
+
+    const [openForm, setOpenForm] = useState(false);
+    const [check,setCheck] = useState(null);
+
+    const checks = GetData('checks');
+
+    const GetClickedCheck = (id) => {
+        for (let index = 0; index < checks.length; index++) {
+            if(checks[index]?.check_id === id){
+                return checks[index];
+            }
+        }
+        return;
+    }
+
+    return (
+        <div>
+            {
+                openForm ?
+                    <div className="mt-14">
+                        <div className="flex justify-center">
+                            <div className="w-1/2 m-5 mb-10">
+                                <Button onClick={() => setOpenForm(false)} color="primary" className="text-xl">
+                                    לחזור<GoArrowRight />
+                                </Button>
+                            </div>
+                        </div>
+                        <ShowForm withData check={GetClickedCheck(check.check_id)} disable={() => {setOpenForm(false);}} car={props.car} driver={props.driver} customer={props.customer} />
+                    </div>
+                    :
+                    <>
+                        <div className="flex justify-center mt-28">
+                            <div className="w-1/2">
+                                <div className="flex justify-between m-5 items-center border-b-2 border-primary p-5">
+                                    <div>
+                                        <Button onClick={props.disable} color="primary" className="text-xl">
+                                            לחזור<GoArrowRight />
+                                        </Button>
+                                    </div>
+                                    <div className="text-2xl text-primary tracking-widest font-black">
+                                        רשימת טפסים של רכב : {props.car.car_num}
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div className="m-5 flex justify-between">
+                                    <div className="w-1/2">
+                                        <div className="bg-gray-300 rounded-3xl">
+                                            <div className="flex justify-between items-center">
+                                                <div className="p-3 tracking-widest font-black">
+                                                    <div>שם הנהג : {props.driver.driver_name}</div>
+                                                    <div>כתובת הנהג : {props.driver.address}</div>
+                                                    <div>ישוב הנהג : {props.driver.city}</div>
+                                                    <div>מס' זהות הנהג : {props.driver.driver_id_card}</div>
+                                                    <div>פלפון הנהג : {props.driver.driver_phone}</div>
+                                                </div>
+                                                <TbSteeringWheel className="text-8xl text-primary" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="m-5" />
+                                    <div className="w-1/2">
+                                        <div className="bg-gray-300 rounded-3xl">
+                                            <div className="flex justify-between items-center">
+                                                <div className="p-3 tracking-widest font-black">
+                                                    <div>שם הלקוח : {props.customer.customer_name}</div>
+                                                    <div>כתובת הלקוח : {props.customer.customer_site}</div>
+                                                    <div>ישוב הלקוח : {props.customer.customer_city}</div>
+                                                    <div>מספר סידורי : {props.customer.serial}</div>
+                                                    <div>פלפון הלקוח : {props.customer.customer_phone}</div>
+                                                </div>
+                                                <FaUserFriends className="text-8xl text-primary" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="m-5 mt-10">
+                                    <table className="w-full">
+                                        <tbody>
+                                            <tr>
+                                                <th className="w-32 p-3 rounded-r-full bg-gray-300">מספר טופס</th>
+                                                <th className="text-right pr-10 p-3 bg-gray-200">טופס</th>
+                                                <th className="w-72 p-3 rounded-l-full bg-gray-300">תאריך</th>
+                                            </tr>
+
+                                            {
+                                                props.checks.map((check, i) => {
+                                                    return <>
+                                                        <tr>
+                                                            <th className="p-2"></th>
+                                                            <th className="p-2"></th>
+                                                            <th className="p-2"></th>
+                                                        </tr>
+                                                        <tr className="hover:text-primary cursor-pointer" onClick={() => {setOpenForm(true);setCheck(check)}}>
+                                                            <th className="w-32 p-3 rounded-r-full bg-gray-300">{i + 1}</th>
+                                                            <th className="text-right pr-10 p-3 bg-gray-200"><SiGoogleforms className="text-2xl" /></th>
+                                                            <th className="w-72 p-3 rounded-l-full bg-gray-300">{check.date}</th>
+                                                        </tr>
+                                                    </>
+                                                })
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+            }
+        </div>
+    )
+}
