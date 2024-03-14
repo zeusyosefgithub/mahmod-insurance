@@ -1,6 +1,7 @@
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useState } from "react";
 import { GrUpdate } from "react-icons/gr";
+import { IoMdClose } from "react-icons/io";
 
 
 export default function ModalEditKinds(props) {
@@ -37,31 +38,31 @@ export default function ModalEditKinds(props) {
                             <div className="flex justify-center">
                                 <div className="w-1/2">
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">שם</div>
+                                        <div className="w-40 font-extrabold">שם</div>
                                         <Input onValueChange={(value) => setName(value)} value={name} type="text"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">טסט חודשי</div>
+                                        <div className="w-40 font-extrabold">טסט חודשי</div>
                                         <Input onValueChange={(value) => setTest(value)} value={test} type="number"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">טכוגרף חודשי</div>
+                                        <div className="w-40 font-extrabold">טכוגרף חודשי</div>
                                         <Input onValueChange={(value) => setTachograph(value)} value={tachograph} type="number"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">ביטוח חודשי</div>
+                                        <div className="w-40 font-extrabold">ביטוח חודשי</div>
                                         <Input onValueChange={(value) => setInsurance(value)} value={insurance} type="number"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">סקירה חודשית</div>
+                                        <div className="w-40 font-extrabold">סקירה חודשית</div>
                                         <Input onValueChange={(value) => setReview(value)} value={review} type="number"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">אישור בולמים</div>
+                                        <div className="w-40 font-extrabold">אישור בולמים</div>
                                         <Input onValueChange={(value) => setApproval(value)} value={approval} type="number"/>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-40">בדיקת חורף</div>
+                                        <div className="w-40 font-extrabold">בדיקת חורף</div>
                                         <Input onValueChange={(value) => setCheck(value)} value={check} type="number"/>
                                     </div>
                                 </div>
@@ -70,13 +71,13 @@ export default function ModalEditKinds(props) {
                     </ModalBody>
                     <ModalFooter>
                         <div className="w-full">
-                            <Button size="lg" color="primary" variant="bordered" onClick={props.disable}>
-                                סגור
+                            <Button className="font-extrabold" size="lg" color="primary" variant="bordered" onClick={props.disable}>
+                                <IoMdClose className="text-xl"/>סגור
                             </Button>
                         </div>
                         {
                             CheckIfNotEqual() &&
-                            <Button size="lg" color="primary" onClick={props.disable}>
+                            <Button className="font-extrabold" size="lg" color="primary" onClick={props.disable}>
                                 <GrUpdate className="text-2xl"/>עדכון
                             </Button>
                         }

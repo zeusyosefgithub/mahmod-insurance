@@ -1,6 +1,7 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { useState } from "react";
 import { GrUpdate } from "react-icons/gr";
+import { IoMdClose } from "react-icons/io";
 
 export default function ModalEditCustomer (props){
 
@@ -34,23 +35,23 @@ export default function ModalEditCustomer (props){
                             <div className="flex justify-center">
                                 <div className="w-1/2">
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">שם</div>
+                                        <div className="w-48 font-extrabold">שם</div>
                                         <Input onValueChange={(value) => setcustomer_name(value)} value={customer_name} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">מספר סידורי</div>
+                                        <div className="w-48 font-extrabold">מספר סידורי</div>
                                         <Input onValueChange={(value) => setserial(value)} value={serial} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">ישוב</div>
+                                        <div className="w-48 font-extrabold">ישוב</div>
                                         <Input onValueChange={(value) => setcustomer_city(value)} value={customer_city} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">כתובת</div>
+                                        <div className="w-48 font-extrabold">כתובת</div>
                                         <Input onValueChange={(value) => setcustomer_site(value)} value={customer_site} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">מספר</div>
+                                        <div className="w-48 font-extrabold">מספר</div>
                                         <Input onValueChange={(value) => setcustomer_phone(value)} value={customer_phone} type="number" />
                                     </div>
                                 </div>
@@ -59,13 +60,13 @@ export default function ModalEditCustomer (props){
                     </ModalBody>
                     <ModalFooter>
                         <div className="w-full">
-                            <Button size="lg" color="primary" variant="bordered" onClick={props.disable}>
-                                סגור
+                            <Button className="font-extrabold" size="lg" color="primary" variant="bordered" onClick={props.disable}>
+                                <IoMdClose className="text-xl"/>סגור
                             </Button>
                         </div>
                         {
                             CheckIfNotEqual() &&
-                            <Button size="lg" color="primary" onClick={props.disable}>
+                            <Button className="font-extrabold" size="lg" color="primary" onClick={props.disable}>
                                 <GrUpdate className="text-2xl"/>עדכון
                             </Button>
                         }

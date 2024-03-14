@@ -15,12 +15,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ContactContext.Provider value={{ contactName, setContactName }}>
-          <NextUIProvider>
-            <NavBar />
-            {children}
-          </NextUIProvider>
-        </ContactContext.Provider>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin='true' />
+      <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Secular+One&display=swap" rel="stylesheet"></link>
+        <div className="secular-one-regular">
+          <ContactContext.Provider value={{ contactName, setContactName }}>
+            <NextUIProvider>
+              <NavBar />
+              {children}
+            </NextUIProvider>
+          </ContactContext.Provider>
+        </div>
       </body>
     </html>
   );

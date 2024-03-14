@@ -111,11 +111,11 @@ export default function Checks() {
                                                 {
                                                     Cars.map((car) => {
                                                         return <tr onClick={() => { setData(car); setModalCar(true); }} className="cursor-pointer hover:bg-primary-200 hover:text-white border-r-4 hover:border-primary">
-                                                            <th className="p-1">{car.car_num}</th>
-                                                            <th className="p-1">{car.car_product}</th>
-                                                            <th className="p-1">{car.car_type2}</th>
-                                                            <th className="p-1">{GetCusNameByCar(car.customer_id)?.customer_name}</th>
-                                                            <th className="p-1">{GetDriverNameByCar(car.Driver_id)?.driver_name}</th>
+                                                            <th className="p-1 font-extralight">{car.car_num}</th>
+                                                            <th className="p-1 font-extralight">{car.car_product}</th>
+                                                            <th className="p-1 font-extralight">{car.car_type2}</th>
+                                                            <th className="p-1 font-extralight">{GetCusNameByCar(car.customer_id)?.customer_name}</th>
+                                                            <th className="p-1 font-extralight">{GetDriverNameByCar(car.Driver_id)?.driver_name}</th>
                                                         </tr>
                                                     })
                                                 }
@@ -151,10 +151,10 @@ export default function Checks() {
                                                 {
                                                     Customers.map((cus) => {
                                                         return <tr onClick={() => { setData(cus); setModalCustomer(true); }} className="cursor-pointer hover:bg-primary-200 hover:text-white border-r-4 hover:border-primary">
-                                                            <th className="p-1">{cus.customer_name}</th>
-                                                            <th className="p-1">{cus.customer_phone}</th>
-                                                            <th className="p-1">{cus.customer_city}</th>
-                                                            <th className="p-1">{cus.customer_site}</th>
+                                                            <th className="p-1 font-extralight">{cus.customer_name}</th>
+                                                            <th className="p-1 font-extralight">{cus.customer_phone}</th>
+                                                            <th className="p-1 font-extralight">{cus.customer_city}</th>
+                                                            <th className="p-1 font-extralight">{cus.customer_site}</th>
                                                         </tr>
                                                     })
                                                 }
@@ -192,11 +192,11 @@ export default function Checks() {
                                                 {
                                                     Drivers.map((driver) => {
                                                         return <tr onClick={() => { setData(driver); setModalDriver(true); }} className="cursor-pointer hover:bg-primary-200 hover:text-white border-r-4 hover:border-primary">
-                                                            <th className="p-1">{driver.driver_name}</th>
-                                                            <th className="p-1">{driver.driver_phone}</th>
-                                                            <th className="p-1">{driver.city}</th>
-                                                            <th className="p-1">{driver.address}</th>
-                                                            <th className="p-1">{GetCustomerByDriver(driver.driver_id)?.customer_name}</th>
+                                                            <th className="p-1 font-extralight">{driver.driver_name}</th>
+                                                            <th className="p-1 font-extralight">{driver.driver_phone}</th>
+                                                            <th className="p-1 font-extralight">{driver.city}</th>
+                                                            <th className="p-1 font-extralight">{driver.address}</th>
+                                                            <th className="p-1 font-extralight">{GetCustomerByDriver(driver.driver_id)?.customer_name}</th>
                                                         </tr>
                                                     })
                                                 }
@@ -234,13 +234,13 @@ export default function Checks() {
                                                 {
                                                     Type2.map((type) => {
                                                         return <tr onClick={() => { setData(type); setModalKind(true); }} className="cursor-pointer hover:bg-primary-200 hover:text-white border-r-4 hover:border-primary">
-                                                            <th className="p-1">{type.name}</th>
-                                                            <th className="p-1">{type.munthstest}</th>
-                                                            <th className="p-1">{type.munthstachograph}</th>
-                                                            <th className="p-1">{type.munthsinsurance}</th>
-                                                            <th className="p-1">{type.monthlyreview}</th>
-                                                            <th className="p-1">{type.approvalabsorbers}</th>
-                                                            <th className="p-1">{type.winterinspection}</th>
+                                                            <th className="p-1 font-extralight">{type.name}</th>
+                                                            <th className="p-1 font-extralight">{type.munthstest}</th>
+                                                            <th className="p-1 font-extralight">{type.munthstachograph}</th>
+                                                            <th className="p-1 font-extralight">{type.munthsinsurance}</th>
+                                                            <th className="p-1 font-extralight">{type.monthlyreview}</th>
+                                                            <th className="p-1 font-extralight">{type.approvalabsorbers}</th>
+                                                            <th className="p-1 font-extralight">{type.winterinspection}</th>
                                                         </tr>
                                                     })
                                                 }

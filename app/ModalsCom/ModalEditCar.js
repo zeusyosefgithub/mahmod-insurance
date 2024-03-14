@@ -106,35 +106,35 @@ export default function ModalEditCar(props) {
                             <div className="flex justify-center">
                                 <div className="w-1/2">
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">מספר רכב</div>
+                                        <div className="w-48 font-extrabold">מספר רכב</div>
                                         <Input onValueChange={(value) => setcar_num(value)} value={car_num} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">יצרן</div>
+                                        <div className="w-48 font-extrabold">יצרן</div>
                                         <Input onValueChange={(value) => setcar_product(value)} value={car_product} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">תוקף</div>
+                                        <div className="w-48 font-extrabold">תוקף</div>
                                         <Input onValueChange={(value) => setenddate(value)} value={enddate} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">תאריך ביטוח</div>
+                                        <div className="w-48 font-extrabold">תאריך ביטוח</div>
                                         <Input onValueChange={(value) => setinsurance(value)} value={insurance} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">מחלקת ביטוח</div>
+                                        <div className="w-48 font-extrabold">מחלקת ביטוח</div>
                                         <Input onValueChange={(value) => setinsuranceclass(value)} value={insuranceclass} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">בולמי זעזועים</div>
+                                        <div className="w-48 font-extrabold">בולמי זעזועים</div>
                                         <Input onValueChange={(value) => setshockabsorbers(value)} value={shockabsorbers} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48">סקירת חורף</div>
+                                        <div className="w-48 font-extrabold">סקירת חורף</div>
                                         <Input onValueChange={(value) => setwinterreview(value)} value={winterreview} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">סוג דלק</div>
+                                        <div className="w-36 font-extrabold">סוג דלק</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -162,7 +162,7 @@ export default function ModalEditCar(props) {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">סוג רכב</div>
+                                        <div className="w-36 font-extrabold">סוג רכב</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -189,7 +189,7 @@ export default function ModalEditCar(props) {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">האם הנהג תוקן</div>
+                                        <div className="w-36 font-extrabold">האם הנהג תוקן</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -214,7 +214,7 @@ export default function ModalEditCar(props) {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">האם הנהג תוקן</div>
+                                        <div className="w-36 font-extrabold">האם הנהג תוקן</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -244,15 +244,15 @@ export default function ModalEditCar(props) {
                     </ModalBody>
                     <ModalFooter>
                         <div className="w-full items-center flex">
-                            <Button size="lg" color="primary" variant="bordered" onClick={props.disable}>
+                            <Button className="font-extrabold" size="lg" color="primary" variant="bordered" onClick={props.disable}>
                                 <IoMdClose className="text-xl"/>סגור
                             </Button>
-                            <Button onClick={createNewForm} size="lg" color="primary" variant="bordered" className="ml-4">
+                            <Button onClick={createNewForm} size="lg" color="primary" variant="bordered" className="ml-4 font-extrabold">
                                 <MdOutlineCreateNewFolder className="text-2xl"/>ליצרת טופס
                             </Button>
                             {
                                 GetChecks().length != 0 ?
-                                <Button onClick={() => {props.disable();props.showAllForms();}} size="lg" color="primary" variant="bordered" className="ml-4">
+                                <Button onClick={() => {props.disable();props.showAllForms();}} size="lg" color="primary" variant="bordered" className="ml-4 font-extrabold">
                                     <SiGoogleforms className="text-xl" />כל הטפסים
                                 </Button>
                                 :
@@ -261,7 +261,7 @@ export default function ModalEditCar(props) {
                         </div>
                         {
                             CheckIfNotEqual() &&
-                            <Button size="lg" color="primary" onClick={updateProps}>
+                            <Button className="font-extrabold" size="lg" color="primary" onClick={updateProps}>
                                 <GrUpdate className="text-2xl" />עדכון
                             </Button>
                         }

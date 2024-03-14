@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Secular+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Secular+One&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -196,4 +198,10 @@ body {
 
 .sizeForModals{
   height: 45rem;
+}
+
+.secular-one-regular {
+  font-family: "Secular One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }

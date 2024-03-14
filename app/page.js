@@ -6,7 +6,7 @@ export default function Home() {
       <div className="flex justify-center mt-32">
         <div className="w-9/12">
           <div className="flex justify-center ">
-            <div className="text-xl bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest font-black">
+            <div className="text-xl bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest">
               דף הבית
             </div>
           </div>
