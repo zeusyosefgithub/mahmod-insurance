@@ -1,24 +1,38 @@
 'use client';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Spinner } from "@nextui-org/react";
 import { useState } from "react";
+import { useAuth } from "../Auth/AuthContext";
 
-export default function NavBar(){
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function NavBar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { signUp, signIn, signOutt, currentUser } = useAuth();
+  const [loading,setLoading] = useState(false);
 
-    const menuItems = [
-        "דף אישי",
-        "לוּחַ מַחווָנִים",
-        "פעילות",
-        "ניתוח",
-        "מערכת",
-        "פריסות",
-        "ההגדרות שלי",
-        "להתנתק",
-      ];
- 
+  const menuItems = [
+    "דף אישי",
+    "לוּחַ מַחווָנִים",
+    "פעילות",
+    "ניתוח",
+    "מערכת",
+    "פריסות",
+    "ההגדרות שלי",
+    "להתנתק",
+  ];
 
-    return(
-        <Navbar dir="rtl" onMenuOpenChange={setIsMenuOpen}>
+  const handelSignout = async() => {
+    setLoading(true);
+    try{
+      await signOutt();
+    }
+    catch(e){
+      console.log(e);
+    }
+    setLoading(false);
+  }
+
+
+  return (
+    <Navbar dir="rtl" onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -52,7 +66,7 @@ export default function NavBar(){
         </NavbarItem>
         <NavbarItem>
           <Link href="/settings">
-            הגדרות 
+            הגדרות
           </Link>
         </NavbarItem>
         {/* <NavbarItem>
@@ -62,14 +76,14 @@ export default function NavBar(){
         </NavbarItem> */}
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
+        {
+          currentUser && <NavbarItem>
+            {loading && <Spinner className="absolute left-0 top-0 right-0 bottom-0 z-50"/>}
+            <Button onClick={handelSignout} color="danger" variant="flat">
+              יצאה מהחשבון
+            </Button>
+          </NavbarItem>
+        }
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
@@ -88,5 +102,5 @@ export default function NavBar(){
         ))}
       </NavbarMenu>
     </Navbar>
-    )
+  )
 }

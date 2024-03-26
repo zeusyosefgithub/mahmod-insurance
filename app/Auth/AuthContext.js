@@ -1,34 +1,50 @@
-'use client';
-import { useContext,createContext,useState,useEffect } from "react";
-import { signInWithPopup,signOut,onAuthStateChanged,GoogleAuthProvider } from "firebase/auth";
-import { auth } from "./firebase";
-const AuthContext = createContext();
+// authContext.js
 
-export const AuthContextProvider = ({children}) => {
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { authh } from '../FireBase/firebase';
+import { Spinner } from '@nextui-org/react';
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword ,signOut} from 'firebase/auth';
 
-    const [user,setUser] = useState(null);
+const AuthContext = createContext({});
 
-    const googleSignIn = () => {
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth,provider);
+
+export const AuthContextProvider = ({ children }) => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const signUp = (email, password) => {
+        return createUserWithEmailAndPassword(authh,email, password);
     }
 
-    const logOut = () => {
-        signOut(auth);
+    const signIn = (email, password) => {
+        return signInWithEmailAndPassword(authh,email, password);
+    }
+
+    const signOutt = () => {
+        return signOut(authh);
+    }
+
+    const resetPassword = (email) => {
+        return sendPasswordResetEmail(authh,email);
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth,(currentUser) => {
-            setUser(currentUser);
-        })
-        return () => unsubscribe();
-    },[user])
-    
+        const unsubscribe = onAuthStateChanged(authh,(user) => {
+            setCurrentUser(user);
+            setLoading(false);
+        });
+
+        return unsubscribe;
+    }, []);
+
     return (
-        <AuthContext.Provider value={{user,googleSignIn,logOut}}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ currentUser, signUp, signIn, signOutt,resetPassword }}>
+            {loading ? <Spinner className="absolute left-0 top-0 right-0 bottom-0" /> : children}
+        </AuthContext.Provider>
     )
 }
 
-export const UserAuth = () => {
+export const useAuth = () => {
     return useContext(AuthContext);
 }
+

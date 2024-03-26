@@ -24,6 +24,10 @@ import { TiInputChecked } from "react-icons/ti";
 
 export default function AddCar() {
 
+    const dateRegex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+    const [errorDate,setErrorDate] = useState('');
+
+
     const { contactName } = useContext(ContactContext);
 
     const Customers = GetData('Customer');
@@ -197,6 +201,11 @@ export default function AddCar() {
     const [showFormCar, setShowFormCar] = useState(null);
 
     const AddCar = async () => {
+        setErrorDate('');
+        if(!car && !dateRegex.test(endDateCar)){
+            return setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !')
+        }
+        setErrorDate('');
         setLoading(true);
         const NewDataDriver = {
             address: addressD,
@@ -360,7 +369,7 @@ export default function AddCar() {
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-36">תוקף רישיון רכב</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-36">תוקף ביטוח</div>

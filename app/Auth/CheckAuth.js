@@ -1,27 +1,16 @@
 'use client';
-import NavBar from "./navBar";
+import NavBar from "../Components/NavBar";
 import { useEffect, useState } from "react";
-import { UserAuth } from "../FireBase/authContext";
-import LogIn from "./logIn";
-import GetTrucks from "./getDocs";
-import NotAdmin from "./notAdmin";
+import { useAuth } from "./AuthContext";
 import { NextUIProvider } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import LoginForm from "../Components/LoginForm";
 
 export default function CheckAuth(props) {
 
     const [loading, setLoading] = useState(true);
-    const { user, googleSignIn, logOut } = UserAuth();
-
-    const Admins = GetTrucks("admins");
-    const NotAnAdmin = () => {
-        for (let index = 0; index < Admins.length; index++) {
-            console.log(user.uid)
-            if (user.uid === Admins[index].id) {
-                return true;
-            }
-        }
-        return false;
-    }
+    const { signUp, signIn, signOutt ,currentUser } = useAuth();
+    const router = useRouter();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -29,7 +18,7 @@ export default function CheckAuth(props) {
             setLoading(false);
         };
         checkAuth();
-    }, [user])
+    }, [currentUser])
 
     return (
         <div>
@@ -39,21 +28,17 @@ export default function CheckAuth(props) {
                 //     <NotAdmin/>
                 // </>
                 // :
-                !loading && !user ?
-                    <>
-                        <LogIn />
-                    </>
+                !loading && !currentUser ?
+                    <LoginForm/>
                     :
-                    !loading && user ?
+                    !loading && currentUser ?
                         <div>
-                            <NextUIProvider>
                                 <div>
                                     <NavBar />
                                 </div>
                                 <div className='mt-40'>
                                     {props.children}
                                 </div>
-                            </NextUIProvider>
                         </div>
                         :
                         null
