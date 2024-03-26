@@ -301,7 +301,7 @@ export default function AddCar() {
 
 
     return (
-        <div className="transition">
+        <div>
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
             {showCustomerModal && <ModalCustomer setCustomer={(cus) => setCustomer(cus)} show={showCustomerModal} disable={() => setShowCustomerModdal(false)} />}
             {showDriverModal && <ModalDriver setDriver={(driver) => setDriver(driver)} show={showDriverModal} disable={() => setShowDriverModdal(false)} />}
@@ -325,18 +325,18 @@ export default function AddCar() {
                                  הוספה
                             </div>
                         </div>
-                        <div className="m-20">
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10">
-                                <div className="flex items-center m-5">
-                                    <div className="mr-5 ml-5 w-24 flex items-center tracking-widest font-black"><div className="text-2xl">רכב</div><FaCar className="mr-3 text-2xl" /></div>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setShowCarModdal(true); setShowCarInputs(true); }}>קיים <GoSearch /></Button>
+                        <div className="mr-5 w-fit">
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                                <div className="flex items-center pl-3 pt-3 pb-3">
+                                    <div className="mr-5 ml-5 w-fit flex items-center tracking-widest font-black"><div className="text-xl w-fit pr-3 pl-3">רכב</div><FaCar className="w-fit text-2xl pl-3" /></div>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }}>חדש <HiPlus /></Button>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarModdal(true); setShowCarInputs(true); }}>קיים <GoSearch /></Button>
 
                                     {
                                         showCarInputs ?
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowCarInputs(false) }}>סגירה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarInputs(false) }}>סגירה</Button>
                                             :
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowCarInputs(true); }}>פתיחה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarInputs(true); }}>פתיחה</Button>
                                     }
                                     {
                                         !showCarInputs && car ?
@@ -360,35 +360,35 @@ export default function AddCar() {
                                 showCarInputs &&
                                 <>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">מספר רכב</div>
-                                        <Input onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">מספר רכב</div>
+                                        <Input onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">יצרן</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">יצרן</div>
+                                        <Input isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">תוקף רישיון רכב</div>
-                                        <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">תוקף רישיון רכב</div>
+                                        <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">תוקף ביטוח</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => setInsurance(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">תוקף ביטוח</div>
+                                        <Input isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => setInsurance(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">דרגת ביטוח</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.insuranceclass : insuranceclass} onValueChange={(value) => setInsuranceclass(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">דרגת ביטוח</div>
+                                        <Input isDisabled={car ? true : false} value={car ? car.insuranceclass : insuranceclass} onValueChange={(value) => setInsuranceclass(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">אישור בולמים</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">אישור בולמים</div>
+                                        <Input isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">ביקורת חורף</div>
-                                        <Input isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">ביקורת חורף</div>
+                                        <Input isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">חו"מס</div>
+                                        <div className="w-[150px]">חו"מס</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -414,7 +414,7 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">טכוגרף</div>
+                                        <div className="w-[150px]">טכוגרף</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -440,7 +440,7 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">סוג רכב</div>
+                                        <div className="w-[150px]">סוג רכב</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -469,7 +469,7 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">סוג טופס</div>
+                                        <div className="w-[150px]">סוג טופס</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -497,18 +497,19 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                 </>
+
                             }
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10">
-                                <div className="flex items-center m-5">
-                                    <div className="mr-5 ml-5 w-24 flex items-center tracking-widest font-black"><div className="text-2xl">לקוח</div><FaUserFriends className="mr-3 text-3xl" /></div>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setShowCustomerModdal(true); setShowCustomerInputs(true); }}>קיים <GoSearch /></Button>
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                                <div className="flex items-center pl-3 pt-3 pb-3">
+                                    <div className="mr-5 ml-5 w-fit flex items-center tracking-widest font-black"><div className="text-xl w-fit pr-3 pl-3">לקוח</div><FaUserFriends className="w-fit pl-3 text-2xl" /></div>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }}>חדש <HiPlus /></Button>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerModdal(true); setShowCustomerInputs(true); }}>קיים <GoSearch /></Button>
 
                                     {
                                         showCustomerInputs ?
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowCustomerInputs(false) }}>סגירה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerInputs(false) }}>סגירה</Button>
                                             :
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowCustomerInputs(true); }}>פתיחה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerInputs(true); }}>פתיחה</Button>
                                     }
                                     {
                                         !showCustomerInputs && customer ?
@@ -534,38 +535,38 @@ export default function AddCar() {
                                 showCustomerInputs &&
                                 <>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">שם לקוח</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => setName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">שם לקוח</div>
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => setName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">פלפון</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => setNumber(value)} type="number" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">פלפון</div>
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => setNumber(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">כתובת</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => setAddresss(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">כתובת</div>
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => setAddresss(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">ישוב</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => setLocation(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">ישוב</div>
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => setLocation(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">מספר סידורי</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.serial : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">מספר סידורי</div>
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.serial : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                 </>
-                            }
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10">
-                                <div className="flex items-center m-5">
-                                    <div className="text-2xl mr-5 ml-5 w-24 flex items-center tracking-widest font-black"><div className="text-2xl">נהג</div><TbSteeringWheel className="mr-3 text-3xl" /></div>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-5 ml-5" onClick={() => { setShowDriverModdal(true); setShowDriverInputs(true); }}>קיים <GoSearch /></Button>
+                            } 
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                                <div className="flex items-center pl-3 pt-3 pb-3">
+                                    <div className="text-2xl mr-5 ml-5 w-fit flex items-center tracking-widest font-black"><div className="text-xl w-fit pr-3 pl-3">נהג</div><TbSteeringWheel className="w-fit pl-3 text-3xl" /></div>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }}>חדש <HiPlus /></Button>
+                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverModdal(true); setShowDriverInputs(true); }}>קיים <GoSearch /></Button>
 
                                     {
                                         showDriverInputs ?
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowDriverInputs(false) }}>סגירה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverInputs(false) }}>סגירה</Button>
                                             :
-                                            <Button color="primary" className="mr-5 ml-14" onClick={() => { setShowDriverInputs(true); }}>פתיחה</Button>
+                                            <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverInputs(true); }}>פתיחה</Button>
                                     }
                                     {
                                         !showDriverInputs && driver ?
@@ -589,47 +590,47 @@ export default function AddCar() {
                                 showDriverInputs &&
                                 <>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">שם פרטי</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => setNameD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">שם פרטי</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => setNameD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">שם משפחה</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => setLastName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">שם משפחה</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => setLastName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">ישוב</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => setCityD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">ישוב</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => setCityD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">כתובת</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => setAddresssD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">כתובת</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => setAddresssD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">פלפון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">פלפון</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">תוקף רישיון נהיגה</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => setEndDate(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">תוקף רישיון נהיגה</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => setEndDate(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">מס' ת.ז</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => setCardId(value)} type="number" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">מס' ת.ז</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => setCardId(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">תאריך יצרת רישיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => setLicenseget(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">תאריך יצרת רישיון</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => setLicenseget(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">דרגת רישיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensegrade : licensegrade} onValueChange={(value) => setLicensegrade(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">דרגת רישיון</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensegrade : licensegrade} onValueChange={(value) => setLicensegrade(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">מספר רשיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-96" />
+                                        <div className="w-[180px]">מספר רשיון</div>
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">נהג קבוע</div>
+                                        <div className="w-[150px]">נהג קבוע</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -655,7 +656,7 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36">חו"מס</div>
+                                        <div className="w-[150px]">חו"מס</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
