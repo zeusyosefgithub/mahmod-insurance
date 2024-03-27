@@ -308,15 +308,27 @@ export default function AddCar() {
             {showCarModal && <ModalCar setCar={(car) => { setShowFormCar(car); setCar(car); setDriver(GetDriverNameByCar(car.Driver_id)); setCustomer(GetCusNameByCar(car.customer_id)); }} show={showCarModal} disable={() => setShowCarModdal(false)} />}
             {
                 showForm ?
-                    <div className="mt-14">
+                    // <div className="mt-14">
+                    //     <div className="flex justify-center">
+                    //         <div className="w-1/2 m-5 mb-10">
+                    //             <Button onClick={() => setShowForm(false)} color="primary" className="text-xl">
+                    //                 לחזור<GoArrowRight />
+                    //             </Button>
+                    //         </div>
+                    //     </div>
+                    //     <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); }} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
+                    // </div>
+                    <div>
                         <div className="flex justify-center">
-                            <div className="w-1/2 m-5 mb-10">
+                            <div className="w-fit m-5 mb-10">
                                 <Button onClick={() => setShowForm(false)} color="primary" className="text-xl">
                                     לחזור<GoArrowRight />
                                 </Button>
                             </div>
                         </div>
-                        <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); }} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
+                        <div className="absolute overflow-auto w-full flex">
+                            <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); }} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
+                        </div>
                     </div>
                     :
                     <>
