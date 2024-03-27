@@ -328,7 +328,7 @@ export default function AddCar() {
                         <div className="mr-5 w-fit">
                             <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
-                                    <div className="mr-2 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-xl ml-2">רכב</div><FaCar className="text-2xl" /></div>
+                                    <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">רכב</div><FaCar className="text-xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }}>חדש <HiPlus /></Button>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarModdal(true); setShowCarInputs(true); }}>קיים <GoSearch /></Button>
 
@@ -501,7 +501,7 @@ export default function AddCar() {
                             }
                             <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
-                                    <div className="mr-2 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-xl ml-2">לקוח</div><FaUserFriends className="text-2xl" /></div>
+                                    <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">לקוח</div><FaUserFriends className="text-xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }}>חדש <HiPlus /></Button>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerModdal(true); setShowCustomerInputs(true); }}>קיים <GoSearch /></Button>
 
@@ -558,7 +558,7 @@ export default function AddCar() {
                             } 
                             <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
-                                    <div className="text-2xl mr-2 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-xl ml-2">נהג</div><TbSteeringWheel className="text-3xl" /></div>
+                                    <div className="text-2xl mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">נהג</div><TbSteeringWheel className="text-2xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }}>חדש <HiPlus /></Button>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverModdal(true); setShowDriverInputs(true); }}>קיים <GoSearch /></Button>
 
