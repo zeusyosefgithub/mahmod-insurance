@@ -104,7 +104,7 @@ export default function ModalEditCar(props) {
                     <ModalBody className="shadow-lg">
                         <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
                             <div className="flex justify-center">
-                                <div className="w-1/2">
+                                <div className="">
                                     <div className="flex items-center mt-5">
                                         <div className="w-48 font-extrabold">מספר רכב</div>
                                         <Input onValueChange={(value) => setcar_num(value)} value={car_num} type="text" />

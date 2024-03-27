@@ -326,7 +326,7 @@ export default function AddCar() {
                             </div>
                         </div>
                         <div className="mr-5 w-fit">
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
                                     <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">רכב</div><FaCar className="text-xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }}>חדש <HiPlus /></Button>
@@ -500,7 +500,7 @@ export default function AddCar() {
                                 </>
 
                             }
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
                                     <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">לקוח</div><FaUserFriends className="text-xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }}>חדש <HiPlus /></Button>
@@ -558,7 +558,7 @@ export default function AddCar() {
                                     </div>
                                 </>
                             } 
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-full mb-7 mt-10 w-full">
+                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
                                 <div className="flex items-center pl-3 pt-3 pb-3">
                                     <div className="text-2xl mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">נהג</div><TbSteeringWheel className="text-2xl" /></div>
                                     <Button color="primary" className="mr-2 ml-2" onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }}>חדש <HiPlus /></Button>

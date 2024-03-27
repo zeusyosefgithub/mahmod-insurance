@@ -33,7 +33,7 @@ export default function ModalEditCustomer (props){
                     <ModalBody className="shadow-lg">
                         <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
                             <div className="flex justify-center">
-                                <div className="w-1/2">
+                                <div className="">
                                     <div className="flex items-center mt-5">
                                         <div className="w-48 font-extrabold">שם</div>
                                         <Input onValueChange={(value) => setcustomer_name(value)} value={customer_name} type="text" />
