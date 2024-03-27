@@ -29,16 +29,18 @@ export default function AllFormsCar(props) {
         <div>
             {
                 openForm ?
-                    <div>
-                        <div className="flex justify-center">
-                            <div className="w-fit m-5 mb-10">
-                                <Button onClick={() => setOpenForm(false)} color="primary" className="text-xl">
-                                    לחזור<GoArrowRight />
-                                </Button>
+                    <div className="flex justify-center">
+                        <div className="w-[800px]">
+                            <div className="flex justify-center">
+                                <div className="w-fit m-5 mb-10">
+                                    <Button onClick={() => setOpenForm(false)} color="primary" className="text-xl">
+                                        לחזור<GoArrowRight />
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="absolute overflow-auto w-full flex">
-                            <ShowForm withData check={GetClickedCheck(check.check_id)} disable={() => { setOpenForm(false); }} car={props.car} driver={props.driver} customer={props.customer} />
+                            <div className="absolute overflow-auto w-full flex">
+                                <ShowForm withData check={GetClickedCheck(check.check_id)} disable={() => { setOpenForm(false); }} car={props.car} driver={props.driver} customer={props.customer} />
+                            </div>
                         </div>
                     </div>
                     :

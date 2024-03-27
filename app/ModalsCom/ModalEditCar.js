@@ -244,16 +244,16 @@ export default function ModalEditCar(props) {
                     </ModalBody>
                     <ModalFooter>
                         <div className="w-full items-center flex">
-                            <Button className="font-extrabold" size="lg" color="primary" variant="bordered" onClick={props.disable}>
-                                <IoMdClose className="text-xl"/>סגור
+                            <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={props.disable}>
+                                <IoMdClose className="text-xl max-[500px]:text-[11px]"/>סגור
                             </Button>
-                            <Button onClick={createNewForm} size="lg" color="primary" variant="bordered" className="ml-4 font-extrabold">
-                                <MdOutlineCreateNewFolder className="text-2xl"/>ליצרת טופס
+                            <Button onClick={createNewForm} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                <MdOutlineCreateNewFolder className="text-2xl max-[500px]:text-[11px]"/>ליצרת טופס
                             </Button>
                             {
                                 GetChecks().length != 0 ?
-                                <Button onClick={() => {props.disable();props.showAllForms();}} size="lg" color="primary" variant="bordered" className="ml-4 font-extrabold">
-                                    <SiGoogleforms className="text-xl" />כל הטפסים
+                                <Button onClick={() => {props.disable();props.showAllForms();}} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                    <SiGoogleforms className="text-xl max-[500px]:text-[11px]" />כל הטפסים
                                 </Button>
                                 :
                                 null
@@ -261,8 +261,8 @@ export default function ModalEditCar(props) {
                         </div>
                         {
                             CheckIfNotEqual() &&
-                            <Button className="font-extrabold" size="lg" color="primary" onClick={updateProps}>
-                                <GrUpdate className="text-2xl" />עדכון
+                            <Button className="max-[500px]:text-[10px] font-extrabold" color="primary" onClick={updateProps}>
+                                <GrUpdate className="text-2xl max-[500px]:text-[11px]" />עדכון
                             </Button>
                         }
                     </ModalFooter>

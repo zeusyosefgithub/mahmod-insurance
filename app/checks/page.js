@@ -69,10 +69,8 @@ export default function Checks() {
             {modalKind && <ModalEditKinds data={data} show={modalKind} disable={() => { setModalKind(false); setData(null); }} />}
             {
                 showAllForms ?
-                    <div className="flex justify-center">
-                        <div className="w-[800px]">
-                            <AllFormsCar car={data} checks={GetChecks(data?.car_id)} driver={GetDriverNameByCar(data?.Driver_id)} customer={GetCusNameByCar(data?.customer_id)} disable={() => { setShowAllForms(false); setModalCar(true); }} />
-                        </div>
+                    <div>
+                        <AllFormsCar car={data} checks={GetChecks(data?.car_id)} driver={GetDriverNameByCar(data?.Driver_id)} customer={GetCusNameByCar(data?.customer_id)} disable={() => { setShowAllForms(false); setModalCar(true); }} />
                     </div>
                     :
                     <>
