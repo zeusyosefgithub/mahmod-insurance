@@ -25,15 +25,15 @@ export default function ModalCar(props) {
 
     return (
         <>
-            <Modal className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+            <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
                         <ModalHeader className="flex justify-center">בחירת רכב מהרישמה</ModalHeader>
                         <ModalBody>
-                            <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
+                            <div className="m-1 bg-white rounded-xl overflow-auto sizeingForDivsModals">
                                 <table className="w-full text-center">
                                     <tbody>
-                                        <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg">
+                                        <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg max-[600px]:text-[10.5px]">
                                             <th className="p-2 rounded-l-lg">יצרן</th>
                                             <th className="p-2">מספר רכב</th>
                                             <th className="p-2">סוג הרכב</th>
@@ -48,13 +48,21 @@ export default function ModalCar(props) {
                                         </tr>
                                         {
                                             Cars.map(car => {
-                                                return <tr onClick={() => {props.setCar(car);props.disable();}} className="cursor-pointer hover:bg-primary hover:text-white">
-                                                    <th className="p-2">{car.car_product}</th>
-                                                    <th className="p-2">{car.car_num}</th>
-                                                    <th className="p-2">{car.car_type}</th>
-                                                    <th className="p-2">{GetDriverNameByCar(car.Driver_id)?.driver_name}</th>
-                                                    <th className="p-2">{GetCusNameByCar(car.customer_id)?.customer_name}</th>
-                                                </tr>
+                                                return <>
+                                                    <tr onClick={() => { props.setCar(car); props.disable(); }} className="max-[600px]:text-[9px] cursor-pointer hover:bg-primary hover:text-white">
+                                                        <th className="p-2">{car.car_product}</th>
+                                                        <th className="p-2">{car.car_num}</th>
+                                                        <th className="p-2">{car.car_type}</th>
+                                                        <th className="p-2">{GetDriverNameByCar(car.Driver_id)?.driver_name}</th>
+                                                        <th className="p-2">{GetCusNameByCar(car.customer_id)?.customer_name}</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                    </tr>
+                                                </>
                                             })
                                         }
                                     </tbody>

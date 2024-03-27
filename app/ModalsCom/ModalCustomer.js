@@ -7,7 +7,7 @@ export default function ModalCustomer(props) {
     let count = 1;
     return (
         <>
-            <Modal className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+            <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
                         <ModalHeader className="flex justify-center">בחירת לקוח מהרישמה</ModalHeader>
@@ -15,7 +15,7 @@ export default function ModalCustomer(props) {
                             <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
                                 <table className="w-full text-center">
                                     <tbody>
-                                        <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg">
+                                        <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg max-[600px]:text-[10.5px]">
                                             <th className="p-2 rounded-l-lg">ישוב לקוח</th>
                                             <th className="p-2">כתובת לקוח</th>
                                             <th className="p-2">מספר לקוח</th>
@@ -29,12 +29,20 @@ export default function ModalCustomer(props) {
                                         </tr>
                                         {
                                             Customers.map(cus => {
-                                                return <tr onClick={() => {props.setCustomer(cus);props.disable();}} className="cursor-pointer hover:bg-primary hover:text-white">
-                                                    <th className="p-2">{cus.customer_city}</th>
-                                                    <th className="p-2">{cus.customer_site}</th>
-                                                    <th className="p-2">{cus.customer_phone}</th>
-                                                    <th className="p-2">{cus.customer_name}</th>
-                                                </tr>
+                                                return <>
+                                                    <tr onClick={() => { props.setCustomer(cus); props.disable(); }} className="cursor-pointer hover:bg-primary hover:text-white max-[600px]:text-[9px]">
+                                                        <th className="p-2">{cus.customer_city}</th>
+                                                        <th className="p-2">{cus.customer_site}</th>
+                                                        <th className="p-2">{cus.customer_phone}</th>
+                                                        <th className="p-2">{cus.customer_name}</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                    </tr>
+                                                </>
                                             })
                                         }
                                     </tbody>

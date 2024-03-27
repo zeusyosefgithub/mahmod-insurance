@@ -26,7 +26,7 @@ export default function ModalCheck(props) {
 
     return (
         <>
-            <Modal className="test-fontt" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+            <Modal placement="center" className="test-fontt" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
                         <ModalHeader className="flex justify-center">בחירת רכב מהרישמה</ModalHeader>
