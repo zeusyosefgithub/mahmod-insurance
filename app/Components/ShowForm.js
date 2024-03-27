@@ -154,7 +154,7 @@ export default function ShowForm(props) {
                                 props.car && props.car.car_type === 'רכב מעל 10,000 ק"ג' &&
                                 <>
                                     <div className="flex justify-center mb-20">
-                                        <div className="sdfsdf border-2 border-black">
+                                        <div className="sdfsdf">
                                             <PageFour driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef4} />
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@ export default function ShowForm(props) {
                                 props.car && props.car.car_type === 'רכב עד 9,999 ק"ג' &&
                                 <>
                                     <div className="flex justify-center mb-20">
-                                        <div className="sdfsdf border-2 border-black">
+                                        <div className="sdfsdf">
                                             <PageThree driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef3} />
                                         </div>
                                     </div>
@@ -188,7 +188,7 @@ export default function ShowForm(props) {
                                 props.car && props.car.car_type === 'גרור' &&
                                 <>
                                     <div className="flex justify-center mb-20">
-                                        <div className="sdfsdf border-2 border-black">
+                                        <div className="sdfsdf">
                                             <PageOne driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef1} />
                                         </div>
                                     </div>
@@ -205,7 +205,7 @@ export default function ShowForm(props) {
                                 props.car && props.car.car_type === `ציוד הנדס'` &&
                                 <>
                                     <div className="flex justify-center mb-20">
-                                        <div className="sdfsdf border-2 border-black">
+                                        <div className="sdfsdf">
                                             <PageTwo driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef2} />
                                         </div>
                                     </div>

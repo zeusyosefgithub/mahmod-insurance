@@ -331,7 +331,7 @@ export default function AddCar() {
                         </div>
                     </div>
                     :
-                    <>
+                    <div className="shadow-2xl rounded-3xl bg-white p-5">
                         <div className="flex justify-center text-xl m-14">
                             <div className="bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest font-black">
                                  הוספה
@@ -702,7 +702,7 @@ export default function AddCar() {
                         <div className="flex justify-center m-14">
                             <Button onClick={AddCar} size="lg" color="primary" >אישור</Button>
                         </div>
-                    </>
+                    </div>
             }
         </div>
     )

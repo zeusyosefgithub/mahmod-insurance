@@ -96,7 +96,7 @@ export default function ModalEditCar(props) {
     }
 
     return (
-        <Modal className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+        <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
                 <>
                     {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50"/>}

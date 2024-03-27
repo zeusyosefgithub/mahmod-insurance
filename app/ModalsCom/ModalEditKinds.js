@@ -29,7 +29,7 @@ export default function ModalEditKinds(props) {
     }
 
     return (
-        <Modal className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
+        <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
                 <>
                     <ModalHeader className="flex justify-center shadow-lg">פרטים הסוג</ModalHeader>
