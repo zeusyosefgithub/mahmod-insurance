@@ -13,7 +13,7 @@ export default function Add(){
     return(
         <div dir="rtl" className="mb-20">
             <div className="flex justify-center mt-20">
-                <div className="w-[800px] shadow-2xl rounded-3xl bg-white">
+                <div className="w-[700px] shadow-2xl rounded-3xl bg-white">
                     <AddCar/>
                 </div>
             </div>
