@@ -6,7 +6,7 @@ import { useAuth } from "../Auth/AuthContext";
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { signUp, signIn, signOutt, currentUser } = useAuth();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const menuItems = [
     "דף אישי",
@@ -19,12 +19,12 @@ export default function NavBar() {
     "להתנתק",
   ];
 
-  const handelSignout = async() => {
+  const handelSignout = async () => {
     setLoading(true);
-    try{
+    try {
       await signOutt();
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
     setLoading(false);
@@ -78,7 +78,7 @@ export default function NavBar() {
       <NavbarContent justify="end">
         {
           currentUser && <NavbarItem>
-            {loading && <Spinner className="absolute left-0 top-0 right-0 bottom-0 z-50"/>}
+            {loading && <Spinner className="absolute left-0 top-0 right-0 bottom-0 z-50" />}
             <Button onClick={handelSignout} color="danger" variant="flat">
               יצאה מהחשבון
             </Button>
@@ -86,20 +86,36 @@ export default function NavBar() {
         }
       </NavbarContent>
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem dir="rtl" key={`${item}-${index}`}>
+
+          <NavbarMenuItem dir="rtl">
             <Link
-              color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
               className="w-full"
-              href="#"
+              href="/"
               size="lg"
-            >
-              {item}
-            </Link>
+            >דף הבית</Link>
           </NavbarMenuItem>
-        ))}
+          <NavbarMenuItem dir="rtl">
+            <Link
+              className="w-full"
+              href="/add"
+              size="lg"
+            >הוספה</Link>
+          </NavbarMenuItem>
+          <NavbarMenuItem dir="rtl">
+            <Link
+              className="w-full"
+              href="/checks"
+              size="lg"
+            >פירטים</Link>
+          </NavbarMenuItem>
+          <NavbarMenuItem dir="rtl">
+            <Link
+              className="w-full"
+              href="/settings"
+              size="lg"
+            >הגדרות</Link>
+          </NavbarMenuItem>
+  
       </NavbarMenu>
     </Navbar>
   )
