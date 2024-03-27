@@ -338,23 +338,24 @@ export default function AddCar() {
                                             :
                                             <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarInputs(true); }}>פתיחה</Button>
                                     }
-                                    {
+                                    
+
+                                </div>
+                                {
                                         !showCarInputs && car ?
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                 <TiInputChecked className="text-2xl text-green-500" />
                                                 <div className="tracking-widest font-black">נהג : {car.car_num}</div>
                                             </div>
                                             :
                                             !showCarInputs && carNumber ?
-                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                     <TiInputChecked className="text-2xl text-green-500" />
                                                     <div className="tracking-widest font-black">נהג : {carNumber}</div>
                                                 </div>
                                                 :
                                                 null
                                     }
-
-                                </div>
                             </div>
                             {
                                 showCarInputs &&
@@ -511,25 +512,26 @@ export default function AddCar() {
                                             :
                                             <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerInputs(true); }}>פתיחה</Button>
                                     }
-                                    {
+                                    
+
+                                </div>
+                                {
                                         !showCustomerInputs && customer ?
                                             <>
-                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                     <TiInputChecked className="text-2xl text-green-500" />
                                                     <div className="tracking-widest font-black">לקוח : {customer.customer_name}</div>
                                                 </div>
                                             </>
                                             :
                                             !showCustomerInputs && name ?
-                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                     <TiInputChecked className="text-2xl text-green-500" />
                                                     <div className="tracking-widest font-black">לקוח : {name}</div>
                                                 </div>
                                                 :
                                                 null
                                     }
-
-                                </div>
                             </div>
                             {
                                 showCustomerInputs &&
@@ -568,23 +570,24 @@ export default function AddCar() {
                                             :
                                             <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverInputs(true); }}>פתיחה</Button>
                                     }
-                                    {
+                                    
+
+                                </div>
+                                {
                                         !showDriverInputs && driver ?
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                 <TiInputChecked className="text-2xl text-green-500" />
                                                 <div className="tracking-widest font-black">נהג : {driver.driver_name}</div>
                                             </div>
                                             :
                                             !showDriverInputs && nameD ?
-                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl">
+                                                <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
                                                     <TiInputChecked className="text-2xl text-green-500" />
                                                     <div className="tracking-widest font-black">נהג : {nameD}</div>
                                                 </div>
                                                 :
                                                 null
                                     }
-
-                                </div>
                             </div>
                             {
                                 showDriverInputs &&
