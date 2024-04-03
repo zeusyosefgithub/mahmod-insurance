@@ -26,8 +26,7 @@ import onClickOutside from 'react-onclickoutside'
 export default function AddCar() {
 
     const dateRegex = /^(0[1-9]|[12][0-9]|3[01])(\/|-)(0[1-9]|1[1,2])(\/|-)(19|20)\d{2}$/;
-    const [errorDate, setErrorDate] = useState('');
-    const [errorDateInsurance,setErrorDateInsurance] = useState('');
+    
 
 
 
@@ -99,20 +98,31 @@ export default function AddCar() {
     }, [GetCurrentPropsCar(), GetCurrentPropsDriver(), GetCurrentPropsCustomer()])
 
     const [typeCar, setTypeCar] = useState('');
-
+    const [errorTypeCar,setErrorTypeCar] = useState('');
     const [carNumber, setCarNumber] = useState('');
+    const [errorCarNumber,setErrorCarNumber] = useState('');
     const [producer, setProducer] = useState('');
+    const [errorProduce,setErrorProduce] = useState('');
     const [typeFuel, setTypeFuel] = useState('');
+    const [errorTypeFuel,setErrorTypeFuel] = useState('');
     const [endDateCar, setEndDateCar] = useState('');
+    const [errorDate, setErrorDate] = useState('');
     const [insurance, setInsurance] = useState('');
+    const [errorDateInsurance,setErrorDateInsurance] = useState('');
     const [insuranceclass, setInsuranceclass] = useState('');
+    const [errorInsuranceclass,setErrorInsuranceclass] = useState('');
     const [shockabsorbers, setShockabsorbers] = useState('');
+    const [errorShockabsorbers,setErrorShockabsorbers] = useState('');
     const [winterreview, setWinterreview] = useState('');
+    const [errorWinterreview,setErrorWinterreview] = useState('');
     const [hazmat, setHazmat] = useState('');
+    const [errorHazmat,setErrorHazmat] = useState('');
     const [hazmatDate,setHazmatDate] = useState('');
     const [tachograph, setTachograph] = useState('');
+    const [errorTachograph,setErrorTachograph] = useState('');
     const [tachographDate,setTachographDate] = useState('');
     const [insuranceCompany,setInsuranceCompany] = useState('');
+    const [errorInsuranceCompany,setErrorInsuranceCompany] = useState('');
 
     const resetAllCar = () => {
         setCarNumber('');
@@ -129,10 +139,15 @@ export default function AddCar() {
     }
 
     const [name, setName] = useState('');
+    const [errorName,setErrorName] = useState('');
     const [number, setNumber] = useState('');
+    const [errorNumber,setErrorNumber] = useState('');
     const [address, setAddresss] = useState('');
+    const [errorAddresss,setErrorAddresss] = useState('');
     const [location, setLocation] = useState('');
+    const [errorLocation,setErrorLocation] = useState('');
     const [serial, setSerial] = useState('');
+    const [errorSerial,setErrorSerial] = useState('');
 
     const resetAllCustomer = () => {
         setName('');
@@ -143,17 +158,29 @@ export default function AddCar() {
     }
 
     const [nameD, setNameD] = useState('');
+    const [errorNameD,setErrorNameD] = useState('');
     const [lastName, setLastName] = useState('');
+    const [errorLastName,setErrorLastName] = useState('');
     const [phone, setPhone] = useState('');
+    const [errorPhone,setErrorPhone] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [errorEndDate,setErrorEndDate] = useState('');
     const [cardId, setCardId] = useState('');
+    const [errorCardId,setErrorCardId] = useState('');
     const [isFixed, setIsFixed] = useState('');
+    const [errorIsFixed,setErrorIsFixed] = useState('');
     const [addressD, setAddresssD] = useState('');
+    const [errorAddresssD,setErrorAddresssD] = useState('');
     const [CityD, setCityD] = useState('');
+    const [errorCityD,setErrorCityD] = useState('');
     const [hazmatD, setHazmatD] = useState('');
+    const [errorHazmatD,setErrorHazmatD] = useState('');
     const [licenseget, setLicenseget] = useState('');
+    const [errorLicenseget,setErrorLicenseget] = useState('');
     const [licensegrade, setLicensegrade] = useState('');
+    const [errorLicensegrad,setErrorLicensegrad] = useState('');
     const [licensenumber, setLicensenumber] = useState('');
+    const [errorLicensenumber,setErrorLicensenumber] = useState('');
 
     const resetAllDriver = () => {
         setNameD('');
@@ -168,6 +195,37 @@ export default function AddCar() {
         setLicenseget('');
         setLicensegrade('');
         setLicensenumber('');
+    }
+
+    const resetAllErrors = () => {
+        setErrorCarNumber('');
+        setErrorProduce('');
+        setErrorTypeFuel('');
+        setErrorDate('');
+        setErrorDateInsurance('');
+        setErrorInsuranceclass('');
+        setErrorShockabsorbers('');
+        setErrorWinterreview('');
+        setErrorHazmat('');
+        setErrorTachograph('');
+        setErrorInsuranceCompany('');
+        setErrorName('');
+        setErrorNumber('');
+        setErrorAddresss('');
+        setErrorLocation('');
+        setErrorSerial('');
+        setErrorNameD('');
+        setErrorLastName('');
+        setErrorPhone('');
+        setErrorEndDate('');
+        setErrorCardId('');
+        setErrorIsFixed('');
+        setErrorAddresssD('');
+        setErrorCityD('');
+        setErrorHazmatD('');
+        setErrorLicenseget('');
+        setErrorLicensegrad('');
+        setErrorLicensenumber('');
     }
 
 
@@ -240,16 +298,104 @@ export default function AddCar() {
     const [showFormCar, setShowFormCar] = useState(null);
 
     const AddCar = async () => {
-        setErrorDate('');
-        setErrorDateInsurance('');
-        if (!car && isNaN(Date.parse(endDateCar))) {
-            return setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !')
+
+
+
+
+
+
+
+
+
+
+        resetAllErrors();
+        if (!car) {
+            if (!carNumber) {
+                return setErrorCarNumber('לא הוזנו נתונים למספר הרכב !');
+            }
+            if (carNumber.length < 5 && carNumber.length > 8) {
+                return setErrorCarNumber('מספר הרכב שהוזן לא נכון !');
+            }
+            if (!producer) {
+                return setErrorProduce('לא הוזנו נתונים ליצרן !');
+            }
+            if (producer.length > 20) {
+                return setErrorProduce('חרגת ממגבלת התווים של היצרן !');
+            }
+            if(!endDateCar){
+                return setErrorDate('לא הוזנו נתונים לתוקף רישיון הרכב !');
+            }
+            if (isNaN(Date.parse(endDateCar))) {
+                return setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if(!insurance){
+                return setErrorDateInsurance('לא הוזנו נתונים לתוקף הביטוח !');
+            }
+            if (isNaN(Date.parse(insurance))) {
+                return setErrorDateInsurance('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if (!shockabsorbers) {
+                return setErrorShockabsorbers('לא הוזנו נתונים לאישור הבולמים !');
+            }
+            if (isNaN(Date.parse(shockabsorbers))) {
+                return setErrorShockabsorbers('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if (!winterreview) {
+                return setErrorWinterreview('לא הוזנו נתונים לאישור הבולמים !');
+            }
+            if (isNaN(Date.parse(winterreview))) {
+                return setErrorWinterreview('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if(!tachograph){
+                return setErrorTachograph('לא הוזנו נתונים לתכוגרף !');
+            }
+            if(tachograph.currentKey === 'כן' && !tachographDate){
+                return setErrorTachograph('לא הוזנו נתונים לתאריך התכוגרף !');
+            }
+            if(tachograph.currentKey === 'כן' && isNaN(Date.parse(tachographDate))){
+                return setErrorTachograph('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if(!hazmat){
+                return setErrorHazmat('לא הוזנו נתונים לתכוגרף !');
+            }
+            if(hazmat.currentKey === 'כן' && !hazmatDate){
+                return setErrorHazmat('לא הוזנו נתונים לתאריך התכוגרף !');
+            }
+            if(hazmat.currentKey === 'כן' && isNaN(Date.parse(hazmatDate))){
+                return setErrorHazmat('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if(!insuranceCompany){
+                return setErrorInsuranceCompany('לא הוזנו נתונים לחברת הביטוח !');
+            }
+            if (!insuranceclass) {
+                return setErrorInsuranceclass('לא הוזנו נתונים לסוג הביטוח  !');
+            }
+            if(!typeFuel){
+                return setErrorTypeFuel('לא הוזנו נתונים לסוג הרכב !');
+            }
+            if (!typeCar) {
+                return setErrorTypeCar('לא הוזנו נתונים לסוג הרכב !');
+            }
         }
-        if (!car && isNaN(Date.parse(insurance))) {
-            return setErrorDateInsurance('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !')
-        }
-        setErrorDate('');
-        setErrorDateInsurance('');
+
+        resetAllErrors();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         setLoading(true);
         const NewDataDriver = {
             address: addressD,
@@ -320,12 +466,12 @@ export default function AddCar() {
             setShowFormCar(NewDataCar);
             await addDoc(collection(MohamadFireStore, "car"), NewDataCar);
             await updateDoc(doc(MohamadFireStore, "numbers", 'cars'), { number: CarsNum + 1 });
-            if (ChoisesProducer()) {
+            if (ChoisesProducer() && checkIfNotEqualProducer(producer)) {
                 let arraych = ChoisesProducer();
                 arraych?.push(producer);
                 await updateDoc(doc(MohamadFireStore, "Choices", 'Producers'), { arch: arraych });
             }
-            else {
+            else if(checkIfNotEqualProducer(producer)) {
                 let arraych = [];
                 arraych.push(producer);
                 await updateDoc(doc(MohamadFireStore, "Choices", 'Producers'), { arch: arraych });
@@ -340,6 +486,16 @@ export default function AddCar() {
         setCar(null);
         setCustomer(null);
         setDriver(null);
+    }
+
+    function checkIfNotEqualProducer(val){
+        let arrayProducers = ChoisesProducer();
+        for (let index = 0; index < arrayProducers.length; index++) {
+            if(arrayProducers[index] === val){
+                return false;
+            }
+        }
+        return true;
     }
 
     const sortCarNumber = (val, s) => {
@@ -402,11 +558,6 @@ export default function AddCar() {
         }
     }
 
-    const GetRightDate = (date) => {
-        console.log(date);
-
-    }
-
     return (
         <div>
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
@@ -428,13 +579,13 @@ export default function AddCar() {
                     <div>
                         <div className="flex justify-center">
                             <div className="w-fit m-5 mb-10">
-                                <Button onClick={() => setShowForm(false)} color="primary" className="text-xl">
+                                <Button onClick={() => {setShowForm(false);resetAllCustomer();resetAllDriver();resetAllErrors();resetAllCar();setShowCustomerInputs(false);setShowDriverInputs(false);setShowCarInputs(false);}} color="primary" className="text-xl">
                                     לחזור<GoArrowRight />
                                 </Button>
                             </div>
                         </div>
                         <div className="absolute overflow-auto w-full flex">
-                            <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); }} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
+                            <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); resetAllCustomer();resetAllDriver();resetAllErrors();resetAllCar();setShowCustomerInputs(false);setShowDriverInputs(false);setShowCarInputs(false);}} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
                         </div>
                     </div>
                     :
@@ -481,14 +632,14 @@ export default function AddCar() {
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר רכב</div>
                                         <div className="w-full">
-                                            <Input onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorCarNumber} onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                         </div>
                                     </div>
 
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">יצרן</div>
                                         <div onClick={() => setDisplaySearchPrdoucer('')} className="w-full">
-                                            <Input onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorProduce} onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                         </div>
 
                                     </div>
@@ -525,16 +676,13 @@ export default function AddCar() {
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">אישור בולמים</div>
                                         <div className="w-full">
-                                            <Input isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                            <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
                                         </div>
                                     </div>
-                                    {
-                                        console.log(shockabsorbers)
-                                    }
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">ביקורת חורף</div>
                                         <div className="w-full">
-                                            <Input isDisabled={car ? true : false} value={car ? car.winterreview : GetRightDate(winterreview)} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
@@ -572,6 +720,7 @@ export default function AddCar() {
                                             </div>
                                         </div>
                                     }
+                                    {errorTachograph && <div className="text-danger text-xs">{errorTachograph}</div>}
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">חו"מס</div>
                                         <Dropdown dir="rtl">
@@ -607,6 +756,7 @@ export default function AddCar() {
                                             </div>
                                         </div>
                                     }
+                                    {errorHazmat && <div className="text-danger text-xs">{errorHazmat}</div>}
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">חברת ביטוח</div>
                                         <Dropdown dir="rtl">
@@ -641,6 +791,7 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
+                                    {errorInsuranceCompany && <div className="text-danger text-xs">{errorInsuranceCompany}</div>}
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">סוג ביטוח</div>
                                         <Dropdown dir="rtl">
@@ -667,6 +818,7 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
+                                    {errorInsuranceclass && <div className="text-danger text-xs">{errorInsuranceclass}</div>}
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">סוג רכב</div>
                                         <Dropdown dir="rtl">
@@ -697,6 +849,7 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
+                                    {errorTypeFuel && <div className="text-danger text-xs">{errorTypeFuel}</div>}
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">סוג טופס</div>
                                         <Dropdown dir="rtl">
@@ -725,6 +878,7 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
+                                    {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
                                 </>
 
                             }
