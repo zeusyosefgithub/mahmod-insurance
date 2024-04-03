@@ -87,7 +87,7 @@ export default function Checks() {
                         </div>
                         <div className="m-5 flex justify-center mb-20">
                             <div className="flex flex-wrap w-full justify-center">
-                                <div className="w-fit m-5">
+                                <div className="w-[700px] m-5">
                                     <div className="w-full bg-white p-5 rounded-lg shadow-xl">
                                         <div className="flex border-b-2 border-primary items-center pb-3">
                                             <div className="text-2xl text-primary tracking-widest font-black">רכבים</div>
@@ -183,7 +183,7 @@ export default function Checks() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-fit m-5">
+                                <div className="w-[700px] m-5">
                                     <div className="w-full bg-white p-5 rounded-lg shadow-xl">
                                         <div className="flex border-b-2 border-primary items-center pb-3">
                                             <div className="text-2xl text-primary tracking-widest font-black">נהגים</div>

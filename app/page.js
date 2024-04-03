@@ -105,20 +105,19 @@ export default function Home() {
 
   return loading ? <Spinner className="absolute left-0 right-0 bottom-0 top-0"/> : (
     <div>
-      <div className="flex justify-center mt-32">
-        <div className="w-9/12">
-          <div className="flex justify-center ">
+      <div className="flex justify-center mt-32 ml-3 mr-3">
+        <div className="w-full">
+          <div className="flex justify-center">
             <div className="text-xl bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest">
               דף הבית
             </div>
           </div>
-          <div className="mt-20 flex justify-between">
-            <div className="w-1/2">
-              1
+          <div className="mt-20 flex flex-wrap justify-around">
+            <div className="w-[800px]">
+              
             </div>
-            <div className="m-10"></div>
-            <div className="w-1/2">
-              <div className="w-full bg-white p-5 rounded-lg overflow-auto h-72 shadow-xl">
+            <div className="w-[800px]">
+              <div className="w-full bg-white p-5 rounded-lg overflow-auto h-[400px] shadow-xl">
                 <div className="mb-3 text-2xl text-primary border-b-2 border-primary tracking-widest font-black text-right">התראות</div>
                 <table className="bg-gray-200 w-full">
                   <tbody>
