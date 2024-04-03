@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 import ContactContext from "../Components/ContactContext";
 import { SiGoogleforms } from "react-icons/si";
 import { IoMdClose } from "react-icons/io";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { MohamadFireStore } from "../FireBase/firebase";
+import { TbTrash } from "react-icons/tb";
 
 
 
@@ -27,7 +28,7 @@ export default function ModalEditCar(props) {
     const [car_type, setcar_type] = useState(props.data.car_type);
     const [car_type2, setcar_type2] = useState(props.data.car_type2);
     const [enddate, setenddate] = useState(props.data.enddate);
-    const [hazmat, sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא')
+    const [hazmat, sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא');
     const [insurance, setinsurance] = useState(props.data.insurance);
     const [insuranceclass, setinsuranceclass] = useState(props.data.insuranceclass);
     const [shockabsorbers, setshockabsorbers] = useState(props.data.shockabsorbers);
@@ -95,6 +96,20 @@ export default function ModalEditCar(props) {
         setLoading(false);
     }
 
+    let CarsNum = GetData('numbers')[0]?.number;
+    const deleteCar = async() => {
+        setLoading(true);
+        for (let index = 0; index < checks.length; index++) {
+            if(checks[index]?.car_id === props.data.car_id){
+                await deleteDoc(doc(MohamadFireStore, "checks", checks[index]?.id));
+            }
+        }
+        await deleteDoc(doc(MohamadFireStore, "car", props.data.id));
+        await updateDoc(doc(MohamadFireStore, "numbers", 'cars'), { number: CarsNum - 1 });
+        setLoading(false);
+        props.disable();
+    }
+
     return (
         <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
@@ -102,7 +117,7 @@ export default function ModalEditCar(props) {
                     {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50"/>}
                     <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                     <ModalBody className="shadow-lg">
-                        <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
+                        <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
                             <div className="flex justify-center">
                                 <div className="">
                                     <div className="flex items-center mt-5">
@@ -243,21 +258,28 @@ export default function ModalEditCar(props) {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <div className="w-full items-center flex">
-                            <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={props.disable}>
-                                <IoMdClose className="text-xl max-[500px]:text-[11px]"/>סגור
-                            </Button>
-                            <Button onClick={createNewForm} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
-                                <MdOutlineCreateNewFolder className="text-2xl max-[500px]:text-[11px]"/>ליצרת טופס
-                            </Button>
-                            {
-                                GetChecks().length != 0 ?
-                                <Button onClick={() => {props.disable();props.showAllForms();}} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
-                                    <SiGoogleforms className="text-xl max-[500px]:text-[11px]" />כל הטפסים
+                        <div className="flex w-full">
+                            <div className="w-full items-center flex">
+                                <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={props.disable}>
+                                    <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
                                 </Button>
-                                :
-                                null
-                            }
+                                <Button onClick={createNewForm} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                    <MdOutlineCreateNewFolder className="text-2xl max-[500px]:text-[11px]" />ליצרת טופס
+                                </Button>
+                                {
+                                    GetChecks().length != 0 ?
+                                        <Button onClick={() => { props.disable(); props.showAllForms(); }} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                            <SiGoogleforms className="text-xl max-[500px]:text-[11px]" />כל הטפסים
+                                        </Button>
+                                        :
+                                        null
+                                }
+                            </div>
+                            <div className="flex justify-start">
+                                <Button onClick={deleteCar} color="danger" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                    <TbTrash className="text-2xl max-[500px]:text-[11px]" />מחיקת הרכב
+                                </Button>
+                            </div>
                         </div>
                         {
                             CheckIfNotEqual() &&

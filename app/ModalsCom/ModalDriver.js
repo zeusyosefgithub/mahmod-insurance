@@ -9,9 +9,9 @@ export default function ModalDriver(props) {
             <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
-                        <ModalHeader className="flex justify-center">בחירת נהג מהרשימה</ModalHeader>
-                        <ModalBody>
-                            <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
+                        <ModalHeader className="flex justify-center shadow-xl">בחירת נהג מהרשימה</ModalHeader>
+                        <ModalBody className="shadow-xl">
+                            <div className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto no-scrollbar sizeingForDivsModals">
                                 <table className="w-full text-center">
                                     <tbody>
                                         <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg max-[600px]:text-[10.5px]">

@@ -28,9 +28,9 @@ export default function ModalCar(props) {
             <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
                 <ModalContent>
                     <>
-                        <ModalHeader className="flex justify-center">בחירת רכב מהרישמה</ModalHeader>
-                        <ModalBody>
-                            <div className="m-1 bg-white rounded-xl overflow-auto sizeingForDivsModals">
+                        <ModalHeader className="shadow-2xl flex justify-center">בחירת רכב מהרישמה</ModalHeader>
+                        <ModalBody className="shadow-2xl">
+                            <div className="m-1 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
                                 <table className="w-full text-center">
                                     <tbody>
                                         <tr className="sticky top-0 z-10 bg-primary text-white rounded-lg max-[600px]:text-[10.5px]">

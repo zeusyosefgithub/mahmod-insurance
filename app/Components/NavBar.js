@@ -32,7 +32,7 @@ export default function NavBar() {
 
 
   return (
-    <Navbar dir="rtl" onMenuOpenChange={setIsMenuOpen}>
+    <Navbar dir="rtl" onMenuOpenChange={setIsMenuOpen} className="reset-style">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}

@@ -31,7 +31,7 @@ export default function ModalEditCustomer (props){
                 <>
                     <ModalHeader className="flex justify-center shadow-lg">פרטים הקלוח</ModalHeader>
                     <ModalBody className="shadow-lg">
-                        <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto sizeingForDivsModals">
+                        <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto no-scrollbar sizeingForDivsModals">
                             <div className="flex justify-center">
                                 <div className="">
                                     <div className="flex items-center mt-5">
