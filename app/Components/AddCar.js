@@ -620,7 +620,7 @@ export default function AddCar() {
                                                 null
                                     }
                                 </div>
-                                <Divider className="w-[3px] h-[28px]"/>
+                                <div className="border-1 border-gray-300"/>
                                 <div>
                                     <div className="text-2xl flex items-center max-[500px]:text-lg">
                                         <div className="ml-5">לקוח</div>
@@ -641,7 +641,7 @@ export default function AddCar() {
                                                 null
                                     }
                                 </div>
-                                <Divider className="w-[3px] h-[28px]"/>
+                                <div className="border-1 border-gray-300"/>
                                 <div>
                                     <div className="text-2xl flex items-center max-[500px]:text-lg">
                                         <div className="ml-5">נהג</div>
