@@ -1,4 +1,4 @@
-import { Button, Input, Spinner } from "@nextui-org/react";
+import { Button, Divider, Input, Spinner } from "@nextui-org/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import ModalCustomer from "../ModalsCom/ModalCustomer";
@@ -18,6 +18,8 @@ import { FaUserFriends } from "react-icons/fa";
 import { FaCar } from "react-icons/fa6";
 import { TiInputChecked } from "react-icons/ti";
 import onClickOutside from 'react-onclickoutside'
+import { FaRegCheckSquare } from "react-icons/fa";
+import { FiSquare } from "react-icons/fi";
 
 
 
@@ -26,7 +28,7 @@ import onClickOutside from 'react-onclickoutside'
 export default function AddCar() {
 
     const dateRegex = /^(0[1-9]|[12][0-9]|3[01])(\/|-)(0[1-9]|1[1,2])(\/|-)(19|20)\d{2}$/;
-    
+
 
 
 
@@ -98,31 +100,31 @@ export default function AddCar() {
     }, [GetCurrentPropsCar(), GetCurrentPropsDriver(), GetCurrentPropsCustomer()])
 
     const [typeCar, setTypeCar] = useState('');
-    const [errorTypeCar,setErrorTypeCar] = useState('');
+    const [errorTypeCar, setErrorTypeCar] = useState('');
     const [carNumber, setCarNumber] = useState('');
-    const [errorCarNumber,setErrorCarNumber] = useState('');
+    const [errorCarNumber, setErrorCarNumber] = useState('');
     const [producer, setProducer] = useState('');
-    const [errorProduce,setErrorProduce] = useState('');
+    const [errorProduce, setErrorProduce] = useState('');
     const [typeFuel, setTypeFuel] = useState('');
-    const [errorTypeFuel,setErrorTypeFuel] = useState('');
+    const [errorTypeFuel, setErrorTypeFuel] = useState('');
     const [endDateCar, setEndDateCar] = useState('');
     const [errorDate, setErrorDate] = useState('');
     const [insurance, setInsurance] = useState('');
-    const [errorDateInsurance,setErrorDateInsurance] = useState('');
+    const [errorDateInsurance, setErrorDateInsurance] = useState('');
     const [insuranceclass, setInsuranceclass] = useState('');
-    const [errorInsuranceclass,setErrorInsuranceclass] = useState('');
+    const [errorInsuranceclass, setErrorInsuranceclass] = useState('');
     const [shockabsorbers, setShockabsorbers] = useState('');
-    const [errorShockabsorbers,setErrorShockabsorbers] = useState('');
+    const [errorShockabsorbers, setErrorShockabsorbers] = useState('');
     const [winterreview, setWinterreview] = useState('');
-    const [errorWinterreview,setErrorWinterreview] = useState('');
+    const [errorWinterreview, setErrorWinterreview] = useState('');
     const [hazmat, setHazmat] = useState('');
-    const [errorHazmat,setErrorHazmat] = useState('');
-    const [hazmatDate,setHazmatDate] = useState('');
+    const [errorHazmat, setErrorHazmat] = useState('');
+    const [hazmatDate, setHazmatDate] = useState('');
     const [tachograph, setTachograph] = useState('');
-    const [errorTachograph,setErrorTachograph] = useState('');
-    const [tachographDate,setTachographDate] = useState('');
-    const [insuranceCompany,setInsuranceCompany] = useState('');
-    const [errorInsuranceCompany,setErrorInsuranceCompany] = useState('');
+    const [errorTachograph, setErrorTachograph] = useState('');
+    const [tachographDate, setTachographDate] = useState('');
+    const [insuranceCompany, setInsuranceCompany] = useState('');
+    const [errorInsuranceCompany, setErrorInsuranceCompany] = useState('');
 
     const resetAllCar = () => {
         setCarNumber('');
@@ -139,15 +141,15 @@ export default function AddCar() {
     }
 
     const [name, setName] = useState('');
-    const [errorName,setErrorName] = useState('');
+    const [errorName, setErrorName] = useState('');
     const [number, setNumber] = useState('');
-    const [errorNumber,setErrorNumber] = useState('');
+    const [errorNumber, setErrorNumber] = useState('');
     const [address, setAddresss] = useState('');
-    const [errorAddresss,setErrorAddresss] = useState('');
+    const [errorAddresss, setErrorAddresss] = useState('');
     const [location, setLocation] = useState('');
-    const [errorLocation,setErrorLocation] = useState('');
+    const [errorLocation, setErrorLocation] = useState('');
     const [serial, setSerial] = useState('');
-    const [errorSerial,setErrorSerial] = useState('');
+    const [errorSerial, setErrorSerial] = useState('');
 
     const resetAllCustomer = () => {
         setName('');
@@ -158,29 +160,29 @@ export default function AddCar() {
     }
 
     const [nameD, setNameD] = useState('');
-    const [errorNameD,setErrorNameD] = useState('');
+    const [errorNameD, setErrorNameD] = useState('');
     const [lastName, setLastName] = useState('');
-    const [errorLastName,setErrorLastName] = useState('');
+    const [errorLastName, setErrorLastName] = useState('');
     const [phone, setPhone] = useState('');
-    const [errorPhone,setErrorPhone] = useState('');
+    const [errorPhone, setErrorPhone] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [errorEndDate,setErrorEndDate] = useState('');
+    const [errorEndDate, setErrorEndDate] = useState('');
     const [cardId, setCardId] = useState('');
-    const [errorCardId,setErrorCardId] = useState('');
+    const [errorCardId, setErrorCardId] = useState('');
     const [isFixed, setIsFixed] = useState('');
-    const [errorIsFixed,setErrorIsFixed] = useState('');
+    const [errorIsFixed, setErrorIsFixed] = useState('');
     const [addressD, setAddresssD] = useState('');
-    const [errorAddresssD,setErrorAddresssD] = useState('');
+    const [errorAddresssD, setErrorAddresssD] = useState('');
     const [CityD, setCityD] = useState('');
-    const [errorCityD,setErrorCityD] = useState('');
+    const [errorCityD, setErrorCityD] = useState('');
     const [hazmatD, setHazmatD] = useState('');
-    const [errorHazmatD,setErrorHazmatD] = useState('');
+    const [errorHazmatD, setErrorHazmatD] = useState('');
     const [licenseget, setLicenseget] = useState('');
-    const [errorLicenseget,setErrorLicenseget] = useState('');
+    const [errorLicenseget, setErrorLicenseget] = useState('');
     const [licensegrade, setLicensegrade] = useState('');
-    const [errorLicensegrad,setErrorLicensegrad] = useState('');
+    const [errorLicensegrad, setErrorLicensegrad] = useState('');
     const [licensenumber, setLicensenumber] = useState('');
-    const [errorLicensenumber,setErrorLicensenumber] = useState('');
+    const [errorLicensenumber, setErrorLicensenumber] = useState('');
 
     const resetAllDriver = () => {
         setNameD('');
@@ -322,13 +324,13 @@ export default function AddCar() {
             if (producer.length > 20) {
                 return setErrorProduce('חרגת ממגבלת התווים של היצרן !');
             }
-            if(!endDateCar){
+            if (!endDateCar) {
                 return setErrorDate('לא הוזנו נתונים לתוקף רישיון הרכב !');
             }
             if (isNaN(Date.parse(endDateCar))) {
                 return setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
-            if(!insurance){
+            if (!insurance) {
                 return setErrorDateInsurance('לא הוזנו נתונים לתוקף הביטוח !');
             }
             if (isNaN(Date.parse(insurance))) {
@@ -346,31 +348,31 @@ export default function AddCar() {
             if (isNaN(Date.parse(winterreview))) {
                 return setErrorWinterreview('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
-            if(!tachograph){
+            if (!tachograph) {
                 return setErrorTachograph('לא הוזנו נתונים לתכוגרף !');
             }
-            if(tachograph.currentKey === 'כן' && !tachographDate){
+            if (tachograph.currentKey === 'כן' && !tachographDate) {
                 return setErrorTachograph('לא הוזנו נתונים לתאריך התכוגרף !');
             }
-            if(tachograph.currentKey === 'כן' && isNaN(Date.parse(tachographDate))){
+            if (tachograph.currentKey === 'כן' && isNaN(Date.parse(tachographDate))) {
                 return setErrorTachograph('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
-            if(!hazmat){
+            if (!hazmat) {
                 return setErrorHazmat('לא הוזנו נתונים לתכוגרף !');
             }
-            if(hazmat.currentKey === 'כן' && !hazmatDate){
+            if (hazmat.currentKey === 'כן' && !hazmatDate) {
                 return setErrorHazmat('לא הוזנו נתונים לתאריך התכוגרף !');
             }
-            if(hazmat.currentKey === 'כן' && isNaN(Date.parse(hazmatDate))){
+            if (hazmat.currentKey === 'כן' && isNaN(Date.parse(hazmatDate))) {
                 return setErrorHazmat('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
-            if(!insuranceCompany){
+            if (!insuranceCompany) {
                 return setErrorInsuranceCompany('לא הוזנו נתונים לחברת הביטוח !');
             }
             if (!insuranceclass) {
                 return setErrorInsuranceclass('לא הוזנו נתונים לסוג הביטוח  !');
             }
-            if(!typeFuel){
+            if (!typeFuel) {
                 return setErrorTypeFuel('לא הוזנו נתונים לסוג הרכב !');
             }
             if (!typeCar) {
@@ -437,7 +439,7 @@ export default function AddCar() {
                 tachograph: car.tachograph,
                 winterreview: car.winterreview,
                 insuranceCompany: car.insuranceCompany,
-                hazmatDate: car.hazmatDate, 
+                hazmatDate: car.hazmatDate,
                 tachographDate: car.tachographDate,
             }
             const invId = doc(MohamadFireStore, "car", car.id);
@@ -454,14 +456,14 @@ export default function AddCar() {
                 customer_id: customer ? customer.customer_id : currectCustomerId(),
                 enddate: endDateCar,
                 hazmat: hazmat.currentKey === 'כן' ? true : false,
-                hazmatDate: hazmat.currentKey === 'כן' ? hazmatDate : null, 
+                hazmatDate: hazmat.currentKey === 'כן' ? hazmatDate : null,
                 insurance: insurance,
                 insuranceclass: insuranceclass.currentKey,
                 shockabsorbers: shockabsorbers,
                 tachograph: tachograph.currentKey === 'כן' ? true : false,
                 tachographDate: tachograph.currentKey === 'כן' ? tachographDate : null,
                 winterreview: winterreview,
-                insuranceCompany : insuranceCompany.currentKey
+                insuranceCompany: insuranceCompany.currentKey
             }
             setShowFormCar(NewDataCar);
             await addDoc(collection(MohamadFireStore, "car"), NewDataCar);
@@ -471,7 +473,7 @@ export default function AddCar() {
                 arraych?.push(producer);
                 await updateDoc(doc(MohamadFireStore, "Choices", 'Producers'), { arch: arraych });
             }
-            else if(checkIfNotEqualProducer(producer)) {
+            else if (checkIfNotEqualProducer(producer)) {
                 let arraych = [];
                 arraych.push(producer);
                 await updateDoc(doc(MohamadFireStore, "Choices", 'Producers'), { arch: arraych });
@@ -488,10 +490,10 @@ export default function AddCar() {
         setDriver(null);
     }
 
-    function checkIfNotEqualProducer(val){
+    function checkIfNotEqualProducer(val) {
         let arrayProducers = ChoisesProducer();
         for (let index = 0; index < arrayProducers.length; index++) {
-            if(arrayProducers[index] === val){
+            if (arrayProducers[index] === val) {
                 return false;
             }
         }
@@ -579,67 +581,136 @@ export default function AddCar() {
                     <div>
                         <div className="flex justify-center">
                             <div className="w-fit m-5 mb-10">
-                                <Button onClick={() => {setShowForm(false);resetAllCustomer();resetAllDriver();resetAllErrors();resetAllCar();setShowCustomerInputs(false);setShowDriverInputs(false);setShowCarInputs(false);}} color="primary" className="text-xl">
+                                <Button onClick={() => { setShowForm(false); resetAllCustomer(); resetAllDriver(); resetAllErrors(); resetAllCar(); setShowCustomerInputs(false); setShowDriverInputs(false); setShowCarInputs(false); }} color="primary" className="text-xl">
                                     לחזור<GoArrowRight />
                                 </Button>
                             </div>
                         </div>
                         <div className="absolute overflow-auto w-full flex">
-                            <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); resetAllCustomer();resetAllDriver();resetAllErrors();resetAllCar();setShowCustomerInputs(false);setShowDriverInputs(false);setShowCarInputs(false);}} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
+                            <ShowForm disable={() => { setShowForm(false); setShowFormCar(null); resetAllCustomer(); resetAllDriver(); resetAllErrors(); resetAllCar(); setShowCustomerInputs(false); setShowDriverInputs(false); setShowCarInputs(false); }} car={showFormCar} driver={GetDriverNameByCar(showFormCar?.Driver_id)} customer={GetCusNameByCar(showFormCar?.customer_id)} />
                         </div>
                     </div>
                     :
-                    <div className="shadow-2xl rounded-3xl bg-white p-5">
+                    <div className="shadow-2xl rounded-3xl bg-white p-5 mr-5 ml-5">
                         <div className="flex justify-center text-xl m-14">
                             <div className="bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest font-black">
                                 הוספה
                             </div>
                         </div>
-                        <div className="mr-5 w-fit ml-5">
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
-                                <div className="flex items-center pl-1 pt-1 pb-1">
-                                    <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">רכב</div><FaCar className="text-xl" /></div>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCarModdal(true); setShowCarInputs(true); }}>קיים <GoSearch /></Button>
+                        <div className="w-full bg-white z-30 sticky top-0">
+                            <Divider />
+                            <div className="flex justify-around p-4 ">
+                                <div>
+                                    <div className="text-2xl flex items-center max-[500px]:text-lg">
+                                        <div className="ml-5">רכב</div>
+                                        <FaRegCheckSquare className="text-green-500" />
+                                        {/* <FiSquare className="text-yellow-500" /> */}
+                                    </div>
                                     {
-                                        showCarInputs ?
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowCarInputs(false) }}>סגירה</Button>
-                                            :
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowCarInputs(true); }}>פתיחה</Button>
-                                    }
-
-
-                                </div>
-                                {
-                                    !showCarInputs && car ?
-                                        <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                            <TiInputChecked className="text-2xl text-green-500" />
-                                            <div className="tracking-widest font-black">נהג : {car.car_num}</div>
-                                        </div>
-                                        :
-                                        !showCarInputs && carNumber ?
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                                <TiInputChecked className="text-2xl text-green-500" />
-                                                <div className="tracking-widest font-black">נהג : {carNumber}</div>
+                                        car ?
+                                            <div className="text-center max-[500px]:text-xs">
+                                                {car.car_num}
                                             </div>
                                             :
-                                            null
-                                }
+                                            carNumber ?
+                                                <div className="text-center max-[500px]:text-xs">
+                                                    {carNumber}
+                                                </div>
+                                                :
+                                                null
+                                    }
+                                </div>
+                                <Divider className="w-[3px] h-[28px]"/>
+                                <div>
+                                    <div className="text-2xl flex items-center max-[500px]:text-lg">
+                                        <div className="ml-5">לקוח</div>
+                                        {/* <FaRegCheckSquare className="text-green-500" /> */}
+                                        <FiSquare className="text-yellow-500" />
+                                    </div>
+                                    {
+                                        customer ?
+                                            <div className="text-center max-[500px]:text-xs">
+                                                {customer.customer_name}
+                                            </div>
+                                            :
+                                            name ?
+                                                <div className="text-center max-[500px]:text-xs">
+                                                    {name}
+                                                </div>
+                                                :
+                                                null
+                                    }
+                                </div>
+                                <Divider className="w-[3px] h-[28px]"/>
+                                <div>
+                                    <div className="text-2xl flex items-center max-[500px]:text-lg">
+                                        <div className="ml-5">נהג</div>
+                                        {/* <FaRegCheckSquare className="text-green-500" /> */}
+                                        <FiSquare className="text-yellow-500" />
+                                    </div>
+                                    {
+                                        driver ?
+                                            <div className="text-center max-[500px]:text-xs">
+                                                {driver.driver_name}
+                                            </div>
+                                            :
+                                            nameD ?
+                                                <div className="text-center max-[500px]:text-xs">
+                                                    {nameD}
+                                                </div>
+                                                :
+                                                null
+                                    }
+                                </div>
+                            </div>
+                            <Divider />
+                        </div>
+                        <div className="w-full mt-10 mb-10">
+                            <div className="flex justify-around items-center mb-20">
+                                <div className="flex w-full justify-center items-center">
+                                    <div className="text-lg ml-2">רכב</div>
+                                    <FaCar className="text-xl" />
+                                </div>
+                                <div className="w-full flex justify-around items-center">
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setCar(null); setShowCarInputs(true); resetAllCar(); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            חדש <HiPlus />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setShowCarModdal(true); setShowCarInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            קיים <GoSearch />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        {
+                                            showCarInputs ?
+                                                <button onClick={() => { setShowCarInputs(false) }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    סגירה
+                                                </button>
+                                                :
+                                                <button onClick={() => { setShowCarInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    פתיחה
+                                                </button>
+                                        }
+
+                                    </div>
+                                </div>
                             </div>
                             {
                                 showCarInputs &&
-                                <>
+                                <div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר רכב</div>
                                         <div className="w-full">
-                                            <Input errorMessage={errorCarNumber} onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorCarNumber} onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => setCarNumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
 
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">יצרן</div>
                                         <div onClick={() => setDisplaySearchPrdoucer('')} className="w-full">
-                                            <Input errorMessage={errorProduce} onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorProduce} onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => setProducer(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
 
                                     </div>
@@ -664,25 +735,25 @@ export default function AddCar() {
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תוקף רישיון רכב</div>
                                         <div className="w-full">
-                                            <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תוקף ביטוח</div>
                                         <div className="w-full">
-                                            <Input errorMessage={errorDateInsurance} isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => setInsurance(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorDateInsurance} isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => setInsurance(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">אישור בולמים</div>
                                         <div className="w-full">
-                                            <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                            <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">ביקורת חורף</div>
                                         <div className="w-full">
-                                            <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
@@ -879,140 +950,144 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
-                                </>
+                                </div>
 
                             }
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
-                                <div className="flex items-center pl-1 pt-1 pb-1">
-                                    <div className="mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">לקוח</div><FaUserFriends className="text-xl" /></div>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowCustomerModdal(true); setShowCustomerInputs(true); }}>קיים <GoSearch /></Button>
-
-                                    {
-                                        showCustomerInputs ?
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowCustomerInputs(false) }}>סגירה</Button>
-                                            :
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowCustomerInputs(true); }}>פתיחה</Button>
-                                    }
-
-
+                        </div>
+                        <Divider />
+                        <div className="w-full mt-10 mb-10">
+                            <div className="flex justify-around items-center mb-20">
+                                <div className="flex w-full justify-center items-center">
+                                    <div className="text-lg ml-2">נהג</div>
+                                    <TbSteeringWheel className="text-2xl" />
                                 </div>
-                                {
-                                    !showCustomerInputs && customer ?
-                                        <>
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                                <TiInputChecked className="text-2xl text-green-500" />
-                                                <div className="tracking-widest font-black">לקוח : {customer.customer_name}</div>
-                                            </div>
-                                        </>
-                                        :
-                                        !showCustomerInputs && name ?
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                                <TiInputChecked className="text-2xl text-green-500" />
-                                                <div className="tracking-widest font-black">לקוח : {name}</div>
-                                            </div>
-                                            :
-                                            null
-                                }
+                                <div className="w-full flex justify-around items-center">
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setCustomer(null); setShowCustomerInputs(true); resetAllCustomer(); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            חדש <HiPlus />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setShowCustomerModdal(true); setShowCustomerInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            קיים <GoSearch />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        {
+                                            showCustomerInputs ?
+                                                <button onClick={() => { setShowCustomerInputs(false) }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    סגירה
+                                                </button>
+                                                :
+                                                <button onClick={() => { setShowCustomerInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    פתיחה
+                                                </button>
+                                        }
+
+                                    </div>
+                                </div>
                             </div>
                             {
                                 showCustomerInputs &&
-                                <>
+                                <div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">שם לקוח</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => setName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => setName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">פלפון</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => setNumber(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => setNumber(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">כתובת</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => setAddresss(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => setAddresss(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">ישוב</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => setLocation(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => setLocation(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר סידורי</div>
-                                        <Input isDisabled={customer ? true : false} value={customer ? customer.serial : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={customer ? true : false} value={customer ? customer.serial : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
-                                </>
-                            }
-                            <div className="border-r-2 border-primary bg-slate-300 p-1 rounded-l-lg mb-7 mt-10 w-full">
-                                <div className="flex items-center pl-1 pt-1 pb-1">
-                                    <div className="text-2xl mr-1 ml-2 w-fit flex items-center tracking-widest font-black"><div className="text-lg ml-2">נהג</div><TbSteeringWheel className="text-2xl" /></div>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }}>חדש <HiPlus /></Button>
-                                    <Button color="primary" className="mr-2 ml-2" onClick={() => { setShowDriverModdal(true); setShowDriverInputs(true); }}>קיים <GoSearch /></Button>
-
-                                    {
-                                        showDriverInputs ?
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowDriverInputs(false) }}>סגירה</Button>
-                                            :
-                                            <Button color="primary" className="mr-2" onClick={() => { setShowDriverInputs(true); }}>פתיחה</Button>
-                                    }
-
-
                                 </div>
-                                {
-                                    !showDriverInputs && driver ?
-                                        <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                            <TiInputChecked className="text-2xl text-green-500" />
-                                            <div className="tracking-widest font-black">נהג : {driver.driver_name}</div>
-                                        </div>
-                                        :
-                                        !showDriverInputs && nameD ?
-                                            <div className="p-2 pr-4 pl-4 bg-white flex items-center rounded-3xl w-fit m-2">
-                                                <TiInputChecked className="text-2xl text-green-500" />
-                                                <div className="tracking-widest font-black">נהג : {nameD}</div>
-                                            </div>
-                                            :
-                                            null
-                                }
+                            }
+                        </div>
+                        <Divider />
+                        <div className="w-full mt-10 mb-10">
+                            <div className="flex justify-around items-center mb-20">
+                                <div className="flex w-full justify-center items-center">
+                                    <div className="text-lg ml-2">לקוח</div>
+                                    <FaUserFriends className="text-xl" />
+                                </div>
+                                <div className="w-full flex justify-around items-center">
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setDriver(null); setShowDriverInputs(true); resetAllDriver(); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            חדש <HiPlus />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        <button onClick={() => { setShowDriverModdal(true); setShowDriverInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                            קיים <GoSearch />
+                                        </button>
+                                    </div>
+                                    <div className="ml-2 mr-2">
+                                        {
+                                            showDriverInputs ?
+                                                <button onClick={() => { setShowDriverInputs(false) }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    סגירה
+                                                </button>
+                                                :
+                                                <button onClick={() => { setShowDriverInputs(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    פתיחה
+                                                </button>
+                                        }
+
+                                    </div>
+                                </div>
                             </div>
                             {
                                 showDriverInputs &&
-                                <>
+                                <div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">שם פרטי</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => setNameD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => setNameD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">שם משפחה</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => setLastName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => setLastName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">ישוב</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => setCityD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => setCityD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">כתובת</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => setAddresssD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => setAddresssD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">פלפון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תוקף רישיון נהיגה</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => setEndDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => setEndDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מס' ת.ז</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => setCardId(value)} type="number" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => setCardId(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תאריך יצרת רישיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => setLicenseget(value)} type="date" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => setLicenseget(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">דרגת רישיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensegrade : licensegrade} onValueChange={(value) => setLicensegrade(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensegrade : licensegrade} onValueChange={(value) => setLicensegrade(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר רשיון</div>
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-ful ml-3" />
+                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[150px]">נהג קבוע</div>
@@ -1066,7 +1141,7 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
-                                </>
+                                </div>
                             }
                         </div>
                         <div className="flex justify-center m-14">

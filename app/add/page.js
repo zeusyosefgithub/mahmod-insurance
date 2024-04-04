@@ -13,7 +13,7 @@ export default function Add(){
     return(
         <div dir="rtl" className="mb-20">
             <div className="flex justify-center">
-                <div className="w-[800px]">
+                <div className="max-w-[800px] w-full">
                     <AddCar/>
                 </div>
             </div>
