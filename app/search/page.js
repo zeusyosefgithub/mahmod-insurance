@@ -72,7 +72,6 @@ export default function searchPage() {
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
                     <ModalContent>
                         <>
-                            <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                             <ModalBody className="shadow-lg">
                                 <div className="bg-black">
                                     <Camera
