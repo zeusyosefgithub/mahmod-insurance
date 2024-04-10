@@ -1,6 +1,6 @@
 'use client';
-import { Button, Dropdown, DropdownItem, DropdownMenu,Divider, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
-import { useState,useCallback, useRef } from "react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, Divider, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
+import { useState, useCallback, useRef } from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import CarNumebr from '../../images/carNumber.jpg';
@@ -27,10 +27,27 @@ export default function searchPage() {
         setLoading(false);
     }
 
-    function handleTakePhoto (dataUri) {
+    function handleTakePhoto(dataUri) {
         // Do stuff with the photo...
         console.log('takePhoto');
-      }
+    }
+
+    function handleTakePhotoAnimationDone(dataUri) {
+        // Do stuff with the photo...
+        console.log('takePhoto');
+    }
+
+    function handleCameraError(error) {
+        console.log('handleCameraError', error);
+    }
+
+    function handleCameraStart(stream) {
+        console.log('handleCameraStart');
+    }
+
+    function handleCameraStop() {
+        console.log('handleCameraStop');
+    }
 
 
     return (
@@ -41,9 +58,23 @@ export default function searchPage() {
                     <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" className="max-w-[350px]" label="מספר הרכב" />
                 </div>
                 <div className="mt-20 flex justify-center">
-                <Camera
-      onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-    />
+                    <Camera
+                        onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
+                        onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
+                        onCameraError={(error) => { handleCameraError(error); }}
+                        idealFacingMode={FACING_MODES.ENVIRONMENT}
+                        idealResolution={{ width: 640, height: 480 }}
+                        imageType={IMAGE_TYPES.JPG}
+                        imageCompression={0.97}
+                        isMaxResolution={true}
+                        isImageMirror={false}
+                        isSilentMode={false}
+                        isDisplayStartCameraError={true}
+                        isFullscreen={false}
+                        sizeFactor={1}
+                        onCameraStart={(stream) => { handleCameraStart(stream); }}
+                        onCameraStop={() => { handleCameraStop(); }}
+                    />
                     <Button className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
@@ -76,7 +107,7 @@ export default function searchPage() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Divider/>
+                                            <Divider />
                                             <div className="flex justify-center m-10 mt-10">
                                                 <table className="w-full">
                                                     <tbody>
