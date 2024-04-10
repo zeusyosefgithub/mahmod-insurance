@@ -16,6 +16,8 @@ export default function searchPage() {
     const [resualt, setResualt] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showSearchModal, setShowSearchModal] = useState(false);
+    const [showCameraModal, setShowCameraModal] = useState(false);
+    const [photo,setPhoto] = useState(null); 
 
     async function GetVichel() {
         setLoading(true);
@@ -30,6 +32,7 @@ export default function searchPage() {
     function handleTakePhoto(dataUri) {
         // Do stuff with the photo...
         console.log(dataUri);
+        setPhoto(dataUri);
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
@@ -43,10 +46,12 @@ export default function searchPage() {
 
     function handleCameraStart(stream) {
         console.log('handleCameraStart');
+        
     }
 
     function handleCameraStop() {
         console.log('handleCameraStop');
+        setShowCameraModal(false);
     }
 
 
@@ -58,26 +63,51 @@ export default function searchPage() {
                     <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" className="max-w-[350px]" label="מספר הרכב" />
                 </div>
                 <div className="mt-20 flex justify-center">
-                    <Camera
-                        onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
-                        onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
-                        onCameraError={(error) => { handleCameraError(error); }}
-                        idealFacingMode={FACING_MODES.ENVIRONMENT}
-                        idealResolution={{ width: 640, height: 480 }}
-                        imageType={IMAGE_TYPES.JPG}
-                        imageCompression={0.97}
-                        isMaxResolution={true}
-                        isImageMirror={false}
-                        isSilentMode={false}
-                        isDisplayStartCameraError={true}
-                        isFullscreen={false}
-                        sizeFactor={1}
-                        onCameraStart={(stream) => { handleCameraStart(stream); }}
-                        onCameraStop={() => { handleCameraStop(); }}
-                    />
-                    <Button className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
+
+                    <Button onClick={() => setShowCameraModal(true)} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
+                <div>
+                    <img src={photo}/>
+                </div>
+                <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
+                    <ModalContent>
+                        <>
+                            <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
+                            <ModalBody className="shadow-lg">
+                                <div className="bg-black">
+                                    <Camera
+                                        onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
+                                        onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
+                                        onCameraError={(error) => { handleCameraError(error); }}
+                                        idealFacingMode={FACING_MODES.ENVIRONMENT}
+                                        idealResolution={{ width: 640, height: 480 }}
+                                        imageType={IMAGE_TYPES.JPG}
+                                        imageCompression={0.97}
+                                        isMaxResolution={true}
+                                        isImageMirror={false}
+                                        isSilentMode={false}
+                                        isDisplayStartCameraError={true}
+                                        isFullscreen={false}
+                                        sizeFactor={1}
+                                        onCameraStart={(stream) => { handleCameraStart(stream); }}
+                                        onCameraStop={() => { handleCameraStop(); }}
+                                    />
+                                </div>
+
+                            </ModalBody>
+                            <ModalFooter>
+                                <div className="flex w-full">
+                                    <div className="w-full items-center flex">
+                                        <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={() => setShowCameraModal(false)}>
+                                            <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
+                                        </Button>
+                                    </div>
+                                </div>
+                            </ModalFooter>
+                        </>
+                    </ModalContent>
+                </Modal>
                 <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showSearchModal} onClose={() => setShowSearchModal(false)}>
                     <ModalContent>
                         <>
