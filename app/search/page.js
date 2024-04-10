@@ -7,8 +7,8 @@ import CarNumebr from '../../images/carNumber.jpg';
 import Image from 'next/image';
 import { FaCamera } from "react-icons/fa";
 import React from 'react';
-import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
+import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 
 export default function searchPage() {
 
