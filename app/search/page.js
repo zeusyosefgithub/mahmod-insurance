@@ -74,7 +74,7 @@ export default function searchPage() {
                         <>
                             <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                             <ModalBody className="shadow-lg">
-                                <div className="bg-black">
+                                <div className="bg-black h-[10px]">
                                     <Camera
                                         onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
                                         onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
