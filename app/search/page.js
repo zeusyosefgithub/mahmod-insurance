@@ -79,7 +79,7 @@ export default function searchPage() {
                                         onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
                                         onCameraError={(error) => { handleCameraError(error); }}
                                         idealFacingMode={FACING_MODES.ENVIRONMENT}
-                                        idealResolution={{ width: 640, height: 10 }}
+                                        idealResolution={{ width: 640, height: 480 }}
                                         imageType={IMAGE_TYPES.JPG}
                                         imageCompression={0.97}
                                         isMaxResolution={true}
@@ -87,7 +87,7 @@ export default function searchPage() {
                                         isSilentMode={false}
                                         isDisplayStartCameraError={true}
                                         isFullscreen={false}
-                                        sizeFactor={1}
+                                        sizeFactor={0.3}
                                         onCameraStart={(stream) => { handleCameraStart(stream); }}
                                         onCameraStop={() => { handleCameraStop(); }}
                                     />
