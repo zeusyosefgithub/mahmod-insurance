@@ -81,7 +81,7 @@ export default function searchPage() {
                                         idealFacingMode={FACING_MODES.ENVIRONMENT}
                                         idealResolution={{ width: 640, height: 480 }}
                                         imageType={IMAGE_TYPES.JPG}
-                                        imageCompression={0.97}
+                                        imageCompression={0.34}
                                         isMaxResolution={true}
                                         isImageMirror={false}
                                         isSilentMode={false}
