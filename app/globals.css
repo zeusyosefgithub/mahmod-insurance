@@ -326,3 +326,8 @@ body {
 }
 
 
+.sdf{
+  font-size: min(8vw, 90px); /* sets the font size to 5% of the viewport width or height, whichever is smaller */
+}
+
+

@@ -1,115 +1,195 @@
 'use client';
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
-import { useState } from "react";
-import { CiSearch } from "react-icons/ci";
+import { Button, Dropdown, DropdownItem, DropdownMenu,Divider, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
+import { useState,useCallback, useRef } from "react";
+import { FaSearch } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+import CarNumebr from '../../images/carNumber.jpg';
+import Image from 'next/image';
+import { FaCamera } from "react-icons/fa";
+import Webcam from 'react-webcam';
 
 export default function searchPage() {
 
-    const [searchValue,setSearchValue] = useState(null);
-    const [resualt,setResualt] = useState(null);
+    const [searchValue, setSearchValue] = useState(null);
+    const [resualt, setResualt] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [showSearchModal, setShowSearchModal] = useState(false);
 
     async function GetVichel() {
+        setLoading(true);
         const response = await fetch(`https://data.gov.il/api/3/action/datastore_search?resource_id=053cea08-09bc-40ec-8f7a-156f0677aff3&q=${searchValue}`);
         const movies = await response.json();
         const ress = movies.result.records;
-        setResualt(ress[0])
+        setResualt(ress[0]);
+        setShowSearchModal(true);
+        setLoading(false);
     }
+
+    const videoConstraints = {
+        width: 640,
+        height: 480,
+        facingMode: "user",
+    };
+
+    const webcamRef = useRef(null);
+    const [imgSrc, setImgSrc] = useState(null);
+
+    const capture = useCallback(() => {
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImgSrc(imageSrc);
+    }, [webcamRef, setImgSrc]);
 
 
     return (
         <div className="hsd flex justify-center items-center">
+            {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
             <div className="w-[500px]">
                 <div dir="rtl" className="flex justify-center">
                     <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" className="max-w-[350px]" label="מספר הרכב" />
                 </div>
                 <div className="mt-20 flex justify-center">
-                    <Button onClick={GetVichel} color="primary" className="text-xl"><CiSearch className="text-2xl" />חיפוש</Button>
+                    <Webcam
+                        audio={false}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={videoConstraints}
+                        minScreenshotWidth={180}
+                        minScreenshotHeight={180}
+                    />
+                    {imgSrc && <img src={imgSrc} alt="img" />}
+                    <Button onClick={capture} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
+                    <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
-                {
-                        resualt &&
-                        <div>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th>{resualt.mispar_rechev}</th>
-                                        <th>מספר הרכב</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.sug_degem}</th>
-                                        <th>סוג דגם</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.tozeret_nm}</th>
-                                        <th>תוצרת</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.degem_nm}</th>
-                                        <th>מספר דגם</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.ramat_gimur}</th>
-                                        <th>רמת גימור</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.kvutzat_zihum}</th>
-                                        <th>קבוצת זיהום</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.shnat_yitzur}</th>
-                                        <th>שנת יצור</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.degem_manoa}</th>
-                                        <th>דגם מנוע</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.mivchan_acharon_dt}</th>
-                                        <th>מבחן אחרון</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.tokef_dt}</th>
-                                        <th>תוקף</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.baalut}</th>
-                                        <th>בעלות</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.misgeret}</th>
-                                        <th>מסגרת</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.tzeva_rechev}</th>
-                                        <th>צבע רכב</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.zmig_kidmi}</th>
-                                        <th>צמיג קדמי</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.zmig_ahori}</th>
-                                        <th>צמיג אחורי</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.sug_delek_nm}</th>
-                                        <th>סוג דלק</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.horaat_rishum}</th>
-                                        <th>הוראת רישום</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.moed_aliya_lakvish}</th>
-                                        <th>מועד עליה לכביש</th>
-                                    </tr>
-                                    <tr>
-                                        <th>{resualt.kinuy_mishari}</th>
-                                        <th>קינוי מסחרי</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    }
+                <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showSearchModal} onClose={() => setShowSearchModal(false)}>
+                    <ModalContent>
+                        <>
+                            <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
+                            <ModalBody className="shadow-lg">
+                                <div>
+                                    {
+                                        resualt &&
+                                        <div className="no-scrollbar overflow-auto sizeingForDivsModals">
+                                            <div className="flex justify-center mt-20 mb-10">
+                                                <div className="border-4 border-black max-w-[700px] w-full flex items-center rounded-lg">
+                                                    <div className="w-full max-w-[90px] bg-blue-800">
+                                                        <Image src={CarNumebr} />
+                                                    </div>
+                                                    <div className="w-full bg-yellow-500 h-full">
+                                                        <div className="flex justify-center h-full w-full">
+                                                            <div className="font-bold sdf  tracking-widest grid place-items-center text-center w-full">
+                                                                {
+                                                                    resualt.mispar_rechev > 999999 && resualt.mispar_rechev <= 9999999 ?
+                                                                        `${parseInt(((((((resualt.mispar_rechev / 10) / 10) / 10) / 10) / 10) / 10) % 10)}${parseInt((((((resualt.mispar_rechev / 10) / 10) / 10) / 10) / 10) % 10)}-${parseInt(((((resualt.mispar_rechev / 10) / 10) / 10) / 10) % 10)}${parseInt((((resualt.mispar_rechev / 10) / 10) / 10) % 10)}${parseInt(((resualt.mispar_rechev / 10) / 10) % 10)}-${parseInt((resualt.mispar_rechev / 10) % 10)}${parseInt(resualt.mispar_rechev % 10)}`
+                                                                        : resualt.mispar_rechev > 9999999 && resualt.mispar_rechev <= 99999999 ?
+                                                                            23
+                                                                            : null
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <Divider/>
+                                            <div className="flex justify-center m-10 mt-10">
+                                                <table className="w-full">
+                                                    <tbody>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.mispar_rechev}</th>
+                                                            <th className="text-right p-2">מספר הרכב</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.sug_degem}</th>
+                                                            <th className="text-right p-2">סוג דגם</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.tozeret_nm}</th>
+                                                            <th className="text-right p-2">תוצרת</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.degem_nm}</th>
+                                                            <th className="text-right p-2">מספר דגם</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.ramat_gimur}</th>
+                                                            <th className="text-right p-2">רמת גימור</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.kvutzat_zihum}</th>
+                                                            <th className="text-right p-2">קבוצת זיהום</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.shnat_yitzur}</th>
+                                                            <th className="text-right p-2">שנת יצור</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.degem_manoa}</th>
+                                                            <th className="text-right p-2">דגם מנוע</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.mivchan_acharon_dt}</th>
+                                                            <th className="text-right p-2">מבחן אחרון</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.tokef_dt}</th>
+                                                            <th className="text-right p-2">תוקף</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.baalut}</th>
+                                                            <th className="text-right p-2">בעלות</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.misgeret}</th>
+                                                            <th className="text-right p-2">מסגרת</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.tzeva_rechev}</th>
+                                                            <th className="text-right p-2">צבע רכב</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.zmig_kidmi}</th>
+                                                            <th className="text-right p-2">צמיג קדמי</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.zmig_ahori}</th>
+                                                            <th className="text-right p-2">צמיג אחורי</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.sug_delek_nm}</th>
+                                                            <th className="text-right p-2">סוג דלק</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.horaat_rishum}</th>
+                                                            <th className="text-right p-2">הוראת רישום</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-200">
+                                                            <th className="text-left p-2">{resualt.moed_aliya_lakvish}</th>
+                                                            <th className="text-right p-2">מועד עליה לכביש</th>
+                                                        </tr>
+                                                        <tr className="bg-primary-100">
+                                                            <th className="text-left p-2">{resualt.kinuy_mishari}</th>
+                                                            <th className="text-right p-2">קינוי מסחרי</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            </ModalBody>
+                            <ModalFooter>
+                                <div className="flex w-full">
+                                    <div className="w-full items-center flex">
+                                        <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={() => setShowSearchModal(false)}>
+                                            <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
+                                        </Button>
+                                    </div>
+                                </div>
+                            </ModalFooter>
+                        </>
+                    </ModalContent>
+                </Modal>
+
             </div>
         </div>
     )

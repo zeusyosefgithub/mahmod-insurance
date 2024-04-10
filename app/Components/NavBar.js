@@ -116,6 +116,13 @@ export default function NavBar() {
           <NavbarMenuItem dir="rtl">
             <Link
               className="w-full"
+              href="/search"
+              size="lg"
+            >חיפוש</Link>
+          </NavbarMenuItem>
+          <NavbarMenuItem dir="rtl">
+            <Link
+              className="w-full"
               href="/settings"
               size="lg"
             >הגדרות</Link>
