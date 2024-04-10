@@ -51,7 +51,6 @@ export default function searchPage() {
 
     function handleCameraStop() {
         console.log('handleCameraStop');
-        setShowCameraModal(false);
     }
 
 
