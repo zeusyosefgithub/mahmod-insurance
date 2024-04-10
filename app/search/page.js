@@ -6,7 +6,9 @@ import { IoMdClose } from "react-icons/io";
 import CarNumebr from '../../images/carNumber.jpg';
 import Image from 'next/image';
 import { FaCamera } from "react-icons/fa";
-import Webcam from 'react-webcam';
+import React from 'react';
+import Camera from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
 
 export default function searchPage() {
 
@@ -25,19 +27,10 @@ export default function searchPage() {
         setLoading(false);
     }
 
-    const videoConstraints = {
-        width: 640,
-        height: 480,
-        facingMode: "user",
-    };
-
-    const webcamRef = useRef(null);
-    const [imgSrc, setImgSrc] = useState(null);
-
-    const capture = useCallback(() => {
-        const imageSrc = webcamRef.current.getScreenshot();
-        setImgSrc(imageSrc);
-    }, [webcamRef, setImgSrc]);
+    function handleTakePhoto (dataUri) {
+        // Do stuff with the photo...
+        console.log('takePhoto');
+      }
 
 
     return (
@@ -48,16 +41,10 @@ export default function searchPage() {
                     <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" className="max-w-[350px]" label="מספר הרכב" />
                 </div>
                 <div className="mt-20 flex justify-center">
-                    <Webcam
-                        audio={false}
-                        ref={webcamRef}
-                        screenshotFormat="image/jpeg"
-                        videoConstraints={videoConstraints}
-                        minScreenshotWidth={180}
-                        minScreenshotHeight={180}
-                    />
-                    {imgSrc && <img src={imgSrc} alt="img" />}
-                    <Button onClick={capture} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
+                <Camera
+      onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
+    />
+                    <Button className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
                 <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showSearchModal} onClose={() => setShowSearchModal(false)}>
