@@ -69,18 +69,18 @@ export default function searchPage() {
                 <div>
                     <img src={photo}/>
                 </div>
-                <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
+                <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
                     <ModalContent>
                         <>
                             <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                             <ModalBody className="shadow-lg">
-                                <div className="bg-black h-[10px]">
+                                <div className="bg-black">
                                     <Camera
                                         onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
                                         onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
                                         onCameraError={(error) => { handleCameraError(error); }}
                                         idealFacingMode={FACING_MODES.ENVIRONMENT}
-                                        idealResolution={{ width: 640, height: 10 }}
+                                        idealResolution={{ width: 640, height: 480 }}
                                         imageType={IMAGE_TYPES.JPG}
                                         imageCompression={0.97}
                                         isMaxResolution={true}
