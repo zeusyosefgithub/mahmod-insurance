@@ -74,13 +74,13 @@ export default function searchPage() {
                         <>
                             <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                             <ModalBody className="shadow-lg">
-                                <div className="bg-black">
+                                <div className="bg-black no-scrollbar overflow-auto sizeingForDivsModals">
                                     <Camera
                                         onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
                                         onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
                                         onCameraError={(error) => { handleCameraError(error); }}
                                         idealFacingMode={FACING_MODES.ENVIRONMENT}
-                                        idealResolution={{ width: 640, height: 280 }}
+                                        idealResolution={{ width: 640, height: 480 }}
                                         imageType={IMAGE_TYPES.JPG}
                                         imageCompression={0.97}
                                         isMaxResolution={true}
