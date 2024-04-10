@@ -160,11 +160,22 @@ export default function Checks() {
                                                     </tr>
 
                                                     {
-                                                        !Customers.length && <tr>
+                                                        (!Customers.length && !Type2.length) ? <tr>
                                                             <th colSpan={4}>
                                                                 <Spinner className="p-10">טוען...</Spinner>
                                                             </th>
                                                         </tr>
+                                                        : (!Customers.length && Type2.length) ?
+                                                        <tr className="">
+                                                            <th colSpan={5} className="bg-white h-[200px] border-r-4 border-white">
+                                                                <div>
+                                                                    <div>עדין לא הוספת לקוחות להרשימה...</div>
+                                                                    <Button onClick={() => {setLoading(true);router.push('/add');}}><FaArrowRight/>להוספת לקוח</Button>
+                                                                </div>
+                                                            </th>
+                                                        </tr>
+                                                        :
+                                                        null
                                                     }
 
                                                     {
@@ -203,11 +214,22 @@ export default function Checks() {
                                                 </tr>
 
                                                 {
-                                                    !Drivers.length && <tr>
+                                                    (!Drivers.length && !Type2.length) ? <tr>
                                                         <th colSpan={5}>
                                                             <Spinner className="p-10">טוען...</Spinner>
                                                         </th>
                                                     </tr>
+                                                    : (!Drivers.length && Type2.length) ?
+                                                    <tr className="">
+                                                        <th colSpan={5} className="bg-white h-[200px] border-r-4 border-white">
+                                                            <div>
+                                                                <div>עדין לא הוספת נהגים להרשימה...</div>
+                                                                <Button onClick={() => {setLoading(true);router.push('/add');}}><FaArrowRight/>להוספת נהג</Button>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                    :
+                                                    null
                                                 }
 
                                                 {

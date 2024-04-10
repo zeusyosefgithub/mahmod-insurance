@@ -607,7 +607,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                 </div>
             </div>
             <div className={`mt-10 flex justify-center ${props.showSave && "hidden"}`}>
-                <Button isDisabled={props.showSave} color="primary" onClick={() => props.sendData(data,discr1,discr2)}>שמירה</Button>
+                <Button isDisabled={props.showSave} color="primary" onClick={() => {props.sendData(data,discr1,discr2);props.updateCar()}}>שמירה</Button>
             </div>
         </div>
     )

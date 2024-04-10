@@ -1,29 +1,33 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Spinner, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { GrUpdate } from "react-icons/gr";
 import { IoMdClose } from "react-icons/io";
+import { MohamadFireStore } from "../FireBase/firebase";
+import GetData from "../FireBase/GetData";
+import { FaTrash } from "react-icons/fa";
 
-export default function ModalEditDrivers (props){
+export default function ModalEditDrivers(props) {
 
-    const [address,setAddress] = useState(props.data.address);
-    const [city,setcity] = useState(props.data.city);
-    const [driver_fixed,setdriver_fixed] = useState(props.data.driver_fixed ? 'כן' : 'לא');
-    const [driver_id_card,setdriver_id_card] = useState(props.data.driver_id_card);
-    const [driver_license_validity,setdriver_license_validity] = useState(props.data.driver_license_validity);
-    const [driver_name,setdriver_name] = useState(props.data.driver_name);
-    const [driver_phone,setdriver_phone] = useState(props.data.driver_phone);
-    const [hazmat,sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא');
-    const [last_name,setlast_name] = useState(props.data.last_name);
-    const [licenseget,setlicenseget] = useState(props.data.licenseget);
-    const [licensegrade,setlicensegrade] = useState(props.data.licensegrade);
-    const [licensenumber,setlicensenumber] = useState(props.data.licensenumber);
+    const [address, setAddress] = useState(props.data.address);
+    const [city, setcity] = useState(props.data.city);
+    const [driver_fixed, setdriver_fixed] = useState(props.data.driver_fixed ? 'כן' : 'לא');
+    const [driver_id_card, setdriver_id_card] = useState(props.data.driver_id_card);
+    const [driver_license_validity, setdriver_license_validity] = useState(props.data.driver_license_validity);
+    const [driver_name, setdriver_name] = useState(props.data.driver_name);
+    const [driver_phone, setdriver_phone] = useState(props.data.driver_phone);
+    const [hazmat, sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא');
+    const [last_name, setlast_name] = useState(props.data.last_name);
+    const [licenseget, setlicenseget] = useState(props.data.licenseget);
+    const [licensegrade, setlicensegrade] = useState(props.data.licensegrade);
+    const [licensenumber, setlicensenumber] = useState(props.data.licensenumber);
 
     const CheckIfNotEqual = () => {
-        let a = props.data?.driver_fixed ? 'כן' : 'לא'; 
-        let b = props.data?.hazmat ? 'כן' : 'לא'; 
+        let a = props.data?.driver_fixed ? 'כן' : 'לא';
+        let b = props.data?.hazmat ? 'כן' : 'לא';
         let c = driver_fixed.anchorKey ? driver_fixed.anchorKey : driver_fixed;
         let d = hazmat.anchorKey ? hazmat.anchorKey : hazmat;
-        if(
+        if (
             address != props.data.address ||
             city != props.data.city ||
             driver_id_card != props.data.driver_id_card ||
@@ -36,17 +40,51 @@ export default function ModalEditDrivers (props){
             licenseget != props.data.licenseget ||
             licensegrade != props.data.licensegrade ||
             licensenumber != props.data.licensenumber
-        )
-        {
+        ) {
             return true;
         }
         return false;
     }
 
-    return(
+    const [loading, setLoading] = useState(false);
+
+    const updateDriver = async () => {
+        setLoading(true);
+        const NewDataDriver = {
+            address: address,
+            city: city,
+            driver_fixed: driver_fixed === 'כן' ? true : false,
+            driver_id: currectDriverId(),
+            driver_id_card: driver_id_card,
+            driver_license_validity: driver_license_validity,
+            driver_name: driver_name,
+            driver_phone: driver_phone,
+            hazmat: hazmat === 'כן' ? true : false,
+            last_name: last_name,
+            licenseget: licenseget,
+            licensegrade: licensegrade.currentKey,
+            licensenumber: licensenumber,
+
+        }
+        const invId = doc(MohamadFireStore, "Driver", props.data.id);
+        await updateDoc(invId, NewDataDriver);
+        setLoading(false);
+    }
+
+    let DriversNum = GetData('numbers')[2]?.number;
+    const deleteDriver = async () => {
+        setLoading(true);
+        await deleteDoc(doc(MohamadFireStore, "Driver", props.data.id));
+        await updateDoc(doc(MohamadFireStore, "numbers", 'drivers'), { number: DriversNum - 1 });
+        setLoading(false);
+        props.disable();
+    }
+
+    return (
         <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
                 <>
+                    {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
                     <ModalHeader className="flex justify-center shadow-lg">פרטים הנהג</ModalHeader>
                     <ModalBody className="shadow-lg">
                         <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl overflow-auto no-scrollbar sizeingForDivsModals">
@@ -149,15 +187,18 @@ export default function ModalEditDrivers (props){
                     <ModalFooter>
                         <div className="w-full">
                             <Button className="font-extrabold" size="lg" color="primary" variant="bordered" onClick={props.disable}>
-                                <IoMdClose className="text-xl"/>סגור
+                                <IoMdClose className="text-xl" />סגור
                             </Button>
                         </div>
                         {
                             CheckIfNotEqual() &&
-                            <Button className="font-extrabold" size="lg" color="primary" onClick={props.disable}>
-                                <GrUpdate className="text-2xl"/>עדכון
+                            <Button className="font-extrabold" size="lg" color="primary" onClick={updateDriver}>
+                                <GrUpdate className="text-2xl" />עדכון
                             </Button>
                         }
+                        <Button className="font-extrabold" size="lg" color="danger" variant="bordered" onClick={deleteDriver}>
+                            <FaTrash className="text-2xl" />מחיקה
+                        </Button>
                     </ModalFooter>
                 </>
             </ModalContent>

@@ -6,7 +6,7 @@ import { PageTwo } from "../PagesToPrint/PageTwo";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import GetData from "../FireBase/GetData";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { MohamadFireStore } from "../FireBase/firebase";
 import { PageTwoWithData } from "../PagesWithData/PageTwoWithData";
 import { PageThreeWithData } from "../PagesWithData/PageThreeWithData";
@@ -104,6 +104,27 @@ export default function ShowForm(props) {
         props.disable();
     }
 
+    const type2 = GetData('type2');
+
+    const GetCurrentMonthlyReview = () => {
+        for (let index = 0; index < type2.length; index++) {
+            if (type2[index]?.name === props.car.car_type2) {
+                let newMonthlyReview = new Date();
+                let monthlyReviewDate = `${newMonthlyReview.getFullYear()}-${newMonthlyReview.getMonth() + type2[index].monthlyreview + 1 < 10 ? `0${newMonthlyReview.getMonth() + type2[index].monthlyreview + 1}` : newMonthlyReview.getMonth()}-${newMonthlyReview.getDate() < 10 ? `0${newMonthlyReview.getDate()}` : newMonthlyReview.getDate()}`
+                return monthlyReviewDate;
+            }
+        }
+
+    }
+
+    const updatePropsCar = async () => {
+        const NewDataCarCurrent = {
+            monthlyReview : GetCurrentMonthlyReview()
+        }
+        const invId = doc(MohamadFireStore, "car", props.car.id);
+        await updateDoc(invId, NewDataCarCurrent);
+    }
+
 
     return (
         <div className="flex justify-center">
@@ -155,7 +176,7 @@ export default function ShowForm(props) {
                                 <>
                                     <div className="flex justify-center mb-20">
                                         <div className="sdfsdf">
-                                            <PageFour driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef4} />
+                                            <PageFour updateCar={updatePropsCar} driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef4} />
                                         </div>
                                     </div>
 

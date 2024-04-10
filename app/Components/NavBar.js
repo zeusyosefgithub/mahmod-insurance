@@ -65,6 +65,11 @@ export default function NavBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
+          <Link href="/search">
+            חיפוש
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
           <Link href="/settings">
             הגדרות
           </Link>

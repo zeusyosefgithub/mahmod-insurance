@@ -20,6 +20,7 @@ import { TiInputChecked } from "react-icons/ti";
 import onClickOutside from 'react-onclickoutside'
 import { FaRegCheckSquare } from "react-icons/fa";
 import { FiSquare } from "react-icons/fi";
+import { FaFolder } from "react-icons/fa";
 
 
 
@@ -150,6 +151,7 @@ export default function AddCar() {
     const [errorLocation, setErrorLocation] = useState('');
     const [serial, setSerial] = useState('');
     const [errorSerial, setErrorSerial] = useState('');
+    const [CustomerEmail, setCustomerEmail] = useState('');
 
     const resetAllCustomer = () => {
         setName('');
@@ -177,6 +179,7 @@ export default function AddCar() {
     const [errorCityD, setErrorCityD] = useState('');
     const [hazmatD, setHazmatD] = useState('');
     const [errorHazmatD, setErrorHazmatD] = useState('');
+    const [hazmatDDate, setHazmatDDate] = useState('');
     const [licenseget, setLicenseget] = useState('');
     const [errorLicenseget, setErrorLicenseget] = useState('');
     const [licensegrade, setLicensegrade] = useState('');
@@ -300,7 +303,14 @@ export default function AddCar() {
     const [showFormCar, setShowFormCar] = useState(null);
 
 
-    const [disableAddCar,setDisableAddCar] = useState(true);
+    const [disableAddCar, setDisableAddCar] = useState(true);
+
+
+    function isDateBeforeToday(date) {
+        return new Date(date.toDateString()) < new Date(new Date().toDateString());
+    }
+
+    const [staticErrorMessage, setStaticErrorMessage] = useState('');
 
     const AddCar = async () => {
 
@@ -308,13 +318,75 @@ export default function AddCar() {
 
 
 
+        let carStaus = true;
+        let customerStatus = true;
+        let driverStatus = true;
 
 
 
-
-
-        resetAllErrors();
         if (!car) {
+            if (typeCar) {
+                if (typeCar.currentKey === `רכב מעל 10,000 ק"ג`) {
+                    if (!carNumber ||
+                        !producer ||
+                        !endDateCar ||
+                        !insurance ||
+                        !shockabsorbers ||
+                        !winterreview ||
+                        !tachograph ||
+                        !hazmat ||
+                        !insuranceCompany ||
+                        !insuranceclass ||
+                        !typeFuel ||
+                        !typeCar.currentKey) {
+                        carStaus = false;
+                    }
+                }
+                else {
+                    if (!carNumber ||
+                        !producer ||
+                        !endDateCar ||
+                        !insurance ||
+                        !winterreview ||
+                        !hazmat ||
+                        !insuranceCompany ||
+                        !insuranceclass ||
+                        !typeFuel ||
+                        !typeCar.currentKey) {
+                        carStaus = false;
+                    }
+                }
+            }
+            else {
+                carStaus = false;
+            }
+        }
+
+        if (!name &&
+            !number &&
+            !address &&
+            !location &&
+            !serial &&
+            !CustomerEmail) {
+            customerStatus = false;
+        }
+        // return console.log(carStaus);
+        if (!nameD &&
+            !lastName &&
+            !CityD &&
+            !addressD &&
+            !phone &&
+            !endDate &&
+            !cardId &&
+            !licenseget &&
+            !licensenumber &&
+            !licensegrade &&
+            !isFixed &&
+            !hazmatD) {
+            driverStatus = false;
+        }
+        resetAllErrors();
+        if (!car && carStaus) {
             if (!carNumber) {
                 return setErrorCarNumber('לא הוזנו נתונים למספר הרכב !');
             }
@@ -382,22 +454,50 @@ export default function AddCar() {
                 return setErrorTypeCar('לא הוזנו נתונים לסוג הרכב !');
             }
         }
-
         resetAllErrors();
 
 
 
+        setStaticErrorMessage('');
+        if (car) {
+            if (!customer && !customerStatus && !driver && !driverStatus) {
+                return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה נהג ולקוח !');
+            }
+            if (customer && customerStatus && !driver && !driverStatus) {
+                return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה נהג !');
+            }
+            if (!customer && !customerStatus && driver && driverStatus) {
+                return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה לקוח !');
+            }
+        }
+        setStaticErrorMessage('');
+
+
+        // if(driver){
+
+        // }
 
 
 
 
 
 
+        // if(car){
+        //     if(driver){
+        //         if(car.hazmat && !driver.hazmat){
+        //             return alert('error');
+        //         }
+        //         // if(isDateBeforeToday(driver.)){
 
+        //         // }
+        //     }
+        //     else{
+        //         if(car.hazmat && hazmatD.currentKey === 'לא'){
+        //             return alert('error');
+        //         }
+        //     }
 
-
-
-
+        // }
 
 
 
@@ -414,19 +514,22 @@ export default function AddCar() {
             hazmat: hazmatD === 'כן' ? true : false,
             last_name: lastName,
             licenseget: licenseget,
-            licensegrade: licensegrade,
+            licensegrade: licensegrade.currentKey,
             licensenumber: licensenumber,
+
         }
-        !driver && await addDoc(collection(MohamadFireStore, "Driver"), NewDataDriver) && await updateDoc(doc(MohamadFireStore, "numbers", 'drivers'), { number: DriversNum + 1 });
+        !driver && driverStatus && await addDoc(collection(MohamadFireStore, "Driver"), NewDataDriver) && await updateDoc(doc(MohamadFireStore, "numbers", 'drivers'), { number: DriversNum + 1 });
         const NewDataCustomer = {
             customer_city: location,
             customer_id: currectCustomerId(),
             customer_name: name,
             customer_phone: number,
-            customer_site: address
+            customer_site: address,
+            customer_email: CustomerEmail,
+            serial_number: serial
         }
-        !customer && await addDoc(collection(MohamadFireStore, "Customer"), NewDataCustomer) && await updateDoc(doc(MohamadFireStore, "numbers", 'customers'), { number: CustomersNum + 1 });
-        if (car) {
+        !customer && customerStatus && await addDoc(collection(MohamadFireStore, "Customer"), NewDataCustomer) && await updateDoc(doc(MohamadFireStore, "numbers", 'customers'), { number: CustomersNum + 1 });
+        if (car && carStaus) {
             const NewDataCarCurrent = {
                 Driver_id: driver ? driver.driver_id : currectDriverId(),
                 car_num: car.car_num,
@@ -448,7 +551,7 @@ export default function AddCar() {
             const invId = doc(MohamadFireStore, "car", car.id);
             await updateDoc(invId, NewDataCarCurrent);
         }
-        else {
+        else if (carStaus) {
             const NewDataCar = {
                 Driver_id: driver ? driver.driver_id : currectDriverId(),
                 car_id: currectCarId(),
@@ -466,7 +569,8 @@ export default function AddCar() {
                 tachograph: tachograph.currentKey === 'כן' ? true : false,
                 tachographDate: tachograph.currentKey === 'כן' ? tachographDate : null,
                 winterreview: winterreview,
-                insuranceCompany: insuranceCompany.currentKey
+                insuranceCompany: insuranceCompany.currentKey,
+                monthlyReview : null
             }
             setShowFormCar(NewDataCar);
             await addDoc(collection(MohamadFireStore, "car"), NewDataCar);
@@ -487,7 +591,7 @@ export default function AddCar() {
         resetAllCustomer();
         resetAllCar();
         setLoading(false);
-        setShowForm(true);
+        carStaus && setShowForm(true);
         setCar(null);
         setCustomer(null);
         setDriver(null);
@@ -563,6 +667,45 @@ export default function AddCar() {
         }
     }
 
+    const [carCheck, setCarCheck] = useState(false);
+    const [customerCheck, setCustomerCheck] = useState(false);
+    const [driverCheck, setDriverCheck] = useState(false);
+
+    useEffect(() => {
+        if (carNumber || car?.car_num &&
+            producer || car?.car_product &&
+            endDateCar || car?.enddate &&
+            insurance || car?.insurance &&
+            shockabsorbers || car?.shockabsorbers &&
+            winterreview || car?.winterreview &&
+            tachograph || car?.tachograph &&
+            hazmat || car?.hazmat &&
+            insuranceCompany || car?.insuranceCompany &&
+            insuranceclass || car?.insuranceclass &&
+            typeFuel || car?.car_type2 &&
+            typeCar || car?.car_type) {
+            return setCarCheck(true);
+        }
+        else {
+            return setCarCheck(false);
+        }
+    },
+        [
+            carNumber, car?.car_num,
+            producer, car?.car_product,
+            endDateCar, car?.enddate,
+            insurance, car?.insurance,
+            shockabsorbers, car?.shockabsorbers,
+            winterreview, car?.winterreview,
+            tachograph, car?.tachograph, tachographDate,
+            hazmat, car?.hazmat, hazmatDate,
+            insuranceCompany, car?.insuranceCompany,
+            insuranceclass, car?.insuranceclass,
+            typeFuel, car?.car_type2,
+            typeCar, car?.car_type,
+        ]
+    )
+
     return (
         <div>
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
@@ -606,11 +749,16 @@ export default function AddCar() {
                                 <div>
                                     <div className="text-2xl flex items-center max-[500px]:text-lg">
                                         <div className="ml-5">רכב</div>
-                                        <FaRegCheckSquare className="text-green-500" />
-                                        {/* <FiSquare className="text-yellow-500" /> */}
+                                        {
+                                            carCheck ?
+                                                <FaRegCheckSquare className="text-green-500" />
+                                                :
+                                                <FiSquare className="text-yellow-500" />
+                                        }
                                     </div>
                                     {
-                                        car ?
+                                        carCheck &&
+                                            car ?
                                             <div className="text-center max-[500px]:text-xs">
                                                 {car.car_num}
                                             </div>
@@ -627,11 +775,16 @@ export default function AddCar() {
                                 <div>
                                     <div className="text-2xl flex items-center max-[500px]:text-lg">
                                         <div className="ml-5">לקוח</div>
-                                        {/* <FaRegCheckSquare className="text-green-500" /> */}
-                                        <FiSquare className="text-yellow-500" />
+                                        {
+                                            customerCheck ?
+                                                <FaRegCheckSquare className="text-green-500" />
+                                                :
+                                                <FiSquare className="text-yellow-500" />
+                                        }
                                     </div>
                                     {
-                                        customer ?
+                                        customerCheck &&
+                                            customer ?
                                             <div className="text-center max-[500px]:text-xs">
                                                 {customer.customer_name}
                                             </div>
@@ -648,11 +801,16 @@ export default function AddCar() {
                                 <div>
                                     <div className="text-2xl flex items-center max-[500px]:text-lg">
                                         <div className="ml-5">נהג</div>
-                                        {/* <FaRegCheckSquare className="text-green-500" /> */}
-                                        <FiSquare className="text-yellow-500" />
+                                        {
+                                            driverCheck ?
+                                                <FaRegCheckSquare className="text-green-500" />
+                                                :
+                                                <FiSquare className="text-yellow-500" />
+                                        }
                                     </div>
                                     {
-                                        driver ?
+                                        driverCheck &&
+                                            driver ?
                                             <div className="text-center max-[500px]:text-xs">
                                                 {driver.driver_name}
                                             </div>
@@ -703,6 +861,37 @@ export default function AddCar() {
                             {
                                 showCarInputs &&
                                 <div className="max-[450px]:text-[13px]">
+
+                                    <div className="flex items-center mt-5">
+                                        <div className="w-[160px]">סוג טופס</div>
+                                        <Dropdown dir="rtl">
+                                            <DropdownTrigger>
+                                                <Button
+                                                    isDisabled={car ? true : false}
+                                                    color="primary"
+                                                    variant="bordered"
+                                                    className="capitalize"
+                                                >
+                                                    {car ? car.car_type : typeCar ? typeCar : "לבחור"}
+                                                </Button>
+                                            </DropdownTrigger>
+                                            <DropdownMenu
+                                                aria-label="Single selection example"
+                                                variant="flat"
+                                                disallowEmptySelection
+                                                selectionMode="single"
+                                                selectedKeys={typeCar}
+                                                onSelectionChange={setTypeCar}
+                                            >
+                                                <DropdownItem key="גרור">גרור</DropdownItem>
+                                                <DropdownItem key="ציוד הנדס'">ציוד הנדס'</DropdownItem>
+                                                <DropdownItem key={`רכב עד 9,999 ק"ג`}>רכב עד 9,999 ק"ג</DropdownItem>
+                                                <DropdownItem key={`רכב מעל 10,000 ק"ג`}>רכב מעל 10,000 ק"ג</DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
+                                    </div>
+                                    {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
+
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר רכב</div>
                                         <div className="w-full">
@@ -737,62 +926,75 @@ export default function AddCar() {
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תוקף רישיון רכב</div>
-                                        <div className="w-full">
+                                        <div className="w-full flex items-center">
                                             <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => setEndDateCar(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            <Button variant="bordered" size="sm"><FaFolder /></Button>
                                         </div>
+
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">תוקף ביטוח</div>
-                                        <div className="w-full">
+                                        <div className="w-full flex items-center">
                                             <Input errorMessage={errorDateInsurance} isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => setInsurance(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            <Button variant="bordered" size="sm"><FaFolder /></Button>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">אישור בולמים</div>
-                                        <div className="w-full">
-                                            <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">ביקורת חורף</div>
-                                        <div className="w-full">
-                                            <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[160px]">טכוגרף</div>
-                                        <Dropdown dir="rtl">
-                                            <DropdownTrigger>
-                                                <Button
-                                                    isDisabled={car ? true : false}
-                                                    color="primary"
-                                                    variant="bordered"
-                                                    className="capitalize"
-                                                >
-                                                    {car ? car.tachograph ? 'כן' : 'לא' : tachograph ? tachograph : "לבחור"}
-                                                </Button>
-                                            </DropdownTrigger>
-                                            <DropdownMenu
-                                                aria-label="Single selection example"
-                                                variant="flat"
-                                                disallowEmptySelection
-                                                selectionMode="single"
-                                                selectedKeys={tachograph}
-                                                onSelectionChange={setTachograph}
-                                            >
-                                                <DropdownItem key='כן'>כן</DropdownItem>
-                                                <DropdownItem key='לא'>לא</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
                                     </div>
                                     {
-                                        (tachograph.currentKey === 'כן' || car?.tachograph) &&
+                                        (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar.currentKey === `רכב מעל 10,000 ק"ג`) &&
                                         <div className="flex items-center mt-5">
-                                            <div className="w-[200px]">תאריך הטכוגרף</div>
-                                            <div className="w-full">
-                                                <Input isDisabled={car ? true : false} value={car ? car.tachographDate : tachographDate} onValueChange={(value) => setTachographDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                            <div className="w-[200px]">אישור בולמים</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => setShockabsorbers(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <Button variant="bordered" size="sm"><FaFolder /></Button>
                                             </div>
                                         </div>
+                                    }
+                                    <div className="flex items-center mt-5">
+                                        <div className="w-[200px]">ביקורת חורף</div>
+                                        <div className="w-full flex items-center">
+                                            <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => setWinterreview(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            <Button variant="bordered" size="sm"><FaFolder /></Button>
+                                        </div>
+                                    </div>
+                                    {
+                                        (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar.currentKey === `רכב מעל 10,000 ק"ג`) &&
+                                        <>
+                                            <div className="flex items-center mt-5">
+                                                <div className="w-[160px]">טכוגרף</div>
+                                                <Dropdown dir="rtl">
+                                                    <DropdownTrigger>
+                                                        <Button
+                                                            isDisabled={car ? true : false}
+                                                            color="primary"
+                                                            variant="bordered"
+                                                            className="capitalize"
+                                                        >
+                                                            {car ? car.tachograph ? 'כן' : 'לא' : tachograph ? tachograph : "לבחור"}
+                                                        </Button>
+                                                    </DropdownTrigger>
+                                                    <DropdownMenu
+                                                        aria-label="Single selection example"
+                                                        variant="flat"
+                                                        disallowEmptySelection
+                                                        selectionMode="single"
+                                                        selectedKeys={tachograph}
+                                                        onSelectionChange={setTachograph}
+                                                    >
+                                                        <DropdownItem key='כן'>כן</DropdownItem>
+                                                        <DropdownItem key='לא'>לא</DropdownItem>
+                                                    </DropdownMenu>
+                                                </Dropdown>
+                                            </div>
+                                            {
+                                                (tachograph.currentKey === 'כן' || car?.tachograph) &&
+                                                <div className="flex items-center mt-5">
+                                                    <div className="w-[200px]">תאריך הטכוגרף</div>
+                                                    <div className="w-full">
+                                                        <Input isDisabled={car ? true : false} value={car ? car.tachographDate : tachographDate} onValueChange={(value) => setTachographDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                    </div>
+                                                </div>
+                                            }
+                                        </>
                                     }
                                     {errorTachograph && <div className="text-danger text-xs">{errorTachograph}</div>}
                                     <div className="flex items-center mt-5">
@@ -826,7 +1028,7 @@ export default function AddCar() {
                                         <div className="flex items-center mt-5">
                                             <div className="w-[200px]">תאריך חו"מס</div>
                                             <div className="w-full">
-                                                <Input isDisabled={car ? true : false} value={car ? car.hazmatDate : hazmatDate} onValueChange={(value) => setHazmatDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full ml-3" />
+                                                <Input isDisabled={car ? true : false} value={car ? car.hazmatDate : hazmatDate} onValueChange={(value) => setHazmatDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                             </div>
                                         </div>
                                     }
@@ -924,35 +1126,6 @@ export default function AddCar() {
                                         </Dropdown>
                                     </div>
                                     {errorTypeFuel && <div className="text-danger text-xs">{errorTypeFuel}</div>}
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[160px]">סוג טופס</div>
-                                        <Dropdown dir="rtl">
-                                            <DropdownTrigger>
-                                                <Button
-                                                    isDisabled={car ? true : false}
-                                                    color="primary"
-                                                    variant="bordered"
-                                                    className="capitalize"
-                                                >
-                                                    {car ? car.car_type : typeCar ? typeCar : "לבחור"}
-                                                </Button>
-                                            </DropdownTrigger>
-                                            <DropdownMenu
-                                                aria-label="Single selection example"
-                                                variant="flat"
-                                                disallowEmptySelection
-                                                selectionMode="single"
-                                                selectedKeys={typeCar}
-                                                onSelectionChange={setTypeCar}
-                                            >
-                                                <DropdownItem key="גרור">גרור</DropdownItem>
-                                                <DropdownItem key="ציוד הנדס'">ציוד הנדס'</DropdownItem>
-                                                <DropdownItem key={`רכב עד 9,999 ק"ג`}>רכב עד 9,999 ק"ג</DropdownItem>
-                                                <DropdownItem key={`רכב מעל 10,000 ק"ג`}>רכב מעל 10,000 ק"ג</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                    </div>
-                                    {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
                                 </div>
 
                             }
@@ -961,8 +1134,8 @@ export default function AddCar() {
                         <div className="w-full mt-10 mb-10">
                             <div className="flex justify-around items-center mb-20">
                                 <div className="flex w-full justify-center items-center">
-                                    <div className="text-lg ml-2">נהג</div>
-                                    <TbSteeringWheel className="text-2xl" />
+                                    <div className="text-lg ml-2">לקוח</div>
+                                    <FaUserFriends className="text-xl" />
                                 </div>
                                 <div className="w-full flex justify-around items-center">
                                     <div className="ml-2 mr-2">
@@ -1000,7 +1173,7 @@ export default function AddCar() {
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">פלפון</div>
+                                        <div className="w-[200px]">נייד</div>
                                         <div className="w-full">
                                             <Input isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => setNumber(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
@@ -1020,7 +1193,13 @@ export default function AddCar() {
                                     <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר סידורי</div>
                                         <div className="w-full">
-                                            <Input isDisabled={customer ? true : false} value={customer ? customer.serial : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            <Input isDisabled={customer ? true : false} value={customer ? customer.serial_number : serial} onValueChange={(value) => setSerial(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center mt-5">
+                                        <div className="w-[200px]">דואר אלקטרוני</div>
+                                        <div className="w-full">
+                                            <Input isDisabled={customer ? true : false} value={customer ? customer.customer_email : CustomerEmail} onValueChange={(value) => setCustomerEmail(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
                                     </div>
                                 </div>
@@ -1030,8 +1209,8 @@ export default function AddCar() {
                         <div className="w-full mt-10 mb-10">
                             <div className="flex justify-around items-center mb-20">
                                 <div className="flex w-full justify-center items-center">
-                                    <div className="text-lg ml-2">לקוח</div>
-                                    <FaUserFriends className="text-xl" />
+                                    <div className="text-lg ml-2">נהג</div>
+                                    <TbSteeringWheel className="text-2xl" />
                                 </div>
                                 <div className="w-full flex justify-around items-center">
                                     <div className="ml-2 mr-2">
@@ -1087,7 +1266,7 @@ export default function AddCar() {
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">פלפון</div>
+                                        <div className="w-[200px]">נייד</div>
                                         <div className="w-full">
                                             <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
@@ -1111,16 +1290,46 @@ export default function AddCar() {
                                         </div>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">דרגת רישיון</div>
-                                        <div className="w-full">
-                                            <Input isDisabled={driver ? true : false} value={driver ? driver.licensegrade : licensegrade} onValueChange={(value) => setLicensegrade(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center mt-5">
                                         <div className="w-[200px]">מספר רשיון</div>
                                         <div className="w-full">
                                             <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
                                         </div>
+                                    </div>
+                                    <div className="flex items-center mt-5">
+                                        <div className="w-[160px]">דרגת רישיון</div>
+                                        <Dropdown dir="rtl">
+                                            <DropdownTrigger>
+                                                <Button
+                                                    isDisabled={driver ? true : false}
+                                                    color="primary"
+                                                    variant="bordered"
+                                                    className="capitalize"
+                                                >
+                                                    {driver ? driver.licensegrade : licensegrade ? licensegrade : "לבחור"}
+                                                </Button>
+                                            </DropdownTrigger>
+                                            <DropdownMenu
+                                                aria-label="Single selection example"
+                                                variant="flat"
+                                                disallowEmptySelection
+                                                selectionMode="multiple"
+                                                selectedKeys={licensegrade}
+                                                onSelectionChange={setLicensegrade}
+                                            >
+                                                <DropdownItem key="A1">A1</DropdownItem>
+                                                <DropdownItem key="A2">A2</DropdownItem>
+                                                <DropdownItem key="A">A</DropdownItem>
+                                                <DropdownItem key="B">B</DropdownItem>
+                                                <DropdownItem key="C1">C1</DropdownItem>
+                                                <DropdownItem key="C">C</DropdownItem>
+                                                <DropdownItem key="D">D</DropdownItem>
+                                                <DropdownItem key="D1">D1</DropdownItem>
+                                                <DropdownItem key="D2">D2</DropdownItem>
+                                                <DropdownItem key="D3">D3</DropdownItem>
+                                                <DropdownItem key="E">E</DropdownItem>
+                                                <DropdownItem key="1">1</DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
                                         <div className="w-[160px]">נהג קבוע</div>
@@ -1174,11 +1383,26 @@ export default function AddCar() {
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
+                                    {
+                                        (hazmatD.currentKey === 'כן' || driver?.hazmat) &&
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">חו"מס</div>
+                                            <div className="w-full">
+                                                <Input isDisabled={driver ? true : false} value={driver ? driver.hazmatDDate : hazmatDDate} onValueChange={(value) => setHazmatDDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             }
                         </div>
+                        <Divider />
+                        {
+                            staticErrorMessage && <div className="text-danger mt-5">
+                                {staticErrorMessage}
+                            </div>
+                        }
                         <div className="flex justify-center m-14">
-                            <Button isDisabled={disableAddCar} onClick={AddCar} size="lg" color="primary" >אישור</Button>
+                            <Button isDisabled={!disableAddCar} onClick={AddCar} size="lg" color="primary" >אישור</Button>
                         </div>
                     </div>
             }
