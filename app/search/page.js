@@ -29,7 +29,7 @@ export default function searchPage() {
 
     function handleTakePhoto(dataUri) {
         // Do stuff with the photo...
-        console.log('takePhoto');
+        console.log(dataUri);
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
