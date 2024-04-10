@@ -94,15 +94,6 @@ export default function searchPage() {
                                 </div>
 
                             </ModalBody>
-                            <ModalFooter>
-                                <div className="flex w-full">
-                                    <div className="w-full items-center flex">
-                                        <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={() => setShowCameraModal(false)}>
-                                            <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
-                                        </Button>
-                                    </div>
-                                </div>
-                            </ModalFooter>
                         </>
                     </ModalContent>
                 </Modal>
