@@ -77,6 +77,7 @@ export default function searchPage() {
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>                
                 <div className="text-black">
+                {photo}
                 {text} 
                 </div>              
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
