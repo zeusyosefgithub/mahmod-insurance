@@ -58,7 +58,7 @@ export default function searchPage() {
     const [text, setText] = useState('');
 
     const handleImageUpload = async () => {
-        const { data: { text } } = await Tesseract.recognize(base64ImageLink, 'eng', {
+        const { data: { text } } = await Tesseract.recognize(photo, 'eng', {
             logger: m => console.log(m) // Optional: enable logging for debugging
         });
         setText(text);
@@ -77,7 +77,7 @@ export default function searchPage() {
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>                
                 <div className="text-black">
-                {photo} 
+                {text} 
                 </div>              
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
                     <ModalContent>
