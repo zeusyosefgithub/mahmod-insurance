@@ -58,15 +58,10 @@ export default function searchPage() {
     const [text, setText] = useState('');
 
     const handleImageUpload = async () => {
-        const reader = new FileReader();
-        reader.onload = async () => {
-            const base64Image = reader.result.split(',')[1]; // Extract base64 data
-            const { data: { text } } = await Tesseract.recognize(base64Image, 'eng', {
-                logger: m => console.log(m) // Optional: enable logging for debugging
-            });
-            setText(text);
-        };
-        reader.readAsDataURL(photo);
+        const { data: { text } } = await Tesseract.recognize(photo, 'eng', {
+            logger: m => console.log(m) // Optional: enable logging for debugging
+        });
+        setText(text);
     };
 
 
