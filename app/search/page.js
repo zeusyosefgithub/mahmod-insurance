@@ -7,9 +7,9 @@ import CarNumebr from '../../images/carNumber.jpg';
 import Image from 'next/image';
 import { FaCamera } from "react-icons/fa";
 import React from 'react';
-import 'react-html5-camera-photo/build/css/index.css';
-import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
-import Tesseract from 'tesseract.js';
+// import 'react-html5-camera-photo/build/css/index.css';
+// import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
+// import Tesseract from 'tesseract.js';
 import CameraTesseract from 'tesseract-with-html5-camera/dist/lib/index.js';
 
 export default function searchPage() {
@@ -31,38 +31,38 @@ export default function searchPage() {
         setLoading(false);
     }
 
-    function handleTakePhoto(dataUri) {
-        console.log(dataUri);
-        setPhoto(dataUri);
-        handleImageUpload(dataUri);
-    }
+    // function handleTakePhoto(dataUri) {
+    //     console.log(dataUri);
+    //     setPhoto(dataUri);
+    //     handleImageUpload(dataUri);
+    // }
 
-    function handleTakePhotoAnimationDone(dataUri) {
-        console.log('takePhoto');
-        setShowCameraModal(false);
-    }
+    // function handleTakePhotoAnimationDone(dataUri) {
+    //     console.log('takePhoto');
+    //     setShowCameraModal(false);
+    // }
 
-    function handleCameraError(error) {
-        console.log('handleCameraError', error);
-    }
+    // function handleCameraError(error) {
+    //     console.log('handleCameraError', error);
+    // }
 
-    function handleCameraStart(stream) {
-        console.log('handleCameraStart');
+    // function handleCameraStart(stream) {
+    //     console.log('handleCameraStart');
 
-    }
+    // }
 
-    function handleCameraStop() {
-        console.log('handleCameraStop');
-    }
+    // function handleCameraStop() {
+    //     console.log('handleCameraStop');
+    // }
 
     const [text, setText] = useState('');
-    const gf = '';
-    const handleImageUpload = async (dataUri) => {
-        setLoading(true);
-        const { data: { text } } = await Tesseract.recognize(gf, 'eng');
-        setText(text);
-        setLoading(false);
-    };
+    // const gf = '';
+    // const handleImageUpload = async (dataUri) => {
+    //     setLoading(true);
+    //     const { data: { text } } = await Tesseract.recognize(gf, 'eng');
+    //     setText(text);
+    //     setLoading(false);
+    // };
 
     const handleTakePhotoo = (texttt) => {
         // Do stuff with recognized text...
