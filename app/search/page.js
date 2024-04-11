@@ -61,7 +61,7 @@ export default function searchPage() {
         try {
             // Perform OCR
             const { data: { text } } = await Tesseract.recognize(
-                gf,
+                dataUri,
                 'eng', // language
                 {
                     logger: m => console.log(m), // logger function
