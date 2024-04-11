@@ -10,6 +10,7 @@ import React from 'react';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import Tesseract from 'tesseract.js';
+import CameraTesseract from 'tesseract-with-html5-camera/dist/lib/index.js';
 
 export default function searchPage() {
 
@@ -55,13 +56,19 @@ export default function searchPage() {
     }
 
     const [text, setText] = useState('');
+    const gf = '';
     const handleImageUpload = async (dataUri) => {
         setLoading(true);
-        const { data: { text } } = await Tesseract.recognize(dataUri, 'eng');
+        const { data: { text } } = await Tesseract.recognize(gf, 'eng');
         setText(text);
         setLoading(false);
     };
 
+    const handleTakePhotoo = (texttt) => {
+        // Do stuff with recognized text...
+        setText(texttt);
+        console.log('Recognize text: ', texttt);
+    }
 
     return (
         <div className="hsd flex justify-center items-center">
@@ -76,7 +83,7 @@ export default function searchPage() {
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
                 {
-                    photo && <div className="text-red-600 bg-black w-fit m-10 p-10">
+                    text && <div className="text-red-600 bg-black w-fit m-10 p-10">
                         {text}
                     </div>
                 }
@@ -85,7 +92,7 @@ export default function searchPage() {
                         <>
                             <ModalBody className="shadow-lg">
                                 <div className="bg-black">
-                                    <Camera
+                                    {/* <Camera
                                         onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
                                         onTakePhotoAnimationDone={(dataUri) => { handleTakePhotoAnimationDone(dataUri); }}
                                         onCameraError={(error) => { handleCameraError(error); }}
@@ -101,6 +108,9 @@ export default function searchPage() {
                                         sizeFactor={1}
                                         onCameraStart={(stream) => { handleCameraStart(stream); }}
                                         onCameraStop={() => { handleCameraStop(); }}
+                                    /> */}
+                                    <CameraTesseract
+                                        onTextRecognize={(text) => { handleTakePhotoo(text); }}
                                     />
                                 </div>
 
