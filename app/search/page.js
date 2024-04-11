@@ -9,6 +9,7 @@ import { FaCamera } from "react-icons/fa";
 import React from 'react';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
+import Tesseract from 'tesseract.js';
 
 export default function searchPage() {
 
@@ -30,14 +31,15 @@ export default function searchPage() {
     }
 
     function handleTakePhoto(dataUri) {
-        // Do stuff with the photo...
         console.log(dataUri);
         setPhoto(dataUri);
+        
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
-        // Do stuff with the photo...
         console.log('takePhoto');
+        setShowCameraModal(false);
+        handleImageUpload();
     }
 
     function handleCameraError(error) {
@@ -46,12 +48,26 @@ export default function searchPage() {
 
     function handleCameraStart(stream) {
         console.log('handleCameraStart');
-        
+
     }
 
     function handleCameraStop() {
         console.log('handleCameraStop');
     }
+
+    const [text, setText] = useState('');
+
+    const handleImageUpload = async () => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const base64Image = reader.result.split(',')[1]; // Extract base64 data
+            const { data: { text } } = await Tesseract.recognize(base64Image, 'eng', {
+                logger: m => console.log(m) // Optional: enable logging for debugging
+            });
+            setText(text);
+        };
+        reader.readAsDataURL(photo);
+    };
 
 
     return (
@@ -65,10 +81,10 @@ export default function searchPage() {
 
                     <Button onClick={() => setShowCameraModal(true)} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
-                </div>
+                </div>                
                 <div>
-                    <img src={photo}/>
-                </div>
+                {text} 
+                </div>              
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
                     <ModalContent>
                         <>
@@ -87,7 +103,7 @@ export default function searchPage() {
                                         isSilentMode={false}
                                         isDisplayStartCameraError={true}
                                         isFullscreen={false}
-                                        sizeFactor={0.3}
+                                        sizeFactor={1}
                                         onCameraStart={(stream) => { handleCameraStart(stream); }}
                                         onCameraStop={() => { handleCameraStop(); }}
                                     />
