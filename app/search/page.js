@@ -77,7 +77,7 @@ export default function searchPage() {
                 </div>
                 {
                     photo && <div className="text-red-600">
-                        {text}
+                        {photo}
                     </div>
                 }
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
