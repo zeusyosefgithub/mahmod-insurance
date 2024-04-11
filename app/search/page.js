@@ -33,13 +33,12 @@ export default function searchPage() {
     function handleTakePhoto(dataUri) {
         console.log(dataUri);
         setPhoto(dataUri);
-        
+        handleImageUpload(dataUri);
     }
 
     function handleTakePhotoAnimationDone(dataUri) {
         console.log('takePhoto');
         setShowCameraModal(false);
-        handleImageUpload(dataUri);
     }
 
     function handleCameraError(error) {
@@ -58,8 +57,7 @@ export default function searchPage() {
     const [text, setText] = useState('');
     const handleImageUpload = async (dataUri) => {
         setLoading(true);
-        let dd = "data:image/png;base64," + dataUri;
-        const { data: { text } } = await Tesseract.recognize(dd, 'eng');
+        const { data: { text } } = await Tesseract.recognize(dataUri, 'eng');
         setText(text);
         setLoading(false);
     };
