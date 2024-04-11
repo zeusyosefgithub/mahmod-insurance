@@ -78,7 +78,7 @@ export default function searchPage() {
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
                 {
-                    photo && <div className="text-red-600">
+                    photo && <div className="text-red-600 bg-black w-fit m-10 p-10">
                         {text}
                     </div>
                 }
