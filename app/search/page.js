@@ -58,8 +58,7 @@ export default function searchPage() {
     const [text, setText] = useState('');
     const handleImageUpload = async (dataUri) => {
         setLoading(true);
-        const base64Image = dataUri.split(',')[1];
-        const { data: { text } } = await Tesseract.recognize(base64Image, 'eng');
+        const { data: { text } } = await Tesseract.recognize(dataUri, 'eng');
         setText(text);
         setLoading(false);
     };
