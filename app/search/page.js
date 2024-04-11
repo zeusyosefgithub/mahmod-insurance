@@ -58,12 +58,11 @@ export default function searchPage() {
     const [text, setText] = useState('');
 
     const handleImageUpload = async () => {
-        const { data: { text } } = await Tesseract.recognize(photo, 'eng', {
+        const { data: { text } } = await Tesseract.recognize(base64ImageLink, 'eng', {
             logger: m => console.log(m) // Optional: enable logging for debugging
         });
         setText(text);
     };
-
 
     return (
         <div className="hsd flex justify-center items-center">
@@ -77,8 +76,8 @@ export default function searchPage() {
                     <Button onClick={() => setShowCameraModal(true)} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>                
-                <div>
-                {text} 
+                <div className="text-black">
+                {photo} 
                 </div>              
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
                     <ModalContent>
