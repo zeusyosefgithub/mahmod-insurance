@@ -77,7 +77,7 @@ export default function searchPage() {
                 </div>
                 {
                     photo && <div className="text-red-600">
-                        {text}df
+                        {text}
                     </div>
                 }
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
@@ -91,7 +91,7 @@ export default function searchPage() {
                                         onCameraError={(error) => { handleCameraError(error); }}
                                         idealFacingMode={FACING_MODES.ENVIRONMENT}
                                         idealResolution={{ width: 640, height: 480 }}
-                                        imageType={IMAGE_TYPES.JPG}
+                                        imageType={IMAGE_TYPES.PNG}
                                         imageCompression={0.97}
                                         isMaxResolution={true}
                                         isImageMirror={false}
