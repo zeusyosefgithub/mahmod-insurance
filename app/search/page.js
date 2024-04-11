@@ -58,7 +58,7 @@ export default function searchPage() {
     const [text, setText] = useState('');
 
     const handleImageUpload = async () => {
-        const { data: { text } } = await Tesseract.recognize(fdd, 'eng');
+        const { data: { text } } = await Tesseract.recognize(photo, 'eng');
         setText(text);
     };
 
@@ -77,7 +77,7 @@ export default function searchPage() {
                 </div>
                 {
                     photo && <div className="text-red-600">
-                        {photo}
+                        {text}
                     </div>
                 }
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
