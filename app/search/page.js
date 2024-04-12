@@ -163,8 +163,8 @@ export default function searchPage() {
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
                 {
-                    text && <div className="text-red-600 bg-black w-fit m-10 p-10">
-                        {text}
+                    extractedText && <div className="text-red-600 bg-black w-fit m-10 p-10">
+                        {extractedText}
                     </div>
                 }
                 <Modal placement="center" className="test-fontt" backdrop={"blur"} size="full" isOpen={showCameraModal} onClose={() => setShowCameraModal(false)}>
@@ -172,15 +172,20 @@ export default function searchPage() {
                         <>
                             <ModalBody className="shadow-lg">
                                 <div className="bg-black">
-                                    
+
                                     <video ref={videoRef} width="640" height="480" playsInline></video>
+                                    <video id="video" autobuffer height="240" width="360">
+                                        <source src="BigBuck.m4v" />
+                                        <source src="BigBuck.webm" type="video/webm" />
+                                        <source src="BigBuck.theora.ogv" type="video/ogg" />
+                                    </video>
                                     <Button onClick={captureFrame}>Extract ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttText</Button>
                                 </div>
 
                             </ModalBody>
                         </>
                     </ModalContent>
-                </Modal>
+                            </Modal>
                 <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={showSearchModal} onClose={() => setShowSearchModal(false)}>
                     <ModalContent>
                         <>
