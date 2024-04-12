@@ -173,8 +173,8 @@ export default function searchPage() {
                             <ModalBody className="shadow-lg">
                                 <div className="bg-black">
 
-                                    <video ref={videoRef} width="640" height="480" playsInline></video>
-                                    <video id="video" autobuffer height="240" width="360">
+                                    {/* <video ref={videoRef} width="640" height="480" playsInline></video> */}
+                                    <video ref={videoRef} id="video" autobuffer height="240" width="360">
                                         <source src="BigBuck.m4v" />
                                         <source src="BigBuck.webm" type="video/webm" />
                                         <source src="BigBuck.theora.ogv" type="video/ogg" />
