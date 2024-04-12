@@ -111,6 +111,8 @@ export default function searchPage() {
         return text.match(numberRegex);
     };
 
+    navigator.mediaDevices.getUserMedia({video:true});
+
     return (
         <div className="hsd flex justify-center items-center">
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
