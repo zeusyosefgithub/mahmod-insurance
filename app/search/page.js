@@ -174,10 +174,15 @@ export default function searchPage() {
                                 <div className="bg-black">
 
                                     {/* <video ref={videoRef} width="640" height="480" playsInline></video> */}
-                                    <video ref={videoRef} id="video" autobuffer height="240" width="360">
+                                    {/* <video ref={videoRef} id="video" autobuffer height="240" width="360">
                                         <source src="BigBuck.m4v" />
                                         <source src="BigBuck.webm" type="video/webm" />
                                         <source src="BigBuck.theora.ogv" type="video/ogg" />
+                                    </video> */}
+                                    <video ref={videoRef} id="video-example" width="256" height="177" poster="image.jpg">
+                                        <source src="video/video.mp4" type="video/mp4"></source>
+                                        <source src="video/video.ogg" type="video/ogg"></source>
+                                        This browser does not support HTML5
                                     </video>
                                     <Button onClick={captureFrame}>Extract ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttText</Button>
                                 </div>
