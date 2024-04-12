@@ -1,6 +1,6 @@
 'use client';
 import { Button, Dropdown, DropdownItem, DropdownMenu, Divider, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import CarNumebr from '../../images/carNumber.jpg';
@@ -10,6 +10,7 @@ import React from 'react';
 import 'react-html5-camera-photo/build/css/index.css';
 import Camera, { FACING_MODES, IMAGE_TYPES } from 'react-html5-camera-photo';
 import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
 export default function searchPage() {
 
@@ -111,7 +112,43 @@ export default function searchPage() {
         return text.match(numberRegex);
     };
 
-    navigator.mediaDevices.getUserMedia({video:true});
+    const videoRef = useRef(null);
+    const [extractedText, setExtractedText] = useState('');
+
+    useEffect(() => {
+        startVideo();
+    }, []);
+
+    const startVideo = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+                videoRef.current.play();
+            }
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+        }
+    };
+
+    const captureFrame = async () => {
+        const video = videoRef.current;
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        // Use Tesseract.js to extract text from the captured frame
+        const worker = createWorker();
+        await worker.load();
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
+        const { data: { text } } = await worker.recognize(imageData);
+        setExtractedText(text);
+        await worker.terminate();
+    };
 
     return (
         <div className="hsd flex justify-center items-center">
@@ -125,7 +162,6 @@ export default function searchPage() {
                     <Button onClick={() => setShowCameraModal(true)} className="text-xl m-5" color="primary"><FaCamera />צלם</Button>
                     <Button onClick={GetVichel} color="primary" className="text-xl m-5"><FaSearch />חיפוש</Button>
                 </div>
-                <video autoPlay></video>
                 {
                     text && <div className="text-red-600 bg-black w-fit m-10 p-10">
                         {text}
@@ -137,11 +173,8 @@ export default function searchPage() {
                             <ModalBody className="shadow-lg">
                                 <div className="bg-black">
                                     
-                                    <Camera
-                                        idealFacingMode={FACING_MODES.ENVIRONMENT}
-                                        isImageMirror={false}
-                                        onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
-                                    />
+                                    <video ref={videoRef} width="640" height="480" playsInline></video>
+                                    <Button onClick={captureFrame}>Extract ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttText</Button>
                                 </div>
 
                             </ModalBody>
