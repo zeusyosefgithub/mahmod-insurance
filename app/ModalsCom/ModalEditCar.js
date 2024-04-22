@@ -1,5 +1,6 @@
+'use client';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
-import { useState,useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { GrUpdate } from "react-icons/gr";
 import GetData from "../FireBase/GetData";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
@@ -8,8 +9,11 @@ import ContactContext from "../Components/ContactContext";
 import { SiGoogleforms } from "react-icons/si";
 import { IoMdClose } from "react-icons/io";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { MohamadFireStore } from "../FireBase/firebase";
+import { MohamadFireStore, storagee } from "../FireBase/firebase";
 import { TbTrash } from "react-icons/tb";
+import { FaFolder } from "react-icons/fa";
+import { deleteObject, getDownloadURL, getMetadata, listAll, ref, uploadBytesResumable } from "firebase/storage";
+import { FaEye } from "react-icons/fa";
 
 
 
@@ -18,7 +22,7 @@ export default function ModalEditCar(props) {
     const { setContactName } = useContext(ContactContext);
     const router = useRouter();
 
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const type2 = GetData('type2');
     const checks = GetData('checks');
@@ -29,47 +33,60 @@ export default function ModalEditCar(props) {
     const [car_type2, setcar_type2] = useState(props.data.car_type2);
     const [enddate, setenddate] = useState(props.data.enddate);
     const [hazmat, sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא');
+    const [hazmatDate, setHazmatDate] = useState(props.data.hazmatDate);
     const [insurance, setinsurance] = useState(props.data.insurance);
     const [insuranceclass, setinsuranceclass] = useState(props.data.insuranceclass);
     const [shockabsorbers, setshockabsorbers] = useState(props.data.shockabsorbers);
     const [tachograph, settachograph] = useState(props.data.tachograph ? 'כן' : 'לא');
+    const [tachographDate, setTachographDate] = useState(props.data.tachographDate);
     const [winterreview, setwinterreview] = useState(props.data.winterreview);
 
+
+    const ReturnKenLo = (val) => {
+        return val === 'כן' ? true : false;
+    }
+
     const CheckIfNotEqual = () => {
-        let a = props.data?.hazmat ? 'כן' : 'לא';
-        let b = props.data?.tachograph ? 'כן' : 'לא';
-        let c = hazmat.anchorKey ? hazmat.anchorKey : hazmat;
-        let d = tachograph.anchorKey ? tachograph.anchorKey : tachograph;
-        let e = car_type.anchorKey ? car_type.anchorKey : car_type;;
-        let f = car_type2.anchorKey ? car_type2.anchorKey : car_type2;
-        if (
-            car_num != props.data.car_num ||
-            car_product != props.data.car_product ||
-            e != props.data.car_type ||
-            f != props.data.car_type2 ||
-            enddate != props.data.enddate ||
-            a != c ||
-            insurance != props.data.insurance ||
-            insuranceclass != props.data.insuranceclass ||
-            shockabsorbers != props.data.shockabsorbers ||
-            b != d ||
-            winterreview != winterreview
+        // (ReturnKenLo(tachograph) != props.data.tachograph && tachographDate) ||
+        // (ReturnKenLo(hazmat) != props.data.hazmat && hazmatDate) ||
+        if (!hazmatDate && ReturnKenLo(hazmat)) { return true; }
+        if (!tachographDate && ReturnKenLo(tachograph)) { return true; }
+        if ((car_num != props.data.car_num) ||
+            (car_product != props.data.car_product) ||
+            (car_type != props.data.car_type) ||
+            (car_type2 != props.data.car_type2) ||
+            (enddate != props.data.enddate) ||
+            (insurance != props.data.insurance) ||
+            (insuranceclass != props.data.insuranceclass) ||
+            (winterreview != props.data.winterreview) ||
+            (shockabsorbers != props.data.shockabsorbers) ||
+            (tachographDate != props.data.tachographDate) ||
+            (hazmatDate != props.data.hazmatDate) ||
+            fileEndDateCar ||
+            fileInsurance ||
+            fileShockabsorbers ||
+            fileWinterreview ||
+            fileTachograph ||
+            fileHazmat
         ) {
+            return false;
+        }
+        else {
             return true;
         }
-        return false;
+
     }
 
     const createNewForm = () => {
         setLoading(true);
         setContactName(props.data.car_id);
         router.push('/add');
-    } 
+    }
 
     const GetChecks = () => {
         let Listchecks = [];
         for (let index = 0; index < checks?.length; index++) {
-            if(checks[index]?.car_id === props.data.car_id){
+            if (checks[index]?.car_id === props.data.car_id) {
                 Listchecks.push(checks[index]);
             }
         }
@@ -90,66 +107,297 @@ export default function ModalEditCar(props) {
             shockabsorbers: shockabsorbers,
             tachograph: tachograph,
             winterreview: winterreview,
+            hazmatDate: hazmat === 'כן' ? hazmatDate : null,
+            tachographDate: tachograph === 'כן' ? tachographDate : null,
         };
         const invId = doc(MohamadFireStore, "car", props.data.id);
         await updateDoc(invId, newCarData);
+        if (fileEndDateCar) {
+            const storageRefEndDate = ref(storagee, `${car_num}/endDateCar`);
+            const uploadTaskEndDate = uploadBytesResumable(storageRefEndDate, fileEndDateCar);
+        }
+        if (fileInsurance) {
+            const storageRefnsurance = ref(storagee, `${car_num}/Insurance`);
+            const uploadTasknsurance = uploadBytesResumable(storageRefnsurance, fileInsurance);
+        }
+        if (fileShockabsorbers) {
+            const storageRefShockabsorber = ref(storagee, `${car_num}/Shockabsorbers`);
+            const uploadTaskShockabsorber = uploadBytesResumable(storageRefShockabsorber, fileShockabsorbers);
+        }
+        if (fileWinterreview) {
+            const storageRefWinterreview = ref(storagee, `${car_num}/Winterreview`);
+            const uploadTaskWinterreview = uploadBytesResumable(storageRefWinterreview, fileWinterreview);
+        }
+        if (fileTachograph) {
+            const storageRefTachograph = ref(storagee, `${car_num}/Tachograph`);
+            const uploadTaskTachograph = uploadBytesResumable(storageRefTachograph, fileTachograph);
+        }
+        if (fileHazmat) {
+            const storageRefHazmat = ref(storagee, `${car_num}/Hazmat`);
+            const uploadTaskHazmat = uploadBytesResumable(storageRefHazmat, fileHazmat);
+        }
         setLoading(false);
     }
 
     let CarsNum = GetData('numbers')[0]?.number;
-    const deleteCar = async() => {
+    const deleteCar = async () => {
         setLoading(true);
         for (let index = 0; index < checks.length; index++) {
-            if(checks[index]?.car_id === props.data.car_id){
+            if (checks[index]?.car_id === props.data.car_id) {
                 await deleteDoc(doc(MohamadFireStore, "checks", checks[index]?.id));
             }
         }
         await deleteDoc(doc(MohamadFireStore, "car", props.data.id));
         await updateDoc(doc(MohamadFireStore, "numbers", 'cars'), { number: CarsNum - 1 });
+        const storageRef = ref(storagee, `${car_num}/`);
+        try {
+            const listResults = await listAll(storageRef);
+            const deletePromises = listResults.items.map(item => {
+              return deleteObject(item);
+            });
+            await Promise.all(deletePromises);
+            console.log('All files deleted successfully');
+          } catch (error) {
+            console.error("Failed to delete files", error);
+          }
         setLoading(false);
         props.disable();
+    }
+
+    const endDatePath = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/endDateCar`;
+    const Insurance = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/Insurance`;
+    const Shockabsorbers = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/Shockabsorbers`;
+    const Winterreview = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/Winterreview`;
+    const Tachograph = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/Tachograph`;
+    const Hazmat = `gs://mahmod-insurance.appspot.com/${props.data.car_num}/Hazmat`;
+
+    const [endDateFile, setEndDateFile] = useState(false);
+    const [InsuranceFile, setInsuranceFile] = useState(false);
+    const [ShockabsorbersFile, setShockabsorbersFile] = useState(false);
+    const [WinterreviewFile, setWinterreviewFile] = useState(false);
+    const [TachographFile, setTachographFile] = useState(false);
+    const [HazmatFile, setHazmatFile] = useState(false);
+
+    const fileEndDateCarRef = useRef();
+    const [fileEndDateCar, setFileEndDateCar] = useState(null);
+    // תוקף ביטוח
+    const fileInsuranceRef = useRef();
+    const [fileInsurance, setFileInsurance] = useState(null);
+    // אישור בולמים
+    const fileShockabsorbersRef = useRef();
+    const [fileShockabsorbers, setFileShockabsorber] = useState(null);
+    // ביקורת חורף
+    const fileWinterreviewRef = useRef();
+    const [fileWinterreview, setFileWinterreview] = useState(null);
+    // טכוגרף
+    const fileTachographRef = useRef();
+    const [fileTachograph, setFileTachograph] = useState(null);
+    // חו"מס
+    const fileHazmatRef = useRef();
+    const [fileHazmat, setFileHazmat] = useState(null);
+
+    const checkForFile = async (filePath) => {
+        const fileRef = ref(storagee, filePath);
+        try {
+            await getMetadata(fileRef);
+            return true;
+        } catch (error) {
+            if (error.code === 'storage/object-not-found') {
+                return false;
+            }
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        checkForFile(endDatePath)
+            .then((fileExists) => {
+                setEndDateFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setEndDateFile(false);
+            });
+        checkForFile(Insurance)
+            .then((fileExists) => {
+                setInsuranceFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setInsuranceFile(false);
+            });
+        checkForFile(Shockabsorbers)
+            .then((fileExists) => {
+                setShockabsorbersFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setShockabsorbersFile(false);
+            });
+        checkForFile(Winterreview)
+            .then((fileExists) => {
+                setWinterreviewFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setWinterreviewFile(false);
+            });
+        checkForFile(Tachograph)
+            .then((fileExists) => {
+                setTachographFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setTachographFile(false);
+            });
+        checkForFile(Hazmat)
+            .then((fileExists) => {
+                setHazmatFile(fileExists);
+            })
+            .catch((error) => {
+                console.error('Error checking for file:', error);
+                setHazmatFile(false);
+            });
+    }, [endDatePath, Insurance, Shockabsorbers, Winterreview, Tachograph, Hazmat]);
+
+    async function GetEndDate(type) {
+        setLoading(true);
+        const storageRef = ref(storagee, `gs://mahmod-insurance.appspot.com/${props.data.car_num}/${type}`);
+        try {
+            const url = await getDownloadURL(storageRef);
+            window.open(url, '_blank');
+        }
+        catch (e) {
+            console.log(e);
+        }
+        setLoading(false);
     }
 
     return (
         <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
                 <>
-                    {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50"/>}
+                    {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
                     <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
                     <ModalBody className="shadow-lg">
-                        <div dir="rtl" className="m-1 pr-5 pl-5 pb-5 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
+
+                        <div dir="rtl" className="m-1 pr-2 pl-2 pb-2 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
                             <div className="flex justify-center">
-                                <div className="">
+                                <div className="w-full max-w-[700px]">
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">מספר רכב</div>
+                                        <div className="w-[130px] ml-2 font-extrabold">מספר רכב</div>
                                         <Input onValueChange={(value) => setcar_num(value)} value={car_num} type="text" />
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">יצרן</div>
+                                        <div className="w-[130px] ml-2 font-extrabold">יצרן</div>
                                         <Input onValueChange={(value) => setcar_product(value)} value={car_product} type="text" />
                                     </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">תוקף</div>
-                                        <Input onValueChange={(value) => setenddate(value)} value={enddate} type="text" />
+                                    <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                        <div className="w-[130px] ml-2 font-extrabold">תוקף</div>
+                                        <div className="w-full flex items-center flex-wrap justify-center">
+                                            <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setenddate(value)} value={enddate} type="date" />
+                                            {
+                                                endDateFile ?
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <Button className='text-primary border-primary' onClick={() => { GetEndDate('endDateCar') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                        <input onChange={(e) => setFileEndDateCar(e.target.files[0])} ref={fileEndDateCarRef} className="hidden" type="file" />
+                                                        <Button onClick={() => { fileEndDateCarRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                    </div>
+                                                    :
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <input onChange={(e) => setFileEndDateCar(e.target.files[0])} ref={fileEndDateCarRef} className="hidden" type="file" />
+                                                        <Button className={`text-${fileEndDateCar ? 'primary' : 'default'} border-${fileEndDateCar ? 'primary' : 'default'}`} onClick={() => { fileEndDateCarRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                    </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                        <div className="w-[130px] ml-2 font-extrabold">תאריך ביטוח</div>
+                                        <div className="w-full flex items-center flex-wrap justify-center">
+                                            <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setinsurance(value)} value={insurance} type="date" />
+                                            {
+                                                InsuranceFile ?
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <Button className='text-primary border-primary' onClick={() => { GetEndDate('Insurance') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                        <input onChange={(e) => setFileInsurance(e.target.files[0])} ref={fileInsuranceRef} className="hidden" type="file" />
+                                                        <Button onClick={() => { fileInsuranceRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                    </div>
+                                                    :
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <input onChange={(e) => setFileInsurance(e.target.files[0])} ref={fileInsuranceRef} className="hidden" type="file" />
+                                                        <Button className={`text-${fileInsurance ? 'primary' : 'default'} border-${fileInsurance ? 'primary' : 'default'}`} onClick={() => { fileInsuranceRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                    </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    {
+                                        props.data.car_type == `רכב מעל 10,000 ק"ג` &&
+                                        <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                            <div className="w-[130px] ml-2 font-extrabold">אישור בולמים</div>
+                                            <div className="w-full flex items-center flex-wrap justify-center">
+                                                <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setshockabsorbers(value)} value={shockabsorbers} type="date" />
+                                                {
+                                                    ShockabsorbersFile ?
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <Button className='text-primary border-primary' onClick={() => { GetEndDate('Shockabsorbers') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                            <input onChange={(e) => setFileShockabsorber(e.target.files[0])} ref={fileShockabsorbersRef} className="hidden" type="file" />
+                                                            <Button onClick={() => { fileShockabsorbersRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                        </div>
+                                                        :
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <input onChange={(e) => setFileShockabsorber(e.target.files[0])} ref={fileShockabsorbersRef} className="hidden" type="file" />
+                                                            <Button className={`text-${fileShockabsorbers ? 'primary' : 'default'} border-${fileShockabsorbers ? 'primary' : 'default'}`} onClick={() => { fileShockabsorbersRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                        </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:border-b-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                        <div className="w-[130px] ml-2 font-extrabold">בדיקת חורף</div>
+                                        <div className="w-full flex items-center flex-wrap justify-center">
+                                            <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setwinterreview(value)} value={winterreview} type="date" />
+                                            {
+                                                WinterreviewFile ?
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <Button className='text-primary border-primary' onClick={() => { GetEndDate('Winterreview') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                        <input onChange={(e) => setFileWinterreview(e.target.files[0])} ref={fileWinterreviewRef} className="hidden" type="file" />
+                                                        <Button onClick={() => { fileWinterreviewRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                    </div>
+                                                    :
+                                                    <div className="flex items-center max-[820px]:mt-3">
+                                                        <input onChange={(e) => setFileWinterreview(e.target.files[0])} ref={fileWinterreviewRef} className="hidden" type="file" />
+                                                        <Button className={`text-${fileWinterreview ? 'primary' : 'default'} border-${fileWinterreview ? 'primary' : 'default'}`} onClick={() => { fileWinterreviewRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                    </div>
+                                            }
+                                        </div>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">תאריך ביטוח</div>
-                                        <Input onValueChange={(value) => setinsurance(value)} value={insurance} type="text" />
+                                        <div className="w-36 font-extrabold">סוג ביטוח</div>
+                                        <Dropdown dir="rtl">
+                                            <DropdownTrigger>
+                                                <Button
+                                                    color="primary"
+                                                    variant="bordered"
+                                                    className="capitalize"
+                                                >
+                                                    {insuranceclass}
+                                                </Button>
+                                            </DropdownTrigger>
+                                            <DropdownMenu
+                                                aria-label="Single selection example"
+                                                variant="flat"
+                                                disallowEmptySelection
+                                                selectionMode="single"
+                                                selectedKeys={insuranceclass}
+                                                onSelectionChange={(value) => setinsuranceclass(value.currentKey)}
+                                            >
+                                                <DropdownItem key='צד שלשי'>צד שלשי</DropdownItem>
+                                                <DropdownItem key='מקיף'>מקיף</DropdownItem>
+                                            </DropdownMenu>
+                                        </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">מחלקת ביטוח</div>
-                                        <Input onValueChange={(value) => setinsuranceclass(value)} value={insuranceclass} type="text" />
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">בולמי זעזועים</div>
-                                        <Input onValueChange={(value) => setshockabsorbers(value)} value={shockabsorbers} type="text" />
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-48 font-extrabold">סקירת חורף</div>
-                                        <Input onValueChange={(value) => setwinterreview(value)} value={winterreview} type="text" />
-                                    </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-36 font-extrabold">סוג דלק</div>
+                                        <div className="w-36 font-extrabold">סוג רכב</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -166,7 +414,7 @@ export default function ModalEditCar(props) {
                                                 disallowEmptySelection
                                                 selectionMode="single"
                                                 selectedKeys={car_type2}
-                                                onSelectionChange={setcar_type2}
+                                                onSelectionChange={(value) => setcar_type2(value.currentKey)}
                                             >
                                                 {
                                                     type2.map((type) => {
@@ -177,10 +425,11 @@ export default function ModalEditCar(props) {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36 font-extrabold">סוג רכב</div>
+                                        <div className="w-36 font-extrabold">סוג טופס</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
+                                                    isDisabled
                                                     color="primary"
                                                     variant="bordered"
                                                     className="capitalize"
@@ -194,7 +443,7 @@ export default function ModalEditCar(props) {
                                                 disallowEmptySelection
                                                 selectionMode="single"
                                                 selectedKeys={car_type}
-                                                onSelectionChange={setcar_type}
+                                                onSelectionChange={(value) => setcar_type(value.currentKey)}
                                             >
                                                 <DropdownItem key="גרור">גרור</DropdownItem>
                                                 <DropdownItem key="ציוד הנדס'">ציוד הנדס'</DropdownItem>
@@ -204,7 +453,7 @@ export default function ModalEditCar(props) {
                                         </Dropdown>
                                     </div>
                                     <div className="flex items-center mt-5">
-                                        <div className="w-36 font-extrabold">האם הנהג תוקן</div>
+                                        <div className="w-36 font-extrabold">חו"מס</div>
                                         <Dropdown dir="rtl">
                                             <DropdownTrigger>
                                                 <Button
@@ -221,72 +470,121 @@ export default function ModalEditCar(props) {
                                                 disallowEmptySelection
                                                 selectionMode="single"
                                                 selectedKeys={hazmat}
-                                                onSelectionChange={sethazmat}
+                                                onSelectionChange={(value) => sethazmat(value.currentKey)}
                                             >
                                                 <DropdownItem key="כן">כן</DropdownItem>
-                                                <DropdownItem key="לא">לא</DropdownItem>
+                                                <DropdownItem key="לא" onClick={() => { setFileHazmat(null); setHazmatDate(''); }}>לא</DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-36 font-extrabold">האם הנהג תוקן</div>
-                                        <Dropdown dir="rtl">
-                                            <DropdownTrigger>
-                                                <Button
-                                                    color="primary"
-                                                    variant="bordered"
-                                                    className="capitalize"
+                                    {
+                                        hazmat === 'כן' &&
+                                        <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:border-b-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                            <div className="font-extrabold w-[130px] ml-2">תאריך חו"מס</div>
+                                            <div className="w-full flex items-center flex-wrap justify-center">
+                                                <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setHazmatDate(value)} value={hazmatDate} type="date" />
+                                                {
+                                                    HazmatFile ?
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <Button className='text-primary border-primary' onClick={() => { GetEndDate('Hazmat') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                            <input onChange={(e) => setFileHazmat(e.target.files[0])} ref={fileHazmatRef} className="hidden" type="file" />
+                                                            <Button onClick={() => { fileHazmatRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                        </div>
+                                                        :
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <input onChange={(e) => setFileHazmat(e.target.files[0])} ref={fileHazmatRef} className="hidden" type="file" />
+                                                            <Button className={`text-${fileHazmat ? 'primary' : 'default'} border-${fileHazmat ? 'primary' : 'default'}`} onClick={() => { fileHazmatRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                        </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    {
+                                        props.data.car_type === `רכב מעל 10,000 ק"ג` &&
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-36 font-extrabold">טכוגרף</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {tachograph}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={tachograph}
+                                                    onSelectionChange={(value) => settachograph(value.currentKey)}
                                                 >
-                                                    {tachograph}
-                                                </Button>
-                                            </DropdownTrigger>
-                                            <DropdownMenu
-                                                aria-label="Single selection example"
-                                                variant="flat"
-                                                disallowEmptySelection
-                                                selectionMode="single"
-                                                selectedKeys={tachograph}
-                                                onSelectionChange={settachograph}
-                                            >
-                                                <DropdownItem key="כן">כן</DropdownItem>
-                                                <DropdownItem key="לא">לא</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                    </div>
+                                                    <DropdownItem key="כן">כן</DropdownItem>
+                                                    <DropdownItem key="לא" onClick={() => { setFileTachograph(null); setTachographDate(''); }}>לא</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                    }
+                                    {
+                                        props.data.car_type === `רכב מעל 10,000 ק"ג` && tachograph === 'כן' &&
+                                        <div className="flex items-center mt-5 max-[820px]:border-t-1 max-[820px]:border-b-1 max-[820px]:pt-4 max-[820px]:pb-4">
+                                            <div className="font-extrabold w-[130px] ml-2">תאריך תכוגרף</div>
+                                            <div className="w-full flex items-center flex-wrap justify-center">
+                                                <Input className="ml-3 max-w-[400px]" onValueChange={(value) => setTachographDate(value)} value={tachographDate} type="date" />
+                                                {
+                                                    TachographFile ?
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <Button className='text-primary border-primary' onClick={() => { GetEndDate('Tachograph') }} variant="bordered" size="sm"><FaEye className="text-xl" /></Button>
+                                                            <input onChange={(e) => setFileTachograph(e.target.files[0])} ref={fileTachographRef} className="hidden" type="file" />
+                                                            <Button onClick={() => { fileTachographRef.current.click() }} color="primary" variant="flat" size="sm" className="mr-2">להחליף</Button>
+                                                        </div>
+                                                        :
+                                                        <div className="flex items-center max-[820px]:mt-3">
+                                                            <input onChange={(e) => setFileTachograph(e.target.files[0])} ref={fileTachographRef} className="hidden" type="file" />
+                                                            <Button className={`text-${fileTachograph ? 'primary' : 'default'} border-${fileTachograph ? 'primary' : 'default'}`} onClick={() => { fileTachographRef.current.click() }} variant="bordered" size="sm"><FaFolder className="text-xl" /></Button>
+                                                        </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <div className="flex w-full">
-                            <div className="w-full items-center flex">
-                                <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={props.disable}>
-                                    <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
-                                </Button>
-                                <Button onClick={createNewForm} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
-                                    <MdOutlineCreateNewFolder className="text-2xl max-[500px]:text-[11px]" />ליצרת טופס
-                                </Button>
-                                {
-                                    GetChecks().length != 0 ?
-                                        <Button onClick={() => { props.disable(); props.showAllForms(); }} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
-                                            <SiGoogleforms className="text-xl max-[500px]:text-[11px]" />כל הטפסים
-                                        </Button>
-                                        :
-                                        null
-                                }
+                        <div className="w-full overflow-auto">
+                            <div className="flex w-full mb-2">
+                                <div className="w-full items-center flex">
+                                    <Button className="font-extrabold max-[500px]:text-[10px]" color="primary" variant="bordered" onClick={props.disable}>
+                                        <IoMdClose className="text-xl max-[500px]:text-[11px]" />סגור
+                                    </Button>
+                                    <Button onClick={createNewForm} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                        <MdOutlineCreateNewFolder className="text-2xl max-[500px]:text-[11px]" />ליצרת טופס
+                                    </Button>
+                                    {
+                                        GetChecks().length != 0 ?
+                                            <Button onClick={() => { props.disable(); props.showAllForms(); }} color="primary" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                                <SiGoogleforms className="text-xl max-[500px]:text-[11px]" />כל הטפסים
+                                            </Button>
+                                            :
+                                            null
+                                    }
+                                </div>
+                                <div className="flex justify-start">
+                                    <Button onClick={deleteCar} color="danger" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
+                                        <TbTrash className="text-2xl max-[500px]:text-[11px]" />מחיקת הרכב
+                                    </Button>
+                                </div>
+                                <div>
+                                    <Button isDisabled={CheckIfNotEqual()} className="max-[500px]:text-[10px] font-extrabold ml-3" color="primary" onClick={updateProps}>
+                                        <GrUpdate className="text-2xl max-[500px]:text-[11px]" />עדכון
+                                    </Button>
+                                </div>
                             </div>
-                            <div className="flex justify-start">
-                                <Button onClick={deleteCar} color="danger" variant="bordered" className="max-[500px]:text-[10px] ml-4 font-extrabold">
-                                    <TbTrash className="text-2xl max-[500px]:text-[11px]" />מחיקת הרכב
-                                </Button>
-                            </div>
+
                         </div>
-                        {
-                            CheckIfNotEqual() &&
-                            <Button className="max-[500px]:text-[10px] font-extrabold" color="primary" onClick={updateProps}>
-                                <GrUpdate className="text-2xl max-[500px]:text-[11px]" />עדכון
-                            </Button>
-                        }
                     </ModalFooter>
                 </>
             </ModalContent>

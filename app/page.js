@@ -15,6 +15,7 @@ export default function Home() {
   const Cars = GetData('car');
   const router = useRouter();
 
+
   const [loading,setLoading] = useState(false);
 
   const Alerts = GetData('alerts');

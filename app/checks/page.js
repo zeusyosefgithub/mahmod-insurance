@@ -80,6 +80,16 @@ export default function Checks() {
                     </div>
                     :
                     <>
+                        {/* <div className="flex justify-center">
+                            <div className="w-full max-w-[1000px] bg-primary-200 m-5 flex justify-between">
+                                <div className="bg-green-200 w-full max-w-[400px]">
+1
+                                </div>
+                                <div className="bg-red-200 w-full max-w-[700px] min-w-[500px]">
+2
+                                </div>
+                            </div>
+                        </div> */}
                         <div className="flex justify-center text-xl m-14">
                             <div className="bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest font-black">
                                 פירטים

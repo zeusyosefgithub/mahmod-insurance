@@ -20,13 +20,34 @@ export default function searchPage() {
     const [showSearchModal, setShowSearchModal] = useState(false);
     const [showCameraModal, setShowCameraModal] = useState(false);
     const [photo,setPhoto] = useState(null); 
+    const [errorSearch,setErrorSearch] = useState('');
 
     async function GetVichel() {
         setLoading(true);
+        let wichOne = false;
         const response = await fetch(`https://data.gov.il/api/3/action/datastore_search?resource_id=053cea08-09bc-40ec-8f7a-156f0677aff3&q=${searchValue}`);
         const movies = await response.json();
         const ress = movies.result.records;
-        setResualt(ress[0]);
+        if(ress[0]){
+            setResualt(ress[0]);
+            wichOne = true;
+        }
+        const response1 = await fetch(`https://data.gov.il/api/3/action/datastore_search?resource_id=cd3acc5c-03c3-4c89-9c54-d40f93c0d790&q=${searchValue}`);
+        const movies1 = await response1.json();
+        const ress1 = movies1.result.records;
+        if(ress1[0]){
+            setResualt(ress1[0]);
+            wichOne = true;
+        }
+        const response2 = await fetch(`https://data.gov.il/api/3/action/datastore_search?resource_id=58dc4654-16b1-42ed-8170-98fadec153ea&q=${searchValue}`);
+        const movies2 = await response2.json();
+        const ress2 = movies2.result.records;
+        if(ress2[0]){
+            setResualt(ress2[0]);
+            wichOne = true;
+        }
+        setErrorSearch('');
+        if(!wichOne){setResualt(null);setLoading(false);setErrorSearch('המספר שהוזן לא נכון!!');;return;}
         setShowSearchModal(true);
         setLoading(false);
     }
@@ -155,7 +176,7 @@ export default function searchPage() {
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
             <div className="w-[500px]">
                 <div dir="rtl" className="flex justify-center">
-                    <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" className="max-w-[350px]" label="מספר הרכב" />
+                    <Input type="number" value={searchValue} onValueChange={(value) => setSearchValue(value)} variant="flat" color="primary" errorMessage={errorSearch} className="max-w-[350px]" label="מספר הרכב" />
                 </div>
                 <div className="mt-20 flex justify-center">
 
@@ -207,7 +228,7 @@ export default function searchPage() {
                                                     </div>
                                                     <div className="w-full bg-yellow-500 h-full">
                                                         <div className="flex justify-center h-full w-full">
-                                                            <div className="font-bold sdf  tracking-widest grid place-items-center text-center w-full">
+                                                            <div className="font-bold sdf tracking-widest grid place-items-center text-center w-full">
                                                                 {
                                                                     resualt.mispar_rechev > 999999 && resualt.mispar_rechev <= 9999999 ?
                                                                         `${parseInt(((((((resualt.mispar_rechev / 10) / 10) / 10) / 10) / 10) / 10) % 10)}${parseInt((((((resualt.mispar_rechev / 10) / 10) / 10) / 10) / 10) % 10)}-${parseInt(((((resualt.mispar_rechev / 10) / 10) / 10) / 10) % 10)}${parseInt((((resualt.mispar_rechev / 10) / 10) / 10) % 10)}${parseInt(((resualt.mispar_rechev / 10) / 10) % 10)}-${parseInt((resualt.mispar_rechev / 10) % 10)}${parseInt(resualt.mispar_rechev % 10)}`
@@ -222,7 +243,7 @@ export default function searchPage() {
                                             </div>
                                             <Divider />
                                             <div className="flex justify-center m-10 mt-10">
-                                                <table className="w-full">
+                                                <table className="w-full max-[450px]:text-xs max-[400px]:text-[9px]">
                                                     <tbody>
                                                         <tr className="bg-primary-100">
                                                             <th className="text-left p-2">{resualt.mispar_rechev}</th>
