@@ -8,7 +8,7 @@ import ModalEditCustomer from "../ModalsCom/ModalEditCustomer";
 import ModalEditCar from "../ModalsCom/ModalEditCar";
 import AllFormsCar from "../Components/AllFormsCar";
 import { CiSearch } from "react-icons/ci";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 
@@ -206,14 +206,19 @@ export default function Checks() {
                                 </div>
                                 <div className="w-[700px] m-5">
                                     <div className="w-full bg-white p-5 rounded-lg shadow-xl">
-                                        <div className="flex border-b-2 border-primary items-center pb-3">
-                                            <div className="text-2xl text-primary tracking-widest font-black">נהגים</div>
-                                            <div className="mr-14">
-                                                <Input size="xs" variant="faded" color="primary" label={<CiSearch className="text-2xl" />} labelPlacement="outside" />
+                                        <div className="flex justify-between border-b-2 border-primary items-center pb-3">
+                                            <div className="flex">
+                                                <div className="text-2xl text-primary tracking-widest font-black">נהגים</div>
+                                                <div className="mr-14">
+                                                    <Input size="xs" variant="faded" color="primary" label={<CiSearch className="text-2xl" />} labelPlacement="outside" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <Button onClick={() => setShowCustomer(true)}>להוספה<FaPlus/></Button>
                                             </div>
                                         </div>
-                                        <div className="overflow-auto h-64">
-                                        <table className="bg-gray-200 w-full no-scrollbar">
+                                        <div className="overflow-auto h-64 no-scrollbar">
+                                        <table className="bg-gray-200 w-full ">
                                             <tbody>
                                                 <tr className="bg-gray-300 sticky top-0 z-10 border-r-4 border-r-gray-300 max-[500px]:text-[13px]">
                                                     <th className="w-24 p-1">נהג</th>

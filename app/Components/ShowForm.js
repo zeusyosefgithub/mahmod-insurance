@@ -131,9 +131,6 @@ export default function ShowForm(props) {
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
             <div>
                 {
-                    console.log(props)
-                }
-                {
                     props.withData ?
                         <div className="mb-32">
                             {

@@ -14,6 +14,27 @@ import { TbTrash } from "react-icons/tb";
 import { FaFolder } from "react-icons/fa";
 import { deleteObject, getDownloadURL, getMetadata, listAll, ref, uploadBytesResumable } from "firebase/storage";
 import { FaEye } from "react-icons/fa";
+import Image from "next/image";
+import rep19 from '../../images/rep19.png';
+import rep30 from '../../images/rep30.png';
+
+
+function GetCarsImages(size,hight,type){
+    if(type === 'merceds'){
+        return <Image
+        src={rep19}
+        sizes={size}
+        height={hight}
+        />
+    }
+    else if(type === 'טויוטה'){
+        return <Image
+        src={rep30}
+        sizes={size}
+        height={hight}
+        />
+    }
+}
 
 
 
@@ -278,10 +299,20 @@ export default function ModalEditCar(props) {
             <ModalContent>
                 <>
                     {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0 z-50" />}
-                    <ModalHeader className="flex justify-center shadow-lg">פרטים רכב</ModalHeader>
+                    <ModalHeader className="flex justify-center shadow-lg">
+                        <div className="flex items-center">
+                            <div className="mr-2">{car_num}</div>
+                            <div className="flex bg-black p-1 rounded-xl w-fit">
+                                {GetCarsImages(30, 30, props.data.car_product)}
+                            </div>
+                        </div>
+                    </ModalHeader>
                     <ModalBody className="shadow-lg">
 
                         <div dir="rtl" className="m-1 pr-2 pl-2 pb-2 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
+                            <div className="flex justify-center">
+
+                            </div>
                             <div className="flex justify-center">
                                 <div className="w-full max-w-[700px]">
                                     <div className="flex items-center mt-5">

@@ -90,6 +90,7 @@ export const PageFour = React.forwardRef((props, ref) => {
         index37,
         index38,
         index39
+
     ]
 
     const [showModalPage,setShowModalPage] = useState(false);
@@ -98,6 +99,9 @@ export const PageFour = React.forwardRef((props, ref) => {
 
     const [discr1,setDiscr1] = useState(null);
     const [discr2,setDiscr2] = useState(null);
+    const discr3 = {
+        taodtZehot : 1,
+    }
 
     var date = new Date();
     let year = date.getFullYear();
@@ -108,7 +112,7 @@ export const PageFour = React.forwardRef((props, ref) => {
     return (
         <div ref={ref} className={`bg-white p-5`}>
             {
-                showModalPage && <ModalPageFour typeShow={typeShow} show={showModalPage} disable={()  => setShowModalPage(false)}
+                showModalPage && <ModalPageFour car={props.car} typeShow={typeShow} show={showModalPage} disable={()  => setShowModalPage(false)}
                 saveDiscr1={(discr1) => setDiscr1(discr1)}
                 saveDiscr2={(discr2) => setDiscr2(discr2)}
                 />
@@ -581,10 +585,10 @@ export const PageFour = React.forwardRef((props, ref) => {
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-xs-ss-1">כן / לא</th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_id_card}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_name} {props.driver?.last_name}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_license_validity}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1"></th>
                         </tr>
                     </tbody>
                 </table>
@@ -607,7 +611,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                 </div>
             </div>
             <div className={`mt-10 flex justify-center ${props.showSave && "hidden"}`}>
-                <Button isDisabled={props.showSave} color="primary" onClick={() => {props.sendData(data,discr1,discr2);props.updateCar()}}>שמירה</Button>
+                <Button isDisabled={props.showSave} color="primary" onClick={() => {props.sendData(data,discr1,discr2,discr3);props.updateCar()}}>שמירה</Button>
             </div>
         </div>
     )

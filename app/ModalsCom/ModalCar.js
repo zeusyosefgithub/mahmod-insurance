@@ -2,19 +2,15 @@
 import { Button } from "@nextui-org/button";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import GetData from "../FireBase/GetData";
+import { GetDataByCondition } from "../FireBase/GetDataByCondition";
+import { useEffect } from "react";
 export default function ModalCar(props) {
-    const Cars = GetData('car');
-
-    const Customers = GetData('Customer');
     const Drivers = GetData('Driver');
+    const Cars = GetDataByCondition('car','customer_id','==',props.customer.customer_id);
 
-    const GetCusNameByCar = (id) => {
-        for (let index = 0; index < Customers.length; index++) {
-            if (Customers[index]?.customer_id === id) {
-                return Customers[index];
-            }
-        }
-    }
+    useEffect(() => {
+    },[Cars,props])
+
     const GetDriverNameByCar = (id) => {
         for (let index = 0; index < Drivers.length; index++) {
             if (Drivers[index]?.driver_id === id) {
@@ -54,7 +50,7 @@ export default function ModalCar(props) {
                                                         <th className="p-2">{car.car_num}</th>
                                                         <th className="p-2">{car.car_type}</th>
                                                         <th className="p-2">{GetDriverNameByCar(car.Driver_id)?.driver_name}</th>
-                                                        <th className="p-2">{GetCusNameByCar(car.customer_id)?.customer_name}</th>
+                                                        <th className="p-2">{props.customer.customer_name}</th>
                                                     </tr>
                                                     <tr>
                                                         <th>&nbsp;</th>

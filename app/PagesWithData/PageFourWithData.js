@@ -467,10 +467,10 @@ export const PageFourWithData = React.forwardRef((props, ref) => {
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-xs-ss-1">כן / לא</th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
-                            <th className="bordering_tebles_1"></th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_id_card}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_name} {props.driver?.last_name}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1">{props.driver?.driver_license_validity}</th>
+                            <th className="bordering_tebles_1 text-xs-ss-1"></th>
                         </tr>
                     </tbody>
                 </table>

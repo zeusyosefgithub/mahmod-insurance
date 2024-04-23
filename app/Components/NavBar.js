@@ -56,7 +56,7 @@ export default function NavBar() {
         </NavbarItem>
         <NavbarItem>
           <Link href="/add">
-            הוספה
+            יצרת תופס
           </Link>
         </NavbarItem>
         <NavbarItem>
@@ -114,7 +114,7 @@ export default function NavBar() {
               className="w-full"
               href="/add"
               size="lg"
-            >הוספה</Link>
+            >יצרת תופס</Link>
           </NavbarMenuItem>
           <NavbarMenuItem dir="rtl">
             <Link

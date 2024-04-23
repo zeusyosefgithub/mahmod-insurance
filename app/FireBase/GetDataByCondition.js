@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import LoadingSpinner from "./loadingSpin";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { MohamadFireStore } from "./firebase";
 
@@ -19,3 +18,4 @@ export const GetDataByCondition = (myCollection, value1, value2, value3) => {
 
     return list;
 };
+

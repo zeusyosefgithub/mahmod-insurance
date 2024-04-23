@@ -2,8 +2,9 @@
 import { Button } from "@nextui-org/button";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import GetData from "../FireBase/GetData";
+import { GetDataByCondition } from "../FireBase/GetDataByCondition";
 export default function ModalDriver(props) {
-    const Drivers = GetData('Driver');
+    const Drivers = GetDataByCondition('Driver','customer_id','==',props.customer.customer_id);
     return (
         <>
             <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>

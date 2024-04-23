@@ -1,5 +1,5 @@
 import { Button, Divider, Input, Spinner } from "@nextui-org/react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import ModalCustomer from "../ModalsCom/ModalCustomer";
 import ModalDriver from "../ModalsCom/ModalDriver";
@@ -13,15 +13,13 @@ import ShowForm from "./ShowForm";
 import ContactContext from "./ContactContext";
 import { GoArrowRight } from "react-icons/go";
 import { TbSteeringWheel } from "react-icons/tb";
-import { FaUserFriends } from "react-icons/fa";
+import { FaArrowLeft, FaUserFriends } from "react-icons/fa";
 import { FaCar } from "react-icons/fa6";
 import { FaRegCheckSquare } from "react-icons/fa";
 import { FiSquare } from "react-icons/fi";
 import { FaFolder } from "react-icons/fa";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-
-
-
+import { FaArrowRight } from "react-icons/fa6";
 
 export default function AddCar() {
 
@@ -81,7 +79,7 @@ export default function AddCar() {
 
 
 
-    const [showCustomerModal, setShowCustomerModdal] = useState(false);
+    const [showCustomerModal, setShowCustomerModdal] = useState(true);
     const [customer, setCustomer] = useState(contactName ? GetCurrentPropsCustomer() : null);
 
     const [showDriverModal, setShowDriverModdal] = useState(false);
@@ -118,9 +116,11 @@ export default function AddCar() {
     const [hazmat, setHazmat] = useState('');
     const [errorHazmat, setErrorHazmat] = useState('');
     const [hazmatDate, setHazmatDate] = useState('');
+    const [errorHazmatDate, setErrorHazmatDate] = useState('');
     const [tachograph, setTachograph] = useState('');
     const [errorTachograph, setErrorTachograph] = useState('');
     const [tachographDate, setTachographDate] = useState('');
+    const [errorTachographDate, setErrorTachographDate] = useState('');
     const [insuranceCompany, setInsuranceCompany] = useState('');
     const [errorInsuranceCompany, setErrorInsuranceCompany] = useState('');
     const typeCarRef = useRef();
@@ -199,6 +199,7 @@ export default function AddCar() {
     const [hazmatD, setHazmatD] = useState('');
     const [errorHazmatD, setErrorHazmatD] = useState('');
     const [hazmatDDate, setHazmatDDate] = useState('');
+    const [errorHazmatDDate, setErrorHazmatDDate] = useState('');
     const [licenseget, setLicenseget] = useState('');
     const [errorLicenseget, setErrorLicenseget] = useState('');
     const [licensegrade, setLicensegrade] = useState('');
@@ -222,6 +223,8 @@ export default function AddCar() {
     }
 
     const resetAllErrors = () => {
+        setErrorHazmatDate('');
+        setErrorTachographDate('');
         setErrorTypeCar('');
         setErrorCarNumber('');
         setErrorProduce('');
@@ -234,11 +237,6 @@ export default function AddCar() {
         setErrorHazmat('');
         setErrorTachograph('');
         setErrorInsuranceCompany('');
-        setErrorName('');
-        setErrorNumber('');
-        setErrorAddresss('');
-        setErrorLocation('');
-        setErrorSerial('');
         setErrorNameD('');
         setErrorLastName('');
         setErrorPhone('');
@@ -251,6 +249,16 @@ export default function AddCar() {
         setErrorLicenseget('');
         setErrorLicensegrad('');
         setErrorLicensenumber('');
+        setErrorHazmatDDate('');
+    }
+
+    const ResetAllErrosCustomer = () => {
+        setErrorName('');
+        setErrorNumber('');
+        setErrorAddresss('');
+        setErrorLocation('');
+        setErrorSerial('');
+        setErrorCustomerEmail('');
     }
 
 
@@ -286,7 +294,7 @@ export default function AddCar() {
     const filehazmatDRef = useRef();
     const [filehazmatD, setFilehazmatD] = useState(null);
 
-    const ResetAllFilesCar  = () => {
+    const ResetAllFilesCar = () => {
         setFileEndDateCar('');
         setFileInsurance('');
         setFileShockabsorber('');
@@ -294,7 +302,7 @@ export default function AddCar() {
         setFileTachograph('');
         setFileHazmat('');
     }
-    const ResetAllFilesDriver  = () => {
+    const ResetAllFilesDriver = () => {
         setFiledriver_license_validity('');
         setFileLicenseget('');
         setFilehazmatD('');
@@ -369,6 +377,9 @@ export default function AddCar() {
     function isDateBeforeToday(date) {
         return new Date(date.toDateString()) < new Date(new Date().toDateString());
     }
+    function isDateBeforeToday1(date) {
+        return new Date(date) < new Date(new Date());
+    }
 
     const CheckCustomerInputs = () => {
         if (!customer) {
@@ -424,12 +435,98 @@ export default function AddCar() {
         console.log(typeee);
     }
 
-    useEffect(() => {
-        setTypeee(typeCar);
-    }, [typeCar])
+
+
+
+    // useEffect(() => {
+    //     const timeoutId = setTimeout(() => {
+    //         const shouldShowButton = checkCondition(typeCar);
+    //         setShowButton(shouldShowButton);
+    //     }, 300); // Adjust the delay as needed
+
+    //     return () => clearTimeout(timeoutId);
+    // }, [typeCar]);
+
+
+
+
+    function is_israeli_id_number(id) {
+        id = String(id).trim();
+        if (id.length > 9 || isNaN(id)) return false;
+        id = id.length < 9 ? ("00000000" + id).slice(-9) : id;
+        return Array.from(id, Number).reduce((counter, digit, i) => {
+            const step = digit * ((i % 2) + 1);
+            return counter + (step > 9 ? step - 9 : step);
+        }) % 10 === 0;
+    }
+
 
     const [staticErrorMessage, setStaticErrorMessage] = useState('');
     let regexNumber = /^05\d([-]{0,1})\d{7}$/;
+
+    const AddCustomer = async() => {
+        ResetAllErrosCustomer();
+        if (!customer) {
+            let numErrors = 0;
+            if (!name) {
+                numErrors++;
+                setErrorName('לא הוזנו נתונים !');
+            }
+            if (name.length > 30) {
+                numErrors++;
+                setErrorName('חרגת ממגבלת התווים !');
+            }
+            if (!number) {
+                numErrors++;
+                setErrorNumber('לא הוזנו נתונים !');
+            }
+            if (number.length != 10) {
+                numErrors++;
+                setErrorNumber('מספר נייד חייב להיות רק 10 תווים !');
+            }
+            if (!regexNumber.test(number)) {
+                numErrors++;
+                setErrorNumber('מספר נייד לא נכון !');
+            }
+            if (address && address.length > 30) {
+                numErrors++;
+                setErrorAddresss('חרגת ממגבלת התווים !');
+            }
+            if (location && location.length > 30) {
+                numErrors++;
+                setErrorLocation('חרגת ממגבלת התווים !');
+            }
+            if (serial && serial.length > 30) {
+                numErrors++;
+                setErrorSerial('חרגת ממגבלת התווים !');
+            }
+            if (CustomerEmail && CustomerEmail.length > 30) {
+                numErrors++;
+                setErrorCustomerEmail('חרגת ממגבלת התווים !');
+            }
+            if(numErrors != 0){
+                return;
+            }
+        }
+        ResetAllErrosCustomer();
+        setLoading(true);
+        const NewDataCustomer = {
+            customer_city: location,
+            customer_id: currectCustomerId(),
+            customer_name: name,
+            customer_phone: number,
+            customer_site: address,
+            customer_email: CustomerEmail,
+            serial_number: serial
+        }
+        !customer && await addDoc(collection(MohamadFireStore, "Customer"), NewDataCustomer) && await updateDoc(doc(MohamadFireStore, "numbers", 'customers'), { number: CustomersNum + 1 });
+        !customer && setCustomer(NewDataCustomer);
+        resetAllCustomer();
+        setShowPropsCarDriver(true);
+        setShowPropsCustomer(false);
+        setLoading(false);
+    }
+
     const AddCar = async () => {
         // window.scrollTo({
         //     top: 100,
@@ -439,105 +536,195 @@ export default function AddCar() {
 
 
         resetAllErrors();
-        if(!customer){
-            console.log(regexNumber.test(number))
-            if(!name){
-                return setErrorName('לא הוזנו נתונים !');
-            }
-            if(name.length > 30){
-                return setErrorName('חרגת ממגבלת התווים !');
-            }
-            if(!number){
-                return setErrorNumber('לא הוזנו נתונים !');
-            }
-            if (number.length != 10) {
-                return setErrorNumber('מספר נייד חייב להיות רק 10 תווים !');
-            }
-            if (!regexNumber.test(number)) {
-                return setErrorNumber('מספר נייד לא נכון !');
-            }
-            if(address && address.length > 30){
-                return setErrorAddresss('חרגת ממגבלת התווים !');
-            }
-            if(location && location.length > 30){
-                return setErrorLocation('חרגת ממגבלת התווים !');
-            }
-            if(serial && serial.length > 30){
-                return setErrorSerial('חרגת ממגבלת התווים !');
-            }
-            if(CustomerEmail && CustomerEmail.length > 30){
-                return setErrorCustomerEmail('חרגת ממגבלת התווים !');
-            }
-        }
+        setStaticErrorMessage('');
         if (!car) {
+            let numErrors = 0;
             if (!typeCar) {
-                return setErrorTypeCar('לא הוזנו נתונים לסוג הרכב !');
+                numErrors++;
+                setErrorTypeCar('לא הוזנו נתונים לסוג הרכב !');
             }
             if (!carNumber) {
-                return setErrorCarNumber('לא הוזנו נתונים למספר הרכב !');
+                numErrors++;
+                setErrorCarNumber('לא הוזנו נתונים למספר הרכב !');
             }
             if (carNumber.length < 5 && carNumber.length > 8) {
-                return setErrorCarNumber('מספר הרכב שהוזן לא נכון !');
+                numErrors++;
+                setErrorCarNumber('מספר הרכב שהוזן לא נכון !');
             }
             if (!producer) {
-                return setErrorProduce('לא הוזנו נתונים ליצרן !');
+                numErrors++;
+                setErrorProduce('לא הוזנו נתונים ליצרן !');
             }
             if (producer.length > 20) {
-                return setErrorProduce('חרגת ממגבלת התווים של היצרן !');
+                numErrors++;
+                setErrorProduce('חרגת ממגבלת התווים של היצרן !');
             }
             if (!endDateCar) {
-                return setErrorDate('לא הוזנו נתונים לתוקף רישיון הרכב !');
+                numErrors++;
+                setErrorDate('לא הוזנו נתונים לתוקף רישיון הרכב !');
             }
             if (isNaN(Date.parse(endDateCar))) {
-                return setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!insurance) {
-                return setErrorDateInsurance('לא הוזנו נתונים לתוקף הביטוח !');
+                numErrors++;
+                setErrorDateInsurance('לא הוזנו נתונים לתוקף הביטוח !');
             }
             if (isNaN(Date.parse(insurance))) {
-                return setErrorDateInsurance('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorDateInsurance('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!shockabsorbers && typeCar === `רכב מעל 10,000 ק"ג`) {
-                return setErrorShockabsorbers('לא הוזנו נתונים לאישור הבולמים !');
+                numErrors++;
+                setErrorShockabsorbers('לא הוזנו נתונים לאישור הבולמים !');
             }
             if (isNaN(Date.parse(shockabsorbers)) && typeCar === `רכב מעל 10,000 ק"ג`) {
-                return setErrorShockabsorbers('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorShockabsorbers('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!winterreview) {
-                return setErrorWinterreview('לא הוזנו נתונים לאישור הבולמים !');
+                numErrors++;
+                setErrorWinterreview('לא הוזנו נתונים לאישור הבולמים !');
             }
             if (isNaN(Date.parse(winterreview))) {
-                return setErrorWinterreview('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorWinterreview('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!tachograph && typeCar === `רכב מעל 10,000 ק"ג`) {
-                return setErrorTachograph('לא הוזנו נתונים לתכוגרף !');
+                numErrors++;
+                setErrorTachograph('לא הוזנו נתונים לתכוגרף !');
             }
             if (tachograph === 'כן' && !tachographDate && typeCar === `רכב מעל 10,000 ק"ג`) {
-                return setErrorTachograph('לא הוזנו נתונים לתאריך התכוגרף !');
+                numErrors++;
+                setErrorTachographDate('לא הוזנו נתונים לתאריך התכוגרף !');
             }
             if (tachograph === 'כן' && isNaN(Date.parse(tachographDate)) && typeCar === `רכב מעל 10,000 ק"ג`) {
-                return setErrorTachograph('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorTachographDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!hazmat) {
-                return setErrorHazmat('לא הוזנו נתונים לתכוגרף !');
+                numErrors++;
+                setErrorHazmat('לא הוזנו נתונים לתכוגרף !');
             }
             if (hazmat === 'כן' && !hazmatDate) {
-                return setErrorHazmat('לא הוזנו נתונים לתאריך התכוגרף !');
+                numErrors++;
+                setErrorHazmatDate('לא הוזנו נתונים לתאריך התכוגרף !');
             }
             if (hazmat === 'כן' && isNaN(Date.parse(hazmatDate))) {
-                return setErrorHazmat('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+                numErrors++;
+                setErrorHazmatDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
             }
             if (!insuranceCompany) {
-                return setErrorInsuranceCompany('לא הוזנו נתונים לחברת הביטוח !');
+                numErrors++;
+                setErrorInsuranceCompany('לא הוזנו נתונים לחברת הביטוח !');
             }
             if (!insuranceclass) {
-                return setErrorInsuranceclass('לא הוזנו נתונים לסוג הביטוח !');
+                numErrors++;
+                setErrorInsuranceclass('לא הוזנו נתונים לסוג הביטוח !');
             }
             if (!typeFuel) {
-                return setErrorTypeFuel('לא הוזנו נתונים לסוג הרכב !');
-            }    
+                numErrors++;
+                setErrorTypeFuel('לא הוזנו נתונים לסוג הרכב !');
+            }
+            if(numErrors != 0){
+                return;
+            }
         }
-        setStaticErrorMessage('');
+        if (!driver) {
+            let numErrors = 0;
+            if (!nameD) {
+                numErrors
+                setErrorNameD('לא הוזנו נתונים !');
+            }
+            if (nameD.length > 30) {
+                numErrors++;
+                setErrorNameD('חרגת ממגבלת התווים !');
+            }
+            if (CityD && CityD.length > 30) {
+                numErrors++;
+                setErrorCityD('חרגת ממגבלת התווים !');
+            }
+            if (addressD && addressD.length > 30) {
+                numErrors++;
+                setErrorAddresssD('חרגת ממגבלת התווים !');
+            }
+            if (!lastName) {
+                numErrors++;
+                setErrorLastName('לא הוזנו נתונים !');
+            }
+            if (lastName.length > 30) {
+                numErrors++;
+                setErrorLastName('חרגת ממגבלת התווים !');
+            }
+            if (!phone) {
+                numErrors++;
+                setErrorPhone('לא הוזנו נתונים !');
+            }
+            if (phone.length != 10) {
+                numErrors++;
+                setErrorPhone('מספר נייד חייב להיות רק 10 תווים !');
+            }
+            if (!regexNumber.test(phone)) {
+                numErrors++;
+                setErrorPhone('מספר נייד לא נכון !');
+            }
+            if (!cardId) {
+                numErrors++;
+                setErrorCardId('לא הוזנו נתונים !');
+            }
+            if (!is_israeli_id_number(cardId)) {
+                numErrors++;
+                setErrorCardId('מספר תעודת זהות לא נכון !');
+            }
+            if (!licensenumber) {
+                numErrors++;
+                setErrorLicensenumber('לא הוזנו נתונים !');
+            }
+            if (licensenumber.length > 7) {
+                numErrors++;
+                setErrorLicensenumber('חרגת ממגבלת התווים !');
+            }
+            if (!endDate) {
+                numErrors++;
+                setErrorEndDate('לא הוזנו נתונים !');
+            }
+            if (isNaN(Date.parse(endDate))) {
+                numErrors++;
+                setErrorEndDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if (!licenseget) {
+                numErrors++;
+                setErrorLicenseget('לא הוזנו נתונים !');
+            }
+            if (isNaN(Date.parse(licenseget))) {
+                numErrors++;
+                setErrorLicenseget('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if (!licensegrade) {
+                numErrors++;
+                setErrorLicensegrad('לא הוזנו נתונים !');
+            }
+            if (!isFixed) {
+                numErrors++;
+                setErrorIsFixed('לא הוזנו נתונים !');
+            }
+            if (!hazmatD) {
+                numErrors++;
+                setErrorHazmatD('לא הוזנו נתונים !');
+            }
+            if (hazmatD === 'כן' && !hazmatDDate) {
+                numErrors++;
+                setErrorHazmatDDate('לא הוזנו נתונים !');
+            }
+            if (hazmatD === 'כן' && isNaN(Date.parse(hazmatDDate))) {
+                numErrors++;
+                setErrorHazmatDDate('התאריך חייב להיות DD/MM/YYYY | DD-MM-YYYY | DD.MM.YYYY !');
+            }
+            if(numErrors != 0){
+                return;
+            }
+        }
         if (car) {
             if (!customer && !customerStatus && !driver && !driverStatus) {
                 return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה נהג ולקוח !');
@@ -549,8 +736,17 @@ export default function AddCar() {
                 return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה לקוח !');
             }
         }
+        if ((!car && hazmat === 'כן' || car && car.hazmat) && (!driver && hazmatD === 'לא' || driver && !driver.hazmat)) {
+            return setStaticErrorMessage('הנהג שהוזן לא מוסמך לחו"מס !');
+        }
+        if ((!car && hazmat === 'כן' || car && car.hazmat) && (!driver && hazmatD === 'כן' && isDateBeforeToday1(hazmatDDate) || driver && driver.hazmat && isDateBeforeToday1(driver.hazmatDDate))) {
+            return setStaticErrorMessage('תוקף החו"מס של הנהג פג !');
+        }
+        // if ((!car && typeCar === `רכב מעל 10,000 ק"ג` || car && car.car_type === `רכב מעל 10,000 ק"ג`) && (!driver && checkLicenseGradeDriverCar(selectedValue) || driver && checkLicenseGradeDriverCar(licensegrade))) {
+        //     return setStaticErrorMessage('רישיון הנהג לא מתאים לרכב !');
+        // }
         setStaticErrorMessage('');
-
+        resetAllErrors();
         setLoading(true);
         const NewDataDriver = {
             address: addressD,
@@ -562,23 +758,15 @@ export default function AddCar() {
             driver_name: nameD,
             driver_phone: phone,
             hazmat: hazmatD === 'כן' ? true : false,
+            hazmatDDate: hazmatD === 'כן' ? hazmatDDate : null,
             last_name: lastName,
             licenseget: licenseget,
-            licensegrade: licensegrade,
+            licensegrade: selectedValue,
             licensenumber: licensenumber,
-
+            zmenotNahag: true,
+            customer_id: customer.customer_id,
         }
         !driver && await addDoc(collection(MohamadFireStore, "Driver"), NewDataDriver) && await updateDoc(doc(MohamadFireStore, "numbers", 'drivers'), { number: DriversNum + 1 });
-        const NewDataCustomer = {
-            customer_city: location,
-            customer_id: currectCustomerId(),
-            customer_name: name,
-            customer_phone: number,
-            customer_site: address,
-            customer_email: CustomerEmail,
-            serial_number: serial
-        }
-        !customer && await addDoc(collection(MohamadFireStore, "Customer"), NewDataCustomer) && await updateDoc(doc(MohamadFireStore, "numbers", 'customers'), { number: CustomersNum + 1 });
         if (car) {
             const NewDataCarCurrent = {
                 Driver_id: driver ? driver.driver_id : currectDriverId(),
@@ -586,7 +774,7 @@ export default function AddCar() {
                 car_product: car.car_product,
                 car_type: car.car_type,
                 car_type2: car.car_type2,
-                customer_id: customer ? customer.customer_id : currectCustomerId(),
+                customer_id: customer.customer_id,
                 enddate: car.enddate,
                 hazmat: car.hazmat,
                 insurance: car.insurance,
@@ -601,7 +789,7 @@ export default function AddCar() {
             const invId = doc(MohamadFireStore, "car", car.id);
             await updateDoc(invId, NewDataCarCurrent);
         }
-        else{
+        else {
             const NewDataCar = {
                 Driver_id: driver ? driver.driver_id : currectDriverId(),
                 car_id: currectCarId(),
@@ -609,7 +797,7 @@ export default function AddCar() {
                 car_product: producer,
                 car_type: typeCar,
                 car_type2: typeFuel,
-                customer_id: customer ? customer.customer_id : currectCustomerId(),
+                customer_id: customer.customer_id,
                 enddate: endDateCar,
                 hazmat: hazmat === 'כן' ? true : false,
                 hazmatDate: hazmat === 'כן' ? hazmatDate : null,
@@ -663,20 +851,18 @@ export default function AddCar() {
             const uploadTaskHazmat = uploadBytesResumable(storageRefHazmat, fileHazmat);
         }
         if (filedriver_license_validity) {
-            const storageRefdriver_license_validity = ref(storagee, `${car ? car.car_num : carNumber}/driver_license_validity`);
+            const storageRefdriver_license_validity = ref(storagee, `${driver ? driver.driver_id_card : cardId}/driver_license_validity`);
             const uploadTaskdriver_license_validity = uploadBytesResumable(storageRefdriver_license_validity, filedriver_license_validity);
         }
         if (fileLicenseget) {
-            const storageRefLicenseget = ref(storagee, `${car ? car.car_num : carNumber}/Licenseget`);
+            const storageRefLicenseget = ref(storagee, `${driver ? driver.driver_id_card : cardId}}/Licenseget`);
             const uploadTaskLicenseget = uploadBytesResumable(storageRefLicenseget, fileLicenseget);
         }
         if (filehazmatD) {
-            const storageRefhazmatD = ref(storagee, `${car ? car.car_num : carNumber}/hazmatD`);
+            const storageRefhazmatD = ref(storagee, `${driver ? driver.driver_id_card : cardId}}/hazmatD`);
             const uploadTaskhazmatD = uploadBytesResumable(storageRefhazmatD, filehazmatD);
         }
-
         resetAllDriver();
-        resetAllCustomer();
         resetAllCar();
         setLoading(false);
         ResetAllFilesCar();
@@ -688,6 +874,17 @@ export default function AddCar() {
         setCarCheck(false);
         setCustomerCheck(false);
         setDriverCheck(false);
+        setShowPropsCarDriver(false);
+        setShowPropsCustomer(true);
+    }
+
+    function checkLicenseGradeDriverCar(value) {
+        let check1 = "C";
+        let check2 = "E";
+        if (value.includes(check1) || value.includes(check2)) {
+            return true;
+        }
+        return false;
     }
 
     function checkIfNotEqualProducer(val) {
@@ -764,12 +961,24 @@ export default function AddCar() {
     const [customerCheck, setCustomerCheck] = useState(false);
     const [driverCheck, setDriverCheck] = useState(false);
 
+    const [customerShowInputs, setCustomerShowInputs] = useState(false);
+    const [carShowInputs, setCarShowInputs] = useState(false);
+    const [driverShowInputs, setDriverShowInputs] = useState(false);
+
+
+    const selectedValue = useMemo(
+        () => Array.from(licensegrade).join(", ").replaceAll("_", " "),
+        [licensegrade]
+    );
+
+    const [showPropsCustomer, setShowPropsCustomer] = useState(true);
+    const [showPropsCarDriver, setShowPropsCarDriver] = useState(false);
+
     return (
         <div>
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
-            {showCustomerModal && <ModalCustomer setCustomer={(cus) => { setCustomer(cus); setCustomerCheck(true); }} show={showCustomerModal} disable={() => setShowCustomerModdal(false)} />}
-            {showDriverModal && <ModalDriver setDriver={(driver) => { setDriver(driver); setDriverCheck(true); }} show={showDriverModal} disable={() => setShowDriverModdal(false)} />}
-            {showCarModal && <ModalCar setCar={(car) => { setCustomerCheck(true); setDriverCheck(true); setCarCheck(true); setShowFormCar(car); setCar(car); setDriver(GetDriverNameByCar(car.Driver_id)); setCustomer(GetCusNameByCar(car.customer_id)); }} show={showCarModal} disable={() => setShowCarModdal(false)} />}
+            {showDriverModal && <ModalDriver customer={customer} setDriver={(driver) => { setDriver(driver); setDriverCheck(true); }} show={showDriverModal} disable={() => setShowDriverModdal(false)} />}
+            {showCarModal && <ModalCar customer={customer} setCar={(car) => { setDriverCheck(true); setCarCheck(true); setShowFormCar(car); setCar(car); setDriver(GetDriverNameByCar(car.Driver_id)); }} show={showCarModal} disable={() => setShowCarModdal(false)} />}
             {
                 showForm ?
                     <div>
@@ -788,7 +997,7 @@ export default function AddCar() {
                     <div className="shadow-2xl rounded-3xl bg-white p-5 mr-5 ml-5">
                         <div className="flex justify-center text-xl m-14">
                             <div className="bg-primary-200 p-5 pl-14 pr-14 rounded-full tracking-widest font-black">
-                                הוספה
+                             יצרת תופס   
                             </div>
                         </div>
                         <div className="w-full bg-white z-30 sticky top-0">
@@ -876,192 +1085,108 @@ export default function AddCar() {
                             </div>
                             <Divider />
                         </div>
-                        <div className="w-full mt-10 mb-10">
-                            <div className="flex justify-around items-center mb-20">
-                                <div className="flex w-full justify-center items-center">
-                                    <div className="text-lg ml-2">לקוח</div>
-                                    <FaUserFriends className="text-xl" />
-                                </div>
-                                <div className="w-full flex justify-around items-center">
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { setCustomer(null); resetAllCustomer(); setCustomerCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            חדש <HiPlus />
-                                        </button>
-                                    </div>
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { setShowCustomerModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            קיים <GoSearch />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="max-[450px]:text-[13px]">
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">שם לקוח</div>
-                                    <div className="w-full">
-                                        <Input ref={nameRef} errorMessage={errorName} isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => { setName(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">נייד</div>
-                                    <div className="w-full">
-                                        <Input ref={numberRef} errorMessage={errorNumber} isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => { setNumber(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">כתובת</div>
-                                    <div className="w-full">
-                                        <Input ref={addressRef} errorMessage={errorAddresss} isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => { setAddresss(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">ישוב</div>
-                                    <div className="w-full">
-                                        <Input ref={locationRef} errorMessage={errorLocation} isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => { setLocation(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">מספר סידורי</div>
-                                    <div className="w-full">
-                                        <Input ref={serialRef} errorMessage={errorSerial} isDisabled={customer ? true : false} value={customer ? customer.serial_number : serial} onValueChange={(value) => { setSerial(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">דואר אלקטרוני</div>
-                                    <div className="w-full">
-                                        <Input ref={CustomerEmailRef} errorMessage={errorCustomerEmail} isDisabled={customer ? true : false} value={customer ? customer.customer_email : CustomerEmail} onValueChange={(value) => { setCustomerEmail(value); CheckCustomerInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className="w-full mt-10 mb-10">
-                            <div className="flex justify-around items-center mb-20">
-                                <div className="flex w-full justify-center items-center">
-                                    <div className="text-lg ml-2">רכב</div>
-                                    <FaCar className="text-xl" />
-                                </div>
-                                <div className="w-full flex justify-around items-center">
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { ResetAllFilesCar();setCar(null); resetAllCar(); setCarCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            חדש <HiPlus />
-                                        </button>
-                                    </div>
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { setShowCarModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            קיים <GoSearch />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="max-[450px]:text-[13px]">
-
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">סוג טופס</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={car ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {car ? car.car_type : typeCar ? typeCar : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={typeCar}
-                                            onSelectionChange={(value) => { setTypeCar(value.currentKey); CheckCarInputs(); }}
-                                        >
-                                            <DropdownItem key="גרור">גרור</DropdownItem>
-                                            <DropdownItem key="ציוד הנדס'">ציוד הנדס'</DropdownItem>
-                                            <DropdownItem key={`רכב עד 9,999 ק"ג`}>רכב עד 9,999 ק"ג</DropdownItem>
-                                            <DropdownItem key={`רכב מעל 10,000 ק"ג`}>רכב מעל 10,000 ק"ג</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
-
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">מספר רכב</div>
-                                    <div className="w-full">
-                                        <Input errorMessage={errorCarNumber} onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => { setCarNumber(value); CheckCarInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">יצרן</div>
-                                    <div onClick={() => setDisplaySearchPrdoucer('')} className="w-full">
-                                        <Input errorMessage={errorProduce} onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => { setProducer(value); CheckCarInputs(); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-
-                                </div>
-                                <div ref={SearchPrdoucerRef1} className="flex justify-end">
-                                    {
-                                        !car && ChoisesProducer() &&
-                                        <div className="w-[280px]">
-                                            <div className="relative w-full">
-                                                <div className={`${displaySearchPrdoucer} overflow-auto max-h-[200px] absolute border-black border-2 mt-1 w-full rounded p-1 bg-white z-30`}>
-                                                    {
-                                                        SearchPrdoucerRef.current?.value
-                                                            ?
-                                                            listProducers
-                                                            :
-                                                            getDefaultProducers()
-                                                    }
-                                                </div>
+                        {
+                            showPropsCustomer &&
+                            <>
+                                <div className="w-full mt-10 mb-10">
+                                    <div className="flex justify-around items-center mb-20">
+                                        <div className="flex w-full justify-center items-center">
+                                            <div className="text-lg ml-2">לקוח</div>
+                                            <FaUserFriends className="text-xl" />
+                                        </div>
+                                        <div className="w-full flex justify-around items-center">
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { setCustomer(null); resetAllCustomer(); setCustomerCheck(false); setCustomerShowInputs(false);setShowCustomerModdal(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    חדש <HiPlus />
+                                                </button>
+                                            </div>
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { setShowCustomerModdal(true);setShowCustomerModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    קיים <GoSearch />
+                                                </button>
                                             </div>
                                         </div>
-                                    }
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">תוקף רישיון רכב</div>
-                                    <div className="w-full flex items-center">
-                                        <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => { setEndDateCar(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        <input onChange={(e) => setFileEndDateCar(e.target.files[0])} ref={fileEndDateCarRef} className="hidden" type="file" />
-                                        <Button className={`text-${fileEndDateCar ? 'primary' : 'default'} border-${fileEndDateCar ? 'primary' : 'default'}`} onClick={() => { fileEndDateCarRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                        {fileEndDateCar && <Button onClick={() => setFileEndDateCar(null)} color="danger" variant="light" className="">הסרה</Button>}
                                     </div>
-                                </div>                        
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">תוקף ביטוח</div>
-                                    <div className="w-full flex items-center">
-                                        <Input errorMessage={errorDateInsurance} isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => { setInsurance(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        <input onChange={(e) => setFileInsurance(e.target.files[0])} ref={fileInsuranceRef} className="hidden" type="file" />
-                                        <Button className={`text-${fileInsurance ? 'primary' : 'default'} border-${fileInsurance ? 'primary' : 'default'}`} onClick={() => { fileInsuranceRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                        {fileInsurance && <Button onClick={() => setFileInsurance(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                    <div dir="ltr">
+                                    {showCustomerModal && <ModalCustomer setCustomer={(cus) => { setCustomer(cus); setCustomerCheck(true);}} show={showCustomerModal} disable={() => setShowCustomerModdal(false)} />}
                                     </div>
-                                </div>
-                                {
-                                    (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar === `רכב מעל 10,000 ק"ג`) &&
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">אישור בולמים</div>
-                                        <div className="w-full flex items-center">
-                                            <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => { setShockabsorbers(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                            <input onChange={(e) => setFileShockabsorber(e.target.files[0])} ref={fileShockabsorbersRef} className="hidden" type="file" />
-                                            <Button className={`text-${fileShockabsorbers ? 'primary' : 'default'} border-${fileShockabsorbers ? 'primary' : 'default'}`} onClick={() => { fileShockabsorbersRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                            {fileShockabsorbers && <Button onClick={() => setFileShockabsorber(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                    {
+                                        !showCustomerModal && 
+                                        <div className={`max-[450px]:text-[13px]`}>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">שם לקוח</div>
+                                            <div className="w-full">
+                                                <Input ref={nameRef} errorMessage={errorName} isDisabled={customer ? true : false} value={customer ? customer.customer_name : name} onValueChange={(value) => { setName(value); CheckCustomerInputs(); setErrorName('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">נייד</div>
+                                            <div className="w-full">
+                                                <Input ref={numberRef} errorMessage={errorNumber} isDisabled={customer ? true : false} value={customer ? customer.customer_phone : number} onValueChange={(value) => { setNumber(value); CheckCustomerInputs();setErrorNumber(''); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">כתובת</div>
+                                            <div className="w-full">
+                                                <Input ref={addressRef} errorMessage={errorAddresss} isDisabled={customer ? true : false} value={customer ? customer.customer_site : address} onValueChange={(value) => { setAddresss(value); CheckCustomerInputs();setErrorAddresss(''); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">ישוב</div>
+                                            <div className="w-full">
+                                                <Input ref={locationRef} errorMessage={errorLocation} isDisabled={customer ? true : false} value={customer ? customer.customer_city : location} onValueChange={(value) => { setLocation(value); CheckCustomerInputs();setErrorLocation('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">מספר סידורי</div>
+                                            <div className="w-full">
+                                                <Input ref={serialRef} errorMessage={errorSerial} isDisabled={customer ? true : false} value={customer ? customer.serial_number : serial} onValueChange={(value) => { setSerial(value); CheckCustomerInputs();setErrorSerial(''); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">דואר אלקטרוני</div>
+                                            <div className="w-full">
+                                                <Input ref={CustomerEmailRef} errorMessage={errorCustomerEmail} isDisabled={customer ? true : false} value={customer ? customer.customer_email : CustomerEmail} onValueChange={(value) => { setCustomerEmail(value); CheckCustomerInputs();setErrorCustomerEmail(''); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
                                         </div>
                                     </div>
-                                }
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">ביקורת חורף</div>
-                                    <div className="w-full flex items-center">
-                                        <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => { setWinterreview(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        <input onChange={(e) => setFileWinterreview(e.target.files[0])} ref={fileWinterreviewRef} className="hidden" type="file" />
-                                        <Button className={`text-${fileWinterreview ? 'primary' : 'default'} border-${fileWinterreview ? 'primary' : 'default'}`} onClick={() => { fileWinterreviewRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                        {fileWinterreview && <Button onClick={() => setFileWinterreview(null)} color="danger" variant="light" className="">הסרה</Button>}
-                                    </div>
+                                    }
+                                    
                                 </div>
-                                {
-                                    (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar === `רכב מעל 10,000 ק"ג`) &&
-                                    <>
+                                <Divider />
+                                <div className="flex justify-center">
+                                    <Button className="m-5" size="lg" color="primary" onClick={AddCustomer}>
+                                        המשך<FaArrowLeft/>
+                                    </Button>
+                                </div>
+                            </>
+                        }
+                        {
+                            showPropsCarDriver &&
+                            <>
+                                <div className="w-full mt-10 mb-10">
+                                    <div className="flex justify-around items-center mb-20">
+                                        <div className="flex w-full justify-center items-center">
+                                            <div className="text-lg ml-2">רכב</div>
+                                            <FaCar className="text-xl" />
+                                        </div>
+                                        <div className="w-full flex justify-around items-center">
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { ResetAllFilesCar(); setCar(null); resetAllCar(); setCarCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    חדש <HiPlus />
+                                                </button>
+                                            </div>
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { setShowCarModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    קיים <GoSearch />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="max-[450px]:text-[13px]">
+
                                         <div className="flex items-center mt-5">
-                                            <div className="w-[160px]">טכוגרף</div>
+                                            <div className="w-[160px]">סוג טופס</div>
                                             <Dropdown dir="rtl">
                                                 <DropdownTrigger>
                                                     <Button
@@ -1070,7 +1195,7 @@ export default function AddCar() {
                                                         variant="bordered"
                                                         className="capitalize"
                                                     >
-                                                        {car ? car.tachograph ? 'כן' : 'לא' : tachograph ? tachograph : "לבחור"}
+                                                        {car ? car.car_type : typeCar ? typeCar : "לבחור"}
                                                     </Button>
                                                 </DropdownTrigger>
                                                 <DropdownMenu
@@ -1078,355 +1203,468 @@ export default function AddCar() {
                                                     variant="flat"
                                                     disallowEmptySelection
                                                     selectionMode="single"
-                                                    selectedKeys={tachograph}
-                                                    onSelectionChange={(value) => { setTachograph(value.currentKey); CheckCarInputs(); }}
+                                                    selectedKeys={typeCar}
+                                                    onSelectionChange={(value) => { setTypeCar(value.currentKey); CheckCarInputs();setErrorTypeCar(''); }}
+                                                >
+                                                    <DropdownItem key="גרור">גרור</DropdownItem>
+                                                    <DropdownItem key="ציוד הנדס'">ציוד הנדס'</DropdownItem>
+                                                    <DropdownItem key={`רכב עד 9,999 ק"ג`}>רכב עד 9,999 ק"ג</DropdownItem>
+                                                    <DropdownItem key={`רכב מעל 10,000 ק"ג`}>רכב מעל 10,000 ק"ג</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorTypeCar && <div className="text-danger text-xs">{errorTypeCar}</div>}
+
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">מספר רכב</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorCarNumber} onKeyDown={(e) => sortCarNumber(e)} isDisabled={car ? true : false} value={car ? car.car_num : carNumber} onValueChange={(value) => { setCarNumber(value); CheckCarInputs();setErrorCarNumber(''); }} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">יצרן</div>
+                                            <div onClick={() => setDisplaySearchPrdoucer('')} className="w-full">
+                                                <Input errorMessage={errorProduce} onChange={GetSearchProducers} ref={SearchPrdoucerRef} isDisabled={car ? true : false} value={car ? car.car_product : producer} onValueChange={(value) => { setProducer(value); CheckCarInputs(); setErrorProduce('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+
+                                        </div>
+                                        <div ref={SearchPrdoucerRef1} className="flex justify-end">
+                                            {
+                                                !car && ChoisesProducer() &&
+                                                <div className="w-[280px]">
+                                                    <div className="relative w-full">
+                                                        <div className={`${displaySearchPrdoucer} overflow-auto max-h-[200px] absolute border-black border-2 mt-1 w-full rounded p-1 bg-white z-30`}>
+                                                            {
+                                                                SearchPrdoucerRef.current?.value
+                                                                    ?
+                                                                    listProducers
+                                                                    :
+                                                                    getDefaultProducers()
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">תוקף רישיון רכב</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorDate} isDisabled={car ? true : false} value={car ? car.enddate : endDateCar} onValueChange={(value) => { setEndDateCar(value); CheckCarInputs();setErrorDate(''); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <input onChange={(e) => setFileEndDateCar(e.target.files[0])} ref={fileEndDateCarRef} className="hidden" type="file" />
+                                                <Button className={`text-${fileEndDateCar ? 'primary' : 'default'} border-${fileEndDateCar ? 'primary' : 'default'}`} onClick={() => { fileEndDateCarRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                {fileEndDateCar && <Button onClick={() => setFileEndDateCar(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">תוקף ביטוח</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorDateInsurance} isDisabled={car ? true : false} value={car ? car.insurance : insurance} onValueChange={(value) => { setInsurance(value); CheckCarInputs();setErrorDateInsurance(''); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <input onChange={(e) => setFileInsurance(e.target.files[0])} ref={fileInsuranceRef} className="hidden" type="file" />
+                                                <Button className={`text-${fileInsurance ? 'primary' : 'default'} border-${fileInsurance ? 'primary' : 'default'}`} onClick={() => { fileInsuranceRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                {fileInsurance && <Button onClick={() => setFileInsurance(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                            </div>
+                                        </div>
+                                        {
+                                            (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar === `רכב מעל 10,000 ק"ג`) &&
+                                            <div className="flex items-center mt-5">
+                                                <div className="w-[200px]">אישור בולמים</div>
+                                                <div className="w-full flex items-center">
+                                                    <Input errorMessage={errorShockabsorbers} isDisabled={car ? true : false} value={car ? car.shockabsorbers : shockabsorbers} onValueChange={(value) => { setShockabsorbers(value); CheckCarInputs();setErrorShockabsorbers(''); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                    <input onChange={(e) => setFileShockabsorber(e.target.files[0])} ref={fileShockabsorbersRef} className="hidden" type="file" />
+                                                    <Button className={`text-${fileShockabsorbers ? 'primary' : 'default'} border-${fileShockabsorbers ? 'primary' : 'default'}`} onClick={() => { fileShockabsorbersRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                    {fileShockabsorbers && <Button onClick={() => setFileShockabsorber(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                                </div>
+                                            </div>
+                                        }
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">ביקורת חורף</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorWinterreview} isDisabled={car ? true : false} value={car ? car.winterreview : winterreview} onValueChange={(value) => { setWinterreview(value); CheckCarInputs();setErrorWinterreview(''); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <input onChange={(e) => setFileWinterreview(e.target.files[0])} ref={fileWinterreviewRef} className="hidden" type="file" />
+                                                <Button className={`text-${fileWinterreview ? 'primary' : 'default'} border-${fileWinterreview ? 'primary' : 'default'}`} onClick={() => { fileWinterreviewRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                {fileWinterreview && <Button onClick={() => setFileWinterreview(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                            </div>
+                                        </div>
+                                        {
+                                            (car?.car_type === `רכב מעל 10,000 ק"ג` || typeCar === `רכב מעל 10,000 ק"ג`) &&
+                                            <>
+                                                <div className="flex items-center mt-5">
+                                                    <div className="w-[160px]">טכוגרף</div>
+                                                    <Dropdown dir="rtl">
+                                                        <DropdownTrigger>
+                                                            <Button
+                                                                isDisabled={car ? true : false}
+                                                                color="primary"
+                                                                variant="bordered"
+                                                                className="capitalize"
+                                                            >
+                                                                {car ? car.tachograph ? 'כן' : 'לא' : tachograph ? tachograph : "לבחור"}
+                                                            </Button>
+                                                        </DropdownTrigger>
+                                                        <DropdownMenu
+                                                            aria-label="Single selection example"
+                                                            variant="flat"
+                                                            disallowEmptySelection
+                                                            selectionMode="single"
+                                                            selectedKeys={tachograph}
+                                                            onSelectionChange={(value) => { setTachograph(value.currentKey); CheckCarInputs();setErrorTachograph(''); }}
+                                                        >
+                                                            <DropdownItem key='כן'>כן</DropdownItem>
+                                                            <DropdownItem key='לא'>לא</DropdownItem>
+                                                        </DropdownMenu>
+                                                    </Dropdown>
+                                                </div>
+                                                {errorTachograph && <div className="text-danger text-xs">{errorTachograph}</div>}
+                                                {
+                                                    (tachograph === 'כן' || car?.tachograph) &&
+                                                    <div className="flex items-center mt-5">
+                                                        <div className="w-[200px]">תאריך הטכוגרף</div>
+                                                        <div className="w-full flex items-center">
+                                                            <Input errorMessage={errorTachographDate} isDisabled={car ? true : false} value={car ? car.tachographDate : tachographDate} onValueChange={(value) => { setTachographDate(value); CheckCarInputs();setErrorTachographDate(''); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                            <input onChange={(e) => setFileTachograph(e.target.files[0])} ref={fileTachographRef} className="hidden" type="file" />
+                                                            <Button className={`text-${fileTachograph ? 'primary' : 'default'} border-${fileTachograph ? 'primary' : 'default'}`} onClick={() => { fileTachographRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                            {fileTachograph && <Button onClick={() => setFileTachograph(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </>
+                                        }
+                                        
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">חו"מס</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={car ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {car ? car.hazmat ? 'כן' : 'לא' : hazmat ? hazmat : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={hazmat}
+                                                    onSelectionChange={(value) => { setHazmat(value.currentKey); CheckCarInputs();setErrorHazmat(''); }}
                                                 >
                                                     <DropdownItem key='כן'>כן</DropdownItem>
                                                     <DropdownItem key='לא'>לא</DropdownItem>
                                                 </DropdownMenu>
                                             </Dropdown>
                                         </div>
+                                        {errorHazmat && <div className="text-danger text-xs">{errorHazmat}</div>}
                                         {
-                                            (tachograph === 'כן' || car?.tachograph) &&
+                                            (hazmat === 'כן' || car?.hazmat) &&
                                             <div className="flex items-center mt-5">
-                                                <div className="w-[200px]">תאריך הטכוגרף</div>
+                                                <div className="w-[200px]">תאריך חו"מס</div>
                                                 <div className="w-full flex items-center">
-                                                    <Input isDisabled={car ? true : false} value={car ? car.tachographDate : tachographDate} onValueChange={(value) => { setTachographDate(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                                    <input onChange={(e) => setFileTachograph(e.target.files[0])} ref={fileTachographRef} className="hidden" type="file" />
-                                                    <Button className={`text-${fileTachograph ? 'primary' : 'default'} border-${fileTachograph ? 'primary' : 'default'}`} onClick={() => { fileTachographRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                                    {fileTachograph && <Button onClick={() => setFileTachograph(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                                    <Input errorMessage={errorHazmatDate} isDisabled={car ? true : false} value={car ? car.hazmatDate : hazmatDate} onValueChange={(value) => { setHazmatDate(value); CheckCarInputs();setErrorHazmatDate('') }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                    <input onChange={(e) => setFileHazmat(e.target.files[0])} ref={fileHazmatRef} className="hidden" type="file" />
+                                                    <Button className={`text-${fileHazmat ? 'primary' : 'default'} border-${fileHazmat ? 'primary' : 'default'}`} onClick={() => { fileHazmatRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                    {fileHazmat && <Button onClick={() => setFileHazmat(null)} color="danger" variant="light" className="">הסרה</Button>}
                                                 </div>
                                             </div>
                                         }
-                                    </>
-                                }
-                                {errorTachograph && <div className="text-danger text-xs">{errorTachograph}</div>}
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">חו"מס</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={car ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {car ? car.hazmat ? 'כן' : 'לא' : hazmat ? hazmat : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={hazmat}
-                                            onSelectionChange={(value) => { setHazmat(value.currentKey); CheckCarInputs(); }}
-                                        >
-                                            <DropdownItem key='כן'>כן</DropdownItem>
-                                            <DropdownItem key='לא'>לא</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {
-                                    (hazmat === 'כן' || car?.hazmat) &&
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">תאריך חו"מס</div>
-                                        <div className="w-full flex items-center">
-                                            <Input isDisabled={car ? true : false} value={car ? car.hazmatDate : hazmatDate} onValueChange={(value) => { setHazmatDate(value); CheckCarInputs(); }} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                            <input onChange={(e) => setFileHazmat(e.target.files[0])} ref={fileHazmatRef} className="hidden" type="file" />
-                                            <Button className={`text-${fileHazmat ? 'primary' : 'default'} border-${fileHazmat ? 'primary' : 'default'}`} onClick={() => { fileHazmatRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                            {fileHazmat && <Button onClick={() => setFileHazmat(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">חברת ביטוח</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={car ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {car ? car.insuranceCompany : insuranceCompany ? insuranceCompany : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={insuranceCompany}
+                                                    onSelectionChange={(value) => { setInsuranceCompany(value.currentKey); CheckCarInputs(); setErrorInsuranceCompany('');}}
+                                                >
+                                                    <DropdownItem key='איילון - חברת ביטוח'>איילון - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='אליהו - חברת ביטוח'>אליהו - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='הכשרה חברה לביטוח'>הכשרה חברה לביטוח</DropdownItem>
+                                                    <DropdownItem key='הפניקס - חברת ביטוח'>הפניקס - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='הראל - חברת ביטוח'>הראל - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='כלל - חברת ביטוח'>כלל - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='מגדל - חברת ביטוח'>מגדל - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='מנורה - חברת ביטוח'>מנורה - חברת ביטוח</DropdownItem>
+                                                    <DropdownItem key='שירביט - חברה לביטוח'>שירביט - חברה לביטוח</DropdownItem>
+                                                    <DropdownItem key='שלמה (ניו קופל) - חברה לביטוח'>שלמה (ניו קופל) - חברה לביטוח</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
                                         </div>
-                                    </div>
-                                }
-                                {errorHazmat && <div className="text-danger text-xs">{errorHazmat}</div>}
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">חברת ביטוח</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={car ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {car ? car.insuranceCompany : insuranceCompany ? insuranceCompany : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={insuranceCompany}
-                                            onSelectionChange={(value) => { setInsuranceCompany(value.currentKey); CheckCarInputs(); }}
-                                        >
-                                            <DropdownItem key='איילון - חברת ביטוח'>איילון - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='אליהו - חברת ביטוח'>אליהו - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='הכשרה חברה לביטוח'>הכשרה חברה לביטוח</DropdownItem>
-                                            <DropdownItem key='הפניקס - חברת ביטוח'>הפניקס - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='הראל - חברת ביטוח'>הראל - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='כלל - חברת ביטוח'>כלל - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='מגדל - חברת ביטוח'>מגדל - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='מנורה - חברת ביטוח'>מנורה - חברת ביטוח</DropdownItem>
-                                            <DropdownItem key='שירביט - חברה לביטוח'>שירביט - חברה לביטוח</DropdownItem>
-                                            <DropdownItem key='שלמה (ניו קופל) - חברה לביטוח'>שלמה (ניו קופל) - חברה לביטוח</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {errorInsuranceCompany && <div className="text-danger text-xs">{errorInsuranceCompany}</div>}
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">סוג ביטוח</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={car ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {car ? car.insuranceclass : insuranceclass ? insuranceclass : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={insuranceclass}
-                                            onSelectionChange={(value) => { setInsuranceclass(value.currentKey); CheckCarInputs(); }}
-                                        >
-                                            <DropdownItem key='צד שלשי'>צד שלשי</DropdownItem>
-                                            <DropdownItem key='מקיף'>מקיף</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {errorInsuranceclass && <div className="text-danger text-xs">{errorInsuranceclass}</div>}
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">סוג רכב</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={car ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {car ? car.car_type2 : typeFuel ? typeFuel : "לבחור"}
-                                            </Button>
+                                        {errorInsuranceCompany && <div className="text-danger text-xs">{errorInsuranceCompany}</div>}
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">סוג ביטוח</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={car ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {car ? car.insuranceclass : insuranceclass ? insuranceclass : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={insuranceclass}
+                                                    onSelectionChange={(value) => { setInsuranceclass(value.currentKey); CheckCarInputs(); setErrorInsuranceclass();}}
+                                                >
+                                                    <DropdownItem key='צד שלשי'>צד שלשי</DropdownItem>
+                                                    <DropdownItem key='מקיף'>מקיף</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorInsuranceclass && <div className="text-danger text-xs">{errorInsuranceclass}</div>}
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">סוג רכב</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={car ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {car ? car.car_type2 : typeFuel ? typeFuel : "לבחור"}
+                                                    </Button>
 
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={typeFuel}
-                                            onSelectionChange={(value) => { setTypeFuel(value.currentKey); CheckCarInputs(); }}
-                                        >
-                                            {
-                                                type2.map((type) => {
-                                                    return <DropdownItem key={type.name}>{type.name}</DropdownItem>
-                                                })
-                                            }
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {errorTypeFuel && <div className="text-danger text-xs">{errorTypeFuel}</div>}
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className="w-full mt-10 mb-10">
-                            <div className="flex justify-around items-center mb-20">
-                                <div className="flex w-full justify-center items-center">
-                                    <div className="text-lg ml-2">נהג</div>
-                                    <TbSteeringWheel className="text-2xl" />
-                                </div>
-                                <div className="w-full flex justify-around items-center">
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { ResetAllFilesDriver();setDriver(null); resetAllDriver(); setDriverCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            חדש <HiPlus />
-                                        </button>
-                                    </div>
-                                    <div className="ml-2 mr-2">
-                                        <button onClick={() => { setShowDriverModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
-                                            קיים <GoSearch />
-                                        </button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={typeFuel}
+                                                    onSelectionChange={(value) => { setTypeFuel(value.currentKey); CheckCarInputs();setErrorTypeFuel(''); }}
+                                                >
+                                                    {
+                                                        type2.map((type) => {
+                                                            return <DropdownItem key={type.name}>{type.name}</DropdownItem>
+                                                        })
+                                                    }
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorTypeFuel && <div className="text-danger text-xs">{errorTypeFuel}</div>}
                                     </div>
                                 </div>
-                            </div>
-                            <div className="max-[450px]:text-[13px]">
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">שם פרטי</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => setNameD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">שם משפחה</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => setLastName(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">ישוב</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => setCityD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">כתובת</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => setAddresssD(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">נייד</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => setPhone(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">תוקף רישיון נהיגה</div>
-                                    <div className="w-full flex items-center">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => setEndDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        <input onChange={(e) => setFiledriver_license_validity(e.target.files[0])} ref={filedriver_license_validityRef} className="hidden" type="file" />
-                                        <Button className={`text-${filedriver_license_validity ? 'primary' : 'default'} border-${filedriver_license_validity ? 'primary' : 'default'}`} onClick={() => { filedriver_license_validityRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                        {filedriver_license_validity && <Button onClick={() => setFiledriver_license_validity(null)} color="danger" variant="light" className="">הסרה</Button>}
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">מס' ת.ז</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => setCardId(value)} type="number" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">תאריך יצרת רישיון</div>
-                                    <div className="w-full flex items-center">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => setLicenseget(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                        <input onChange={(e) => setFileLicenseget(e.target.files[0])} ref={fileLicensegetRef} className="hidden" type="file" />
-                                        <Button className={`text-${fileLicenseget ? 'primary' : 'default'} border-${fileLicenseget ? 'primary' : 'default'}`} onClick={() => { fileLicensegetRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                        {fileLicenseget && <Button onClick={() => setFileLicenseget(null)} color="danger" variant="light" className="">הסרה</Button>}
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[200px]">מספר רשיון</div>
-                                    <div className="w-full">
-                                        <Input isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => setLicensenumber(value)} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">דרגת רישיון</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={driver ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {driver ? driver.licensegrade : licensegrade ? licensegrade : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="multiple"
-                                            selectedKeys={licensegrade}
-                                            onSelectionChange={(value) => { setLicensegrade(value.currentKey)}}
-                                        >
-                                            <DropdownItem key="A1">A1</DropdownItem>
-                                            <DropdownItem key="A2">A2</DropdownItem>
-                                            <DropdownItem key="A">A</DropdownItem>
-                                            <DropdownItem key="B">B</DropdownItem>
-                                            <DropdownItem key="C1">C1</DropdownItem>
-                                            <DropdownItem key="C">C</DropdownItem>
-                                            <DropdownItem key="D">D</DropdownItem>
-                                            <DropdownItem key="D1">D1</DropdownItem>
-                                            <DropdownItem key="D2">D2</DropdownItem>
-                                            <DropdownItem key="D3">D3</DropdownItem>
-                                            <DropdownItem key="E">E</DropdownItem>
-                                            <DropdownItem key="1">1</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">נהג קבוע</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={driver ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {driver ? driver.driver_fixed ? 'כן' : 'לא' : isFixed ? isFixed : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={isFixed}
-                                            onSelectionChange={(value) => { setIsFixed(value.currentKey)}}
-                                        >
-                                            <DropdownItem key="כן">כן</DropdownItem>
-                                            <DropdownItem key="לא">לא</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                <div className="flex items-center mt-5">
-                                    <div className="w-[160px]">חו"מס</div>
-                                    <Dropdown dir="rtl">
-                                        <DropdownTrigger>
-                                            <Button
-                                                isDisabled={driver ? true : false}
-                                                color="primary"
-                                                variant="bordered"
-                                                className="capitalize"
-                                            >
-                                                {driver ? driver.hazmat ? 'כן' : 'לא' : hazmatD ? hazmatD : "לבחור"}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={hazmatD}
-                                            onSelectionChange={(value) => { setHazmatD(value.currentKey)}}
-                                        >
-                                            <DropdownItem key="כן">כן</DropdownItem>
-                                            <DropdownItem key="לא">לא</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                                {
-                                    (hazmatD.currentKey === 'כן' || driver?.hazmat) &&
-                                    <div className="flex items-center mt-5">
-                                        <div className="w-[200px]">חו"מס</div>
-                                        <div className="w-full flex items-centerl">
-                                            <Input isDisabled={driver ? true : false} value={driver ? driver.hazmatDDate : hazmatDDate} onValueChange={(value) => setHazmatDDate(value)} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
-                                            <input onChange={(e) => setFilehazmatD(e.target.files[0])} ref={filehazmatDRef} className="hidden" type="file" />
-                                            <Button className={`text-${filehazmatD ? 'primary' : 'default'} border-${filehazmatD ? 'primary' : 'default'}`} onClick={() => { filehazmatDRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
-                                            {filehazmatD && <Button onClick={() => setFilehazmatD(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                <Divider />
+                                <div className="w-full mt-10 mb-10">
+                                    <div className="flex justify-around items-center mb-20">
+                                        <div className="flex w-full justify-center items-center">
+                                            <div className="text-lg ml-2">נהג</div>
+                                            <TbSteeringWheel className="text-2xl" />
+                                        </div>
+                                        <div className="w-full flex justify-around items-center">
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { ResetAllFilesDriver(); setDriver(null); resetAllDriver(); setDriverCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    חדש <HiPlus />
+                                                </button>
+                                            </div>
+                                            <div className="ml-2 mr-2">
+                                                <button onClick={() => { setShowDriverModdal(true); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                                    קיים <GoSearch />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="max-[450px]:text-[13px]">
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">שם פרטי</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorNameD} isDisabled={driver ? true : false} value={driver ? driver.driver_name : nameD} onValueChange={(value) => {setNameD(value);setErrorNameD('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">שם משפחה</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorLastName} isDisabled={driver ? true : false} value={driver ? driver.last_name : lastName} onValueChange={(value) => {setLastName(value);setErrorLastName('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">ישוב</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorCityD} isDisabled={driver ? true : false} value={driver ? driver.city : CityD} onValueChange={(value) => {setCityD(value);setErrorCityD('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">כתובת</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorAddresssD} isDisabled={driver ? true : false} value={driver ? driver.address : addressD} onValueChange={(value) => {setAddresssD(value);setErrorAddresssD('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">נייד</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorPhone} isDisabled={driver ? true : false} value={driver ? driver.driver_phone : phone} onValueChange={(value) => {setPhone(value);setErrorPhone('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">מס' ת.ז</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorCardId} isDisabled={driver ? true : false} value={driver ? driver.driver_id_card : cardId} onValueChange={(value) => {setCardId(value);setErrorCardId('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">מספר רשיון</div>
+                                            <div className="w-full">
+                                                <Input errorMessage={errorLicensenumber} isDisabled={driver ? true : false} value={driver ? driver.licensenumber : licensenumber} onValueChange={(value) => {setLicensenumber(value);setErrorLicensenumber('');}} type="text" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">תוקף רישיון נהיגה</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorEndDate} isDisabled={driver ? true : false} value={driver ? driver.driver_license_validity : endDate} onValueChange={(value) => {setEndDate(value);setErrorEndDate('');}} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <input onChange={(e) => setFiledriver_license_validity(e.target.files[0])} ref={filedriver_license_validityRef} className="hidden" type="file" />
+                                                <Button className={`text-${filedriver_license_validity ? 'primary' : 'default'} border-${filedriver_license_validity ? 'primary' : 'default'}`} onClick={() => { filedriver_license_validityRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                {filedriver_license_validity && <Button onClick={() => setFiledriver_license_validity(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[200px]">תאריך יצרת רישיון</div>
+                                            <div className="w-full flex items-center">
+                                                <Input errorMessage={errorLicenseget} isDisabled={driver ? true : false} value={driver ? driver.licenseget : licenseget} onValueChange={(value) => {setLicenseget(value);setErrorLicenseget('');}} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                <input onChange={(e) => setFileLicenseget(e.target.files[0])} ref={fileLicensegetRef} className="hidden" type="file" />
+                                                <Button className={`text-${fileLicenseget ? 'primary' : 'default'} border-${fileLicenseget ? 'primary' : 'default'}`} onClick={() => { fileLicensegetRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                {fileLicenseget && <Button onClick={() => setFileLicenseget(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">דרגת רישיון</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={driver ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {driver ? driver.licensegrade : licensegrade ? selectedValue : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    closeOnSelect={false}
+                                                    disallowEmptySelection
+                                                    selectionMode="multiple"
+                                                    selectedKeys={licensegrade}
+                                                    onSelectionChange={(value) => { setLicensegrade(value);setErrorLicensegrad(''); }}
+                                                >
+                                                    <DropdownItem key="A1">A1</DropdownItem>
+                                                    <DropdownItem key="A2">A2</DropdownItem>
+                                                    <DropdownItem key="A">A</DropdownItem>
+                                                    <DropdownItem key="B">B</DropdownItem>
+                                                    <DropdownItem key="C1">C1</DropdownItem>
+                                                    <DropdownItem key="C">C</DropdownItem>
+                                                    <DropdownItem key="D">D</DropdownItem>
+                                                    <DropdownItem key="D1">D1</DropdownItem>
+                                                    <DropdownItem key="D2">D2</DropdownItem>
+                                                    <DropdownItem key="D3">D3</DropdownItem>
+                                                    <DropdownItem key="E">E</DropdownItem>
+                                                    <DropdownItem key="1">1</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorLicensegrad && <div className="text-danger text-xs">{errorLicensegrad}</div>}
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">נהג קבוע</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={driver ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {driver ? driver.driver_fixed ? 'כן' : 'לא' : isFixed ? isFixed : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={isFixed}
+                                                    onSelectionChange={(value) => { setIsFixed(value.currentKey);setErrorIsFixed(''); }}
+                                                >
+                                                    <DropdownItem key="כן">כן</DropdownItem>
+                                                    <DropdownItem key="לא">לא</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorIsFixed && <div className="text-danger text-xs">{errorIsFixed}</div>}
+                                        <div className="flex items-center mt-5">
+                                            <div className="w-[160px]">חו"מס</div>
+                                            <Dropdown dir="rtl">
+                                                <DropdownTrigger>
+                                                    <Button
+                                                        isDisabled={driver ? true : false}
+                                                        color="primary"
+                                                        variant="bordered"
+                                                        className="capitalize"
+                                                    >
+                                                        {driver ? driver.hazmat ? 'כן' : 'לא' : hazmatD ? hazmatD : "לבחור"}
+                                                    </Button>
+                                                </DropdownTrigger>
+                                                <DropdownMenu
+                                                    aria-label="Single selection example"
+                                                    variant="flat"
+                                                    disallowEmptySelection
+                                                    selectionMode="single"
+                                                    selectedKeys={hazmatD}
+                                                    onSelectionChange={(value) => { setHazmatD(value.currentKey);setErrorHazmatD(''); }}
+                                                >
+                                                    <DropdownItem key="כן">כן</DropdownItem>
+                                                    <DropdownItem key="לא">לא</DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        </div>
+                                        {errorHazmatD && <div className="text-danger text-xs">{errorHazmatD}</div>}
+                                        {
+                                            (hazmatD === 'כן' || driver?.hazmat) &&
+                                            <div className="flex items-center mt-5">
+                                                <div className="w-[200px]">חו"מס</div>
+                                                <div className="w-full flex items-centerl">
+                                                    <Input errorMessage={errorHazmatDDate} isDisabled={driver ? true : false} value={driver ? driver.hazmatDDate : hazmatDDate} onValueChange={(value) => {setHazmatDDate(value);setErrorHazmatDDate('');}} type="date" variant="bordered" size="sm" color="primary" className="w-full max-w-[300px] ml-3" />
+                                                    <input onChange={(e) => setFilehazmatD(e.target.files[0])} ref={filehazmatDRef} className="hidden" type="file" />
+                                                    <Button className={`text-${filehazmatD ? 'primary' : 'default'} border-${filehazmatD ? 'primary' : 'default'}`} onClick={() => { filehazmatDRef.current.click() }} variant="bordered" size="sm"><FaFolder /></Button>
+                                                    {filehazmatD && <Button onClick={() => setFilehazmatD(null)} color="danger" variant="light" className="">הסרה</Button>}
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <Divider />
+                                {
+                                    staticErrorMessage && <div className="text-danger mt-5">
+                                        {staticErrorMessage}
+                                    </div>
                                 }
-                            </div>
-                        </div>
-                        <Divider />
-                        {
-                            staticErrorMessage && <div className="text-danger mt-5">
-                                {staticErrorMessage}
-                            </div>
+                                <div className="flex justify-between m-14 items-center">
+                                    <Button onClick={() => {ResetAllFilesCar();ResetAllFilesDriver();resetAllDriver();resetAllCar();setShowPropsCustomer(true);setShowPropsCarDriver(false);}}>לחזור<FaArrowRight/></Button>
+                                    <Button isDisabled={!disableAddCar} onClick={AddCar} size="lg" color="primary" >אישור</Button>
+                                    <div className="w-[40px]"></div>
+                                </div>
+                            </>
                         }
-                        <div className="flex justify-center m-14">
-                            <Button isDisabled={!disableAddCar} onClick={AddCar} size="lg" color="primary" >אישור</Button>
-                        </div>
                     </div>
             }
         </div>
