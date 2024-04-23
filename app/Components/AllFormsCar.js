@@ -39,7 +39,7 @@ export default function AllFormsCar(props) {
                                 </div>
                             </div>
                             <div className="absolute overflow-auto w-full flex">
-                                <ShowForm check={GetClickedCheck(check.check_id)} disable={() => { setOpenForm(false); }} car={props.car} driver={props.driver} customer={props.customer} />
+                                <ShowForm withData check={GetClickedCheck(check.check_id)} disable={() => { setOpenForm(false); }} car={props.car} driver={props.driver} customer={props.customer} />
                             </div>
                         </div>
                     </div>
