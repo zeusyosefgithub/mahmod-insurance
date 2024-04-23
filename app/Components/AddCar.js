@@ -139,6 +139,7 @@ export default function AddCar() {
     const insuranceCompanyRef = useRef();
 
     const resetAllCar = () => {
+        setTypeCar('');
         setCarNumber('');
         setProducer('');
         setTypeFuel('');
@@ -285,13 +286,15 @@ export default function AddCar() {
     const filehazmatDRef = useRef();
     const [filehazmatD, setFilehazmatD] = useState(null);
 
-    const ResetAllFiles = () => {
+    const ResetAllFilesCar  = () => {
         setFileEndDateCar('');
         setFileInsurance('');
         setFileShockabsorber('');
         setFileWinterreview('');
         setFileTachograph('');
         setFileHazmat('');
+    }
+    const ResetAllFilesDriver  = () => {
         setFiledriver_license_validity('');
         setFileLicenseget('');
         setFilehazmatD('');
@@ -676,11 +679,15 @@ export default function AddCar() {
         resetAllCustomer();
         resetAllCar();
         setLoading(false);
-        ResetAllFiles();
+        ResetAllFilesCar();
+        ResetAllFilesDriver();
         setShowForm(true);
         setCar(null);
         setCustomer(null);
         setDriver(null);
+        setCarCheck(false);
+        setCustomerCheck(false);
+        setDriverCheck(false);
     }
 
     function checkIfNotEqualProducer(val) {
@@ -936,7 +943,7 @@ export default function AddCar() {
                                 </div>
                                 <div className="w-full flex justify-around items-center">
                                     <div className="ml-2 mr-2">
-                                        <button onClick={() => { setCar(null); resetAllCar(); setCarCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                        <button onClick={() => { ResetAllFilesCar();setCar(null); resetAllCar(); setCarCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
                                             חדש <HiPlus />
                                         </button>
                                     </div>
@@ -1237,7 +1244,7 @@ export default function AddCar() {
                                 </div>
                                 <div className="w-full flex justify-around items-center">
                                     <div className="ml-2 mr-2">
-                                        <button onClick={() => { setDriver(null); resetAllDriver(); setDriverCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
+                                        <button onClick={() => { ResetAllFilesDriver();setDriver(null); resetAllDriver(); setDriverCheck(false); }} className="hover:bg-primary-200 hover:rounded-lg border-b-2 border-b-primary-200 w-[80px] h-[40px] max-[400px]:w-[55px] max-[400px]:h-[35px] max-[400px]:text-[14px] flex items-center justify-center">
                                             חדש <HiPlus />
                                         </button>
                                     </div>

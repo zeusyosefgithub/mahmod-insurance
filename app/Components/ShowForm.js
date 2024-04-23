@@ -117,13 +117,13 @@ export default function ShowForm(props) {
 
     }
 
-    // const updatePropsCar = async () => {
+    const updatePropsCar = async () => {
     //     const NewDataCarCurrent = {
     //         monthlyReview : GetCurrentMonthlyReview()
     //     }
     //     const invId = doc(MohamadFireStore, "car", props.car.id);
     //     await updateDoc(invId, NewDataCarCurrent);
-    // }
+    }
 
 
     return (
