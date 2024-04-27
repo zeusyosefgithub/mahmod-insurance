@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import ContactContext from "../Components/ContactContext";
 import { SiGoogleforms } from "react-icons/si";
 import { IoMdClose } from "react-icons/io";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { MohamadFireStore, storagee } from "../FireBase/firebase";
 import { TbTrash } from "react-icons/tb";
 import { FaFolder } from "react-icons/fa";
@@ -40,7 +40,7 @@ function GetCarsImages(size,hight,type){
 
 export default function ModalEditCar(props) {
 
-    const { setContactName } = useContext(ContactContext);
+    const { setContactName , setCustomerSet } = useContext(ContactContext);
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
@@ -48,21 +48,46 @@ export default function ModalEditCar(props) {
     const type2 = GetData('type2');
     const checks = GetData('checks');
 
-    const [car_num, setcar_num] = useState(props.data.car_num);
-    const [car_product, setcar_product] = useState(props.data.car_product);
-    const [car_type, setcar_type] = useState(props.data.car_type);
-    const [car_type2, setcar_type2] = useState(props.data.car_type2);
-    const [enddate, setenddate] = useState(props.data.enddate);
-    const [hazmat, sethazmat] = useState(props.data.hazmat ? 'כן' : 'לא');
-    const [hazmatDate, setHazmatDate] = useState(props.data.hazmatDate);
-    const [insurance, setinsurance] = useState(props.data.insurance);
-    const [insuranceclass, setinsuranceclass] = useState(props.data.insuranceclass);
-    const [shockabsorbers, setshockabsorbers] = useState(props.data.shockabsorbers);
-    const [tachograph, settachograph] = useState(props.data.tachograph ? 'כן' : 'לא');
-    const [tachographDate, setTachographDate] = useState(props.data.tachographDate);
-    const [winterreview, setwinterreview] = useState(props.data.winterreview);
+    const [carData, setCarData] = useState(props.data);
+    useEffect(() => {
+        const unsubscribe = onSnapshot(doc(MohamadFireStore, 'car', props.data.id), (doc) => {
+            setCarData({ id: doc.id, ...doc.data() });
+        });
 
+        return () => unsubscribe();
+    }, [props.data.id]);
 
+    const [car_num, setcar_num] = useState(carData.car_num);
+    const [car_product, setcar_product] = useState(carData.car_product);
+    const [car_type, setcar_type] = useState(carData.car_type);
+    const [car_type2, setcar_type2] = useState(carData.car_type2);
+    const [enddate, setenddate] = useState(carData.enddate);
+    const [hazmat, sethazmat] = useState(carData.hazmat ? 'כן' : 'לא');
+    const [hazmatDate, setHazmatDate] = useState(carData.hazmatDate);
+    const [insurance, setinsurance] = useState(carData.insurance);
+    const [insuranceclass, setinsuranceclass] = useState(carData.insuranceclass);
+    const [shockabsorbers, setshockabsorbers] = useState(carData.shockabsorbers);
+    const [tachograph, settachograph] = useState(carData.tachograph ? 'כן' : 'לא');
+    const [tachographDate, setTachographDate] = useState(carData.tachographDate);
+    const [winterreview, setwinterreview] = useState(carData.winterreview);
+
+    useEffect(() => {
+        setinsurance(carData.insurance);
+        setcar_num(carData.car_num);
+        setcar_product(carData.car_product);
+        setcar_type(carData.car_type);
+        setcar_type2(carData.car_type2);
+        setenddate(carData.enddate);
+        sethazmat(carData.hazmat ? 'כן' : 'לא');
+        setHazmatDate(carData.hazmatDate);
+        setinsuranceclass(carData.insuranceclass);
+        setshockabsorbers(carData.shockabsorbers);
+        settachograph(carData.tachograph ? 'כן' : 'לא');
+        setTachographDate(carData.tachographDate);
+        setwinterreview(carData.winterreview);
+    }, [carData])
+
+    console.log(carData);
     const ReturnKenLo = (val) => {
         return val === 'כן' ? true : false;
     }
@@ -72,17 +97,17 @@ export default function ModalEditCar(props) {
         // (ReturnKenLo(hazmat) != props.data.hazmat && hazmatDate) ||
         if (!hazmatDate && ReturnKenLo(hazmat)) { return true; }
         if (!tachographDate && ReturnKenLo(tachograph)) { return true; }
-        if ((car_num != props.data.car_num) ||
-            (car_product != props.data.car_product) ||
-            (car_type != props.data.car_type) ||
-            (car_type2 != props.data.car_type2) ||
-            (enddate != props.data.enddate) ||
-            (insurance != props.data.insurance) ||
-            (insuranceclass != props.data.insuranceclass) ||
-            (winterreview != props.data.winterreview) ||
-            (shockabsorbers != props.data.shockabsorbers) ||
-            (tachographDate != props.data.tachographDate) ||
-            (hazmatDate != props.data.hazmatDate) ||
+        if ((car_num != carData.car_num) ||
+            (car_product != carData.car_product) ||
+            (car_type != carData.car_type) ||
+            (car_type2 != carData.car_type2) ||
+            (enddate != carData.enddate) ||
+            (insurance != carData.insurance) ||
+            (insuranceclass != carData.insuranceclass) ||
+            (winterreview != carData.winterreview) ||
+            (shockabsorbers != carData.shockabsorbers) ||
+            (tachographDate != carData.tachographDate) ||
+            (hazmatDate != carData.hazmatDate) ||
             fileEndDateCar ||
             fileInsurance ||
             fileShockabsorbers ||
@@ -98,9 +123,22 @@ export default function ModalEditCar(props) {
 
     }
 
-    const createNewForm = () => {
+    async function getCustomerCar(customerId) {
+        const carsRef = collection(MohamadFireStore, 'Customer');
+        const q = query(carsRef, where("customer_id", "==", customerId));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs[0].data();
+        } else {
+            console.log('No matching car found');
+            return null;
+        }
+    }
+    const createNewForm = async() => {
         setLoading(true);
+        let customerCar = await getCustomerCar(props.data.customer_id);
         setContactName(props.data.car_id);
+        setCustomerSet(customerCar);
         router.push('/add');
     }
 
@@ -160,6 +198,18 @@ export default function ModalEditCar(props) {
         setLoading(false);
     }
 
+    async function UpdateDriverById(Driver_id) {
+        const carsRef = collection(MohamadFireStore, 'Driver');
+        const q = query(carsRef, where("driver_id", "==", Driver_id));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            return await updateDoc(doc(MohamadFireStore,'Driver',querySnapshot.docs[0].id),{zmenotNahag : false})
+        } else {
+          console.log('No matching car found');
+          return null;
+        }
+      }
+
     let CarsNum = GetData('numbers')[0]?.number;
     const deleteCar = async () => {
         setLoading(true);
@@ -170,6 +220,7 @@ export default function ModalEditCar(props) {
         }
         await deleteDoc(doc(MohamadFireStore, "car", props.data.id));
         await updateDoc(doc(MohamadFireStore, "numbers", 'cars'), { number: CarsNum - 1 });
+        await UpdateDriverById(props.data.Driver_id);
         const storageRef = ref(storagee, `${car_num}/`);
         try {
             const listResults = await listAll(storageRef);
@@ -294,6 +345,9 @@ export default function ModalEditCar(props) {
         setLoading(false);
     }
 
+
+
+
     return (
         <Modal placement="center" className="test-fontt sizeForModals" backdrop={"blur"} size="5xl" isOpen={props.show} onClose={props.disable}>
             <ModalContent>
@@ -308,10 +362,8 @@ export default function ModalEditCar(props) {
                         </div>
                     </ModalHeader>
                     <ModalBody className="shadow-lg">
-
                         <div dir="rtl" className="m-1 pr-2 pl-2 pb-2 bg-white rounded-xl no-scrollbar overflow-auto sizeingForDivsModals">
                             <div className="flex justify-center">
-
                             </div>
                             <div className="flex justify-center">
                                 <div className="w-full max-w-[700px]">

@@ -72,6 +72,7 @@ export default function ModalEditDrivers(props) {
     }
 
     let DriversNum = GetData('numbers')[2]?.number;
+    
     const deleteDriver = async () => {
         setLoading(true);
         await deleteDoc(doc(MohamadFireStore, "Driver", props.data.id));

@@ -65,17 +65,12 @@ export default function NavBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/search">
-            חיפוש
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link href="/settings">
+          <Link href="/accidents">
             תאונות  
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/settings">
+          <Link href="/repairOrder">
           הזמנה לתיקון
           </Link>
         </NavbarItem>
@@ -126,21 +121,14 @@ export default function NavBar() {
           <NavbarMenuItem dir="rtl">
             <Link
               className="w-full"
-              href="/search"
-              size="lg"
-            >חיפוש</Link>
-          </NavbarMenuItem>
-          <NavbarMenuItem dir="rtl">
-            <Link
-              className="w-full"
-              href="/settings"
+              href="/accidents"
               size="lg"
             >תאונות</Link>
           </NavbarMenuItem>
           <NavbarMenuItem dir="rtl">
             <Link
               className="w-full"
-              href="/settings"
+              href="/repairOrder"
               size="lg"
             >הזמנה לתיקון</Link>
           </NavbarMenuItem>

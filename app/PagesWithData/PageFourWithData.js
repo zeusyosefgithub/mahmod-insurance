@@ -441,17 +441,17 @@ export const PageFourWithData = React.forwardRef((props, ref) => {
             </div>
             <div dir="rtl" className="mr-32 ml-32 text-xs mt-5">
                 <div>תוקף רישיון מוביל הוחתם על ידי קצין בטיחות - כן / לא</div>
-                {props.data2 && <div className="absoulte_date_page_four2">{props.data2[0]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four2">{props.data2.monthlyReview}</div>}
                 <div className="text-xs-xx">תוקף  האישור עד: _______________</div>
-                {props.data2 && <div className="absoulte_date_page_four3">{props.data2[1]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four3">{props.data2.enddate}</div>}
                 <div className="text-xs-xx">תוקף רישיון כלי הרכב: _______________</div>
-                {props.data2 && <div className="absoulte_date_page_four4">{props.data2[2]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four4">{props.data2.insurance}</div>}
                 <div className="text-xs-xx">תוקף הביטוח: _______________</div>
-                {props.data2 && <div className="absoulte_date_page_four5">{props.data2[3]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four5">{props.data2.tachographDate}</div>}
                 <div className="text-xs-xx">תוקף תעודת כיול הטכוגרף: _______________</div>
-                {props.data2 && <div className="absoulte_date_page_four6">{props.data2[4]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four6">{props.data2.hazmatDate}</div>}
                 <div className="text-xs-xx">תוקף היתר לנהג המוביל חומרים מסוכנים: _______________</div>
-                {props.data2 && <div className="absoulte_date_page_four7">{props.data2[5]}</div>}
+                {props.data2 && <div className="absoulte_date_page_four7">{props.data2.ddd}</div>}
                 <div className="text-xs-xx">תוקף רישיון המוביל לכלי הרכב: _______________</div>
             </div>
             <div className="mr-32 ml-32 mt-5">

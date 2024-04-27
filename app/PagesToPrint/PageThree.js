@@ -1,8 +1,11 @@
 'use client';
-import { Button } from "@nextui-org/react";
-import React, { useState } from "react";
+import { Button, Card, CardBody } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import ModalPageFour from "../ModalsCom/ModalPageFour";
+import { format, parseISO, subDays } from "date-fns";
+import { IoIosWarning } from "react-icons/io";
+import { FaCheck } from "react-icons/fa";
 
 export const PageThree = React.forwardRef((props, ref) =>{
 
@@ -42,17 +45,130 @@ export const PageThree = React.forwardRef((props, ref) =>{
     let day = date.getDate();
     let currentdate = `${day}/${month}/${year}`;
 
-    return(
+
+    function isDateBeforeToday1(date) {
+        return new Date(date) < new Date(new Date());
+    }
+
+    const [enddateCheck,setenddateCheck] = useState(discr2 ? discr2.enddate : props.car?.enddate);
+    const [hazmatDateCheck,sethazmatDateCheck] = useState(discr2 ? discr2.hazmatDate : props.car?.hazmatDate);
+    const [monthlyReviewCheck,setmonthlyReviewCheck] = useState(discr2 ? discr2.monthlyReview : props.car?.monthlyReview);
+    const [shockabsorbersCheck,setshockabsorbersCheck] = useState(discr2 ? discr2.shockabsorbers : props.car?.shockabsorbers);
+    const [tachographDateCheck,settachographDateCheck] = useState(discr2 ? discr2.tachographDate : props.car?.tachographDate);
+    const [winterreviewCheck,setwinterreviewCheck] = useState(discr2 ? discr2.winterreview : props.car?.winterreview);
+    const [insuranceCheck,setinsuranceCheck] = useState(discr2 ? discr2.insurance : props.car?.insurance);
+
+    const CheckAllDates = () => {
+        let count = 0;
+        let messageWrnings = '';
+        let count2 = 0;
+        let messageWrnings2 = '';
+        let res1 = subDays(parseISO(enddateCheck), 6);
+        let res2 = hazmatDateCheck ? subDays(parseISO(hazmatDateCheck), 6) : null;
+        let res3 = monthlyReviewCheck ? subDays(parseISO(monthlyReviewCheck), 6) : null;
+        let res4 = shockabsorbersCheck ? subDays(parseISO(shockabsorbersCheck), 6) : null;
+        let res5 = tachographDateCheck ? subDays(parseISO(tachographDateCheck), 6) : null;
+        let res6 = subDays(parseISO(winterreviewCheck), 6);
+        let res7 = subDays(parseISO(insuranceCheck), 6);
+        if(isDateBeforeToday1(enddateCheck)){
+            count++;
+            messageWrnings += ' תוקף רישיון,';
+        }
+        else if(isDateBeforeToday1(format(res1, 'yyyy-MM-dd'))){
+            count2++;
+            messageWrnings2 += ' תוקף רישיון,';
+        }
+        if(props.car?.hazmatDate && isDateBeforeToday1(hazmatDateCheck)){
+            count++;
+            messageWrnings += ' חו"מס,';
+        }
+        else if(props.car?.hazmatDate && isDateBeforeToday1(format(res2, 'yyyy-MM-dd'))){
+            count2++;
+            messageWrnings2 += ' חו"מס,';
+        }
+        if (props.car?.monthlyReview && isDateBeforeToday1(monthlyReviewCheck)) {
+            count++;
+            messageWrnings += ' ביקורת חודשית,';
+        }
+        else if (props.car?.monthlyReview && isDateBeforeToday1(format(res3, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביקורת חודשית,';
+        }
+        if (props.car?.shockabsorbers && isDateBeforeToday1(shockabsorbersCheck)) {
+            count++;
+            messageWrnings += ' אישור בולמים,';
+        }
+        else if (props.car?.shockabsorbers && isDateBeforeToday1(format(res4, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' אישור בולמים,';
+        }
+        if (props.car?.tachographDate && isDateBeforeToday1(tachographDateCheck)) {
+            count++;
+            messageWrnings += ' טכוגרף,';
+        }
+        else if (props.car?.tachographDate && isDateBeforeToday1(format(res5, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' טכוגרף,';
+        }
+        if (isDateBeforeToday1(winterreviewCheck)) {
+            count++;
+            messageWrnings += ' ביקורת חורף,';
+        }
+        else if (isDateBeforeToday1(format(res6, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביקורת חורף,';
+        }
+        if (isDateBeforeToday1(insuranceCheck)) {
+            count++;
+            messageWrnings += ' ביטוח';
+        }
+        else if (isDateBeforeToday1(format(res7, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביטוח';
+        }
+        return {
+            message: messageWrnings,
+            numberWrnings: count,
+            message2: messageWrnings2,
+            numberWrnings2: count2
+        }
+    }
+
+    useEffect(() => {
+        setenddateCheck(discr2 ? discr2.enddate : props.car?.enddate);
+        sethazmatDateCheck(discr2 ? discr2.hazmatDate : props.car?.hazmatDate);
+        setmonthlyReviewCheck(discr2 ? discr2.monthlyReview : props.car?.monthlyReview);
+        setshockabsorbersCheck(discr2 ? discr2.shockabsorbers : props.car?.shockabsorbers);
+        settachographDateCheck(discr2 ? discr2.tachographDate : props.car?.tachographDate);
+        setwinterreviewCheck(discr2 ? discr2.winterreview : props.car?.winterreview);
+        setinsuranceCheck(discr2 ? discr2.insurance : props.car?.insurance);
+    }, [discr2, props.car])
+
+    return (
         <div ref={ref} className="bg-white p-7">
             {
-                showModalPage && <ModalPageFour typeShow={typeShow} show={showModalPage} disable={()  => setShowModalPage(false)}
-                saveDiscr1={(discr1) => setDiscr1(discr1)}
-                saveDiscr2={(discr2) => setDiscr2(discr2)}
+                showModalPage && <ModalPageFour car={props.car} typeShow={typeShow} show={showModalPage} disable={() => setShowModalPage(false)}
+                    saveDiscr1={(discr1) => setDiscr1(discr1)}
+                    saveDiscr2={(discr2) => setDiscr2(discr2)}
+                    dates={{
+                        monthlyReview: props.car.monthlyReview,
+                        enddate: enddateCheck,
+                        insurance: insuranceCheck,
+                        tachographDate: tachographDateCheck,
+                        hazmatDate: hazmatDateCheck,
+                        shockabsorbers: shockabsorbersCheck,
+                        winterreview: winterreviewCheck,
+                        hazmat: props.car?.hazmat,
+                        car_type: props.car?.car_type,
+                        tachograph: props.car?.tachograph
+                    }}
                 />
             }
             <div className="flex justify-center text-sm" dir="rtl">
                 טופס בדיקת תקינות לרכב פרטי ומסחרי עד 9,999 ק"ג
             </div>
+            <div>{CheckAllDates()?.message}</div>
+            <div>{CheckAllDates()?.message2}</div>
             <div dir="rtl">
                 <div className="flex justify-around text-xs mt-5">
                     <div className="absoulte_date_page_four13">{props.car?.car_num}</div>
@@ -204,6 +320,78 @@ export const PageThree = React.forwardRef((props, ref) =>{
                 <div>____________________________________________________________________________________</div>
                 <div>____________________________________________________________________________________</div>
             </div>
+            <div className="mr-32 ml-32 mt-5 mb-5">
+
+                {
+                    !props.showSave &&
+                    <>
+                        {
+                            CheckAllDates().numberWrnings != 0 &&
+                            <Card className="border-red-600 border-1">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <IoIosWarning className="text-red-600 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4">
+                                            {CheckAllDates().numberWrnings} תאריכים פגים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                        {
+                            CheckAllDates().numberWrnings2 != 0 &&
+                            <Card className="border-yellow-500 border-1 mt-3">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <IoIosWarning className="text-yellow-500 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4">
+                                            {CheckAllDates().numberWrnings2} תאריכים חרגים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                        {
+                            (CheckAllDates().numberWrnings == 0) && (CheckAllDates().numberWrnings2 == 0) &&
+                            <Card className="border-green-600 border-1 mt-5">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <FaCheck className="text-green-600 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4">
+                                            כל התארכים תקנים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                    </>
+                }
+            </div>
+            {
+                !props.showSave &&
+                <div dir="rtl" className="mr-32 ml-32 text-xs mt-5">
+                    <Button onClick={() => { setTypeShow('2'); setShowModalPage(true) }} color="primary" variant="bordered" size="sm" className="ml-10">לכתוב<MdEdit className="text-sm" /></Button>
+                    <div>תוקף רישיון מוביל הוחתם על ידי קצין בטיחות - כן / לא</div>
+                    {discr2 && <div className="absoulte_date_page_four2">{discr2.monthlyReview}</div>}
+                    <div className="text-xs-xx">תוקף  האישור עד: _______________</div>
+                    {discr2 && <div className="absoulte_date_page_four3">{discr2.enddate}</div>}
+                    <div className="text-xs-xx">תוקף רישיון כלי הרכב: _______________</div>
+                    {discr2 && <div className="absoulte_date_page_four4">{discr2.insurance}</div>}
+                    <div className="text-xs-xx">תוקף הביטוח: _______________</div>
+                    {discr2 && <div className="absoulte_date_page_four5">{discr2.tachographDate}</div>}
+                    <div className="text-xs-xx">תוקף תעודת כיול הטכוגרף: _______________</div>
+                    {discr2 && <div className="absoulte_date_page_four6">{discr2.hazmatDate}</div>}
+                    <div className="text-xs-xx">תוקף היתר לנהג המוביל חומרים מסוכנים: _______________</div>
+                    {discr2 && <div className="absoulte_date_page_four7">{discr2.reshionMovel}</div>}
+                    <div className="text-xs-xx">תוקף רישיון המוביל לכלי הרכב: _______________</div>
+                </div>
+            }
             <div dir="rtl" className="mr-32 ml-32 text-xs mt-5">
                 <div>
                     1. מוסך יצבצע את התיקונים הדרושים והחלפת חלקים רק באישור קצין בטיחות או מנהל צי הרכב.
@@ -250,7 +438,7 @@ export const PageThree = React.forwardRef((props, ref) =>{
                 </div>
             </div>
             <div className={`mt-10 flex justify-center ${props.showSave && "hidden"}`}>
-                <Button isDisabled={props.showSave} color="primary" onClick={() => props.sendData(data,discr1,discr2)}>שמירה</Button>
+                <Button isDisabled={props.showSave || (CheckAllDates().numberWrnings != 0 ? true : false)} color="primary" onClick={() => props.sendData(data,discr1,discr2)}>שמירה</Button>
             </div>
         </div>
     )

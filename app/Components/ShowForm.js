@@ -3,7 +3,7 @@ import { PageFour } from "../PagesToPrint/PageFour";
 import { PageThree } from "../PagesToPrint/PageThree";
 import { PageOne } from "../PagesToPrint/PageOne";
 import { PageTwo } from "../PagesToPrint/PageTwo";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import GetData from "../FireBase/GetData";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
@@ -12,8 +12,18 @@ import { PageTwoWithData } from "../PagesWithData/PageTwoWithData";
 import { PageThreeWithData } from "../PagesWithData/PageThreeWithData";
 import { PageOneWithData } from "../PagesWithData/PageOneWithData";
 import { PageFourWithData } from "../PagesWithData/PageFourWithData";
+import { format } from "date-fns";
 
-export default function ShowForm(props) {
+export default function ShowForm({ withData,disable, car,driver,customer }) {
+
+
+    const [gettingCarShowForm,setGittingCarShowForm] = useState(car);
+    useEffect(() => {
+    }, [car,driver,customer]);
+
+    useEffect(() => {
+        setGittingCarShowForm(car);
+    }, [car]);
 
     const componentRef1 = useRef();
     const componentRef2 = useRef();
@@ -52,15 +62,7 @@ export default function ShowForm(props) {
         content: () => componentRef4.current,
     });
 
-    const GetDriverNameByCar = (id) => {
-        for (let index = 0; index < Drivers.length; index++) {
-            if (Drivers[index]?.driver_id === id) {
-                return Drivers[index];
-            }
-        }
-    }
-
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(false);
     const [data2, setData2] = useState(null);
     const [data3, setData3] = useState(null);
 
@@ -86,29 +88,46 @@ export default function ShowForm(props) {
 
     const [loading, setLoading] = useState(false);
 
-    const saveData = async () => {
+    const saveData = async (data1,data2,data3) => {
+        if (!car) {
+            console.log("No car data available");
+            return <p>No data</p>;
+        }
+        setData(true);
         setLoading(true);
+        await updateDoc(doc(MohamadFireStore,'car',gettingCarShowForm?.id),{
+            enddate : data3.enddate,
+            hazmatDate : gettingCarShowForm.hazmat ? data3.hazmatDate : null,
+            insurance : data3.insurance,
+            monthlyReview : data3.monthlyReview,
+            shockabsorbers : gettingCarShowForm.car_type === 'רכב מעל 10,000 ק"ג' ? data3.shockabsorbers : null,
+            tachographDate : gettingCarShowForm.tachograph ? data3.tachographDate : null,
+            winterreview : data3.winterreview
+        });
         const newData = {
-            checks: data,
+            checks: data1,
             data2: data2,
             data3: data3,
-            car_id: props.car.car_id,
+            customer_id: customer.customer_id,
+            driver_id: driver ? driver.driver_id : null,
+            car_id: gettingCarShowForm.car_id,
             check_id: currectCheckId(),
-            date: currentdate
+            date: currentdate,
+            mtsavTofs: !driver ? 'driver' : true
         }
         await addDoc(collection(MohamadFireStore, 'checks'), newData);
         setData(null);
         setData2(null);
         setData3(null);
         setLoading(false);
-        props.disable();
+        disable();
     }
 
     const type2 = GetData('type2');
 
     const GetCurrentMonthlyReview = () => {
         for (let index = 0; index < type2.length; index++) {
-            if (type2[index]?.name === props.car.car_type2) {
+            if (type2[index]?.name === gettingCarShowForm.car_type2) {
                 let newMonthlyReview = new Date();
                 let monthlyReviewDate = `${newMonthlyReview.getFullYear()}-${newMonthlyReview.getMonth() + type2[index].monthlyreview + 1 < 10 ? `0${newMonthlyReview.getMonth() + type2[index].monthlyreview + 1}` : newMonthlyReview.getMonth()}-${newMonthlyReview.getDate() < 10 ? `0${newMonthlyReview.getDate()}` : newMonthlyReview.getDate()}`
                 return monthlyReviewDate;
@@ -121,7 +140,7 @@ export default function ShowForm(props) {
     //     const NewDataCarCurrent = {
     //         monthlyReview : GetCurrentMonthlyReview()
     //     }
-    //     const invId = doc(MohamadFireStore, "car", props.car.id);
+    //     const invId = doc(MohamadFireStore, "car", gettingCarShowForm.id);
     //     await updateDoc(invId, NewDataCarCurrent);
     }
 
@@ -131,35 +150,35 @@ export default function ShowForm(props) {
             {loading && <Spinner className="absolute left-0 right-0 bottom-0 top-0" />}
             <div>
                 {
-                    props.withData ?
+                    withData ?
                         <div className="mb-32">
                             {
-                                props.car?.car_type === `ציוד הנדס'` && <div className="sdfsdf">
-                                    <PageTwoWithData car={props.car} ref={componentRef1} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                gettingCarShowForm?.car_type === `ציוד הנדס'` && <div className="sdfsdf">
+                                    <PageTwoWithData car={gettingCarShowForm} ref={componentRef1} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint1}>הדפסה</Button>
                                     </div>
                                 </div>
                             }
                             {
-                                props.car?.car_type === 'רכב עד 9,999 ק"ג' && <div className="sdfsdf">
-                                    <PageThreeWithData car={props.car} ref={componentRef3} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                gettingCarShowForm?.car_type === 'רכב עד 9,999 ק"ג' && <div className="sdfsdf">
+                                    <PageThreeWithData car={gettingCarShowForm} ref={componentRef3} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint3}>הדפסה</Button>
                                     </div>
                                 </div>
                             }
                             {
-                                props.car?.car_type === 'גרור' && <div className="sdfsdf">
-                                    <PageOneWithData car={props.car} ref={componentRef2} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                gettingCarShowForm?.car_type === 'גרור' && <div className="sdfsdf">
+                                    <PageOneWithData car={gettingCarShowForm} ref={componentRef2} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint2}>הדפסה</Button>
                                     </div>
                                 </div>
                             }
                             {
-                                props.car?.car_type === 'רכב מעל 10,000 ק"ג' && <div className="sdfsdf">
-                                    <PageFourWithData car={props.car} ref={componentRef4} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                gettingCarShowForm?.car_type === 'רכב מעל 10,000 ק"ג' && <div className="sdfsdf">
+                                    <PageFourWithData car={gettingCarShowForm} ref={componentRef4} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint4}>הדפסה</Button>
                                     </div>
@@ -169,69 +188,69 @@ export default function ShowForm(props) {
                         :
                         <>
                             {
-                                props.car && props.car.car_type === 'רכב מעל 10,000 ק"ג' &&
+                                gettingCarShowForm && gettingCarShowForm.car_type === 'רכב מעל 10,000 ק"ג' &&
                                 <>
                                     <div className="flex justify-center mb-20">
                                         <div className="sdfsdf">
-                                            <PageFour updateCar={updatePropsCar} driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef4} />
+                                            <PageFour updateCar={updatePropsCar} driver={driver} car={gettingCarShowForm} showSave={data} sendData={(data, data2, data3) => {saveData(data,data2,data3);}} ref={componentRef4} />
                                         </div>
                                     </div>
 
                                     {
                                         data &&
                                         <div className="flex justify-center mt-10 mb-20">
-                                            <Button color="primary" onClick={() => { saveData(); handlePrint4(); }}>הדפסה</Button>
+                                            <Button color="primary" onClick={() => { handlePrint4(); }}>הדפסה</Button>
                                         </div>
                                     }
                                 </>
                             }
                             {
-                                props.car && props.car.car_type === 'רכב עד 9,999 ק"ג' &&
+                                gettingCarShowForm && gettingCarShowForm.car_type === 'רכב עד 9,999 ק"ג' &&
                                 <>
                                     <div className="flex justify-center mb-20">
                                         <div className="sdfsdf">
-                                            <PageThree driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef3} />
+                                            <PageThree driver={driver} car={gettingCarShowForm} showSave={data} sendData={(data, data2, data3) => {saveData(data,data2,data3);}} ref={componentRef3} />
                                         </div>
                                     </div>
 
                                     {
                                         data &&
                                         <div className="flex justify-center mt-10 mb-20">
-                                            <Button color="primary" onClick={() => { saveData(); handlePrint3(); }}>הדפסה</Button>
+                                            <Button color="primary" onClick={() => {handlePrint3(); }}>הדפסה</Button>
                                         </div>
                                     }
                                 </>
                             }
                             {
-                                props.car && props.car.car_type === 'גרור' &&
+                                gettingCarShowForm && gettingCarShowForm.car_type === 'גרור' &&
                                 <>
                                     <div className="flex justify-center mb-20">
                                         <div className="sdfsdf">
-                                            <PageOne driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef1} />
+                                            <PageOne driver={driver} car={gettingCarShowForm} showSave={data} sendData={(data, data2, data3) => {saveData(data,data2,data3);}} ref={componentRef1} />
                                         </div>
                                     </div>
 
                                     {
                                         data &&
                                         <div className="flex justify-center mt-10 mb-20">
-                                            <Button color="primary" onClick={() => { saveData(); handlePrint1(); }}>הדפסה</Button>
+                                            <Button color="primary" onClick={() => {handlePrint1(); }}>הדפסה</Button>
                                         </div>
                                     }
                                 </>
                             }
                             {
-                                props.car && props.car.car_type === `ציוד הנדס'` &&
+                                gettingCarShowForm && gettingCarShowForm.car_type === `ציוד הנדס'` &&
                                 <>
                                     <div className="flex justify-center mb-20">
                                         <div className="sdfsdf">
-                                            <PageTwo driver={props.driver} car={props.car} showSave={!data ? false : true} sendData={(data, data2, data3) => { setData(data); setData2(data2); setData3(data3); }} ref={componentRef2} />
+                                            <PageTwo driver={driver} car={gettingCarShowForm} showSave={data} sendData={(data, data2, data3) => {saveData(data,data2,data3);}} ref={componentRef2} />
                                         </div>
                                     </div>
 
                                     {
                                         data &&
                                         <div className="flex justify-center mt-10 mb-20">
-                                            <Button color="primary" onClick={() => { saveData(); handlePrint2(); }}>הדפסה</Button>
+                                            <Button color="primary" onClick={() => {handlePrint2(); }}>הדפסה</Button>
                                         </div>
                                     }
                                 </>
@@ -243,3 +262,5 @@ export default function ShowForm(props) {
         </div>
     )
 }
+
+

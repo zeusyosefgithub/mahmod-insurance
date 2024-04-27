@@ -1,5 +1,5 @@
 import { Spinner, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { GrUpdate } from "react-icons/gr";
@@ -47,9 +47,41 @@ export default function ModalEditCustomer(props) {
         setLoading(false);
     }
 
+    async function DeleteAllCarsById(customer_id) {
+        const carsRef = collection(MohamadFireStore, 'car');
+        const q = query(carsRef, where("customer_id", "==", customer_id));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            for (let index = 0; index < querySnapshot.docs.length; index++) {
+                await deleteDoc(doc(MohamadFireStore,'car',querySnapshot.docs[index].id))   
+            }
+            return;
+        } else {
+          console.log('No matching car found');
+          return null;
+        }
+    }
+
+    async function DeleteAllDriversById(customer_id) {
+        const carsRef = collection(MohamadFireStore, 'car');
+        const q = query(carsRef, where("customer_id", "==", customer_id));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            for (let index = 0; index < querySnapshot.docs.length; index++) {
+                await deleteDoc(doc(MohamadFireStore,'Driver',querySnapshot.docs[index].id))   
+            }
+            return;
+        } else {
+          console.log('No matching car found');
+          return null;
+        }
+      }
+
     let CustomersNum = GetData('numbers')[1]?.number;
     const deleteCustomer = async () => {
         setLoading(true);
+        DeleteAllCarsById(props.data.customer_id);
+        DeleteAllDriversById(props.data.customer_id);
         await deleteDoc(doc(MohamadFireStore, "Customer", props.data.id));
         await updateDoc(doc(MohamadFireStore, "numbers", 'customers'), { number: CustomersNum - 1 });
         setLoading(false);

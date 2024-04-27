@@ -1,8 +1,13 @@
 'use client';
-import { Button } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import ModalPageFour from "../ModalsCom/ModalPageFour";
+import { IoIosWarning } from "react-icons/io";
+import { FaCheck } from "react-icons/fa";
+import GetData from "../FireBase/GetData";
+import { format, parseISO, subDays, subMonths } from "date-fns";
+import { RiErrorWarningFill } from "react-icons/ri";
 
 
 export const PageFour = React.forwardRef((props, ref) => {
@@ -93,15 +98,26 @@ export const PageFour = React.forwardRef((props, ref) => {
 
     ]
 
-    const [showModalPage,setShowModalPage] = useState(false);
-    const [typeShow,setTypeShow] = useState('');
+    const [showModalPage, setShowModalPage] = useState(false);
+    const [typeShow, setTypeShow] = useState('');
 
 
-    const [discr1,setDiscr1] = useState(null);
-    const [discr2,setDiscr2] = useState(null);
+    const [discr1, setDiscr1] = useState(null);
+    const [discr2, setDiscr2] = useState(null);
     const discr3 = {
-        taodtZehot : 1,
+        taodtZehot: 1,
     }
+
+    function isDateBeforeToday1(date) {
+        return new Date(date) < new Date(new Date());
+    }
+
+    function isDateBeforeAnotherDate(date, date2) {
+        return new Date(date) > new Date(date2);
+    }
+
+    // useEffect(() => {
+    // }, [props.car.insurance])
 
     var date = new Date();
     let year = date.getFullYear();
@@ -109,12 +125,127 @@ export const PageFour = React.forwardRef((props, ref) => {
     let day = date.getDate();
     let currentdate = `${day}/${month}/${year}`;
 
+    const Alerts = GetData('alerts');
+
+    const WarningDates = () => {
+        for (let index = 0; index < Alerts?.length; index++) {
+            if (Alerts[index]?.id === 'WarningDates') {
+                return Alerts[index]?.value;
+            }
+        }
+    }
+
+    const [enddateCheck,setenddateCheck] = useState(discr2 ? discr2.enddate : props.car?.enddate);
+    const [hazmatDateCheck,sethazmatDateCheck] = useState(discr2 ? discr2.hazmatDate : props.car?.hazmatDate);
+    const [monthlyReviewCheck,setmonthlyReviewCheck] = useState(discr2 ? discr2.monthlyReview : props.car?.monthlyReview);
+    const [shockabsorbersCheck,setshockabsorbersCheck] = useState(discr2 ? discr2.shockabsorbers : props.car?.shockabsorbers);
+    const [tachographDateCheck,settachographDateCheck] = useState(discr2 ? discr2.tachographDate : props.car?.tachographDate);
+    const [winterreviewCheck,setwinterreviewCheck] = useState(discr2 ? discr2.winterreview : props.car?.winterreview);
+    const [insuranceCheck,setinsuranceCheck] = useState(discr2 ? discr2.insurance : props.car?.insurance);
+
+    const CheckAllDates = () => {
+        let count = 0;
+        let messageWrnings = '';
+        let count2 = 0;
+        let messageWrnings2 = '';
+        let res1 = subDays(parseISO(enddateCheck), 6);
+        let res2 = hazmatDateCheck ? subDays(parseISO(hazmatDateCheck), 6) : null;
+        let res3 = monthlyReviewCheck ? subDays(parseISO(monthlyReviewCheck), 6) : null;
+        let res4 = shockabsorbersCheck ? subDays(parseISO(shockabsorbersCheck), 6) : null;
+        let res5 = tachographDateCheck ? subDays(parseISO(tachographDateCheck), 6) : null;
+        let res6 = subDays(parseISO(winterreviewCheck), 6);
+        let res7 = subDays(parseISO(insuranceCheck), 6);
+        if(isDateBeforeToday1(enddateCheck)){
+            count++;
+            messageWrnings += ' תוקף רישיון,';
+        }
+        else if(isDateBeforeToday1(format(res1, 'yyyy-MM-dd'))){
+            count2++;
+            messageWrnings2 += ' תוקף רישיון,';
+        }
+        if(props.car?.hazmatDate && isDateBeforeToday1(hazmatDateCheck)){
+            count++;
+            messageWrnings += ' חו"מס,';
+        }
+        else if(props.car?.hazmatDate && isDateBeforeToday1(format(res2, 'yyyy-MM-dd'))){
+            count2++;
+            messageWrnings2 += ' חו"מס,';
+        }
+        if (props.car?.monthlyReview && isDateBeforeToday1(monthlyReviewCheck)) {
+            count++;
+            messageWrnings += ' ביקורת חודשית,';
+        }
+        else if (props.car?.monthlyReview && isDateBeforeToday1(format(res3, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביקורת חודשית,';
+        }
+        if (props.car?.shockabsorbers && isDateBeforeToday1(shockabsorbersCheck)) {
+            count++;
+            messageWrnings += ' אישור בולמים,';
+        }
+        else if (props.car?.shockabsorbers && isDateBeforeToday1(format(res4, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' אישור בולמים,';
+        }
+        if (props.car?.tachographDate && isDateBeforeToday1(tachographDateCheck)) {
+            count++;
+            messageWrnings += ' טכוגרף,';
+        }
+        else if (props.car?.tachographDate && isDateBeforeToday1(format(res5, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' טכוגרף,';
+        }
+        if (isDateBeforeToday1(winterreviewCheck)) {
+            count++;
+            messageWrnings += ' ביקורת חורף,';
+        }
+        else if (isDateBeforeToday1(format(res6, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביקורת חורף,';
+        }
+        if (isDateBeforeToday1(insuranceCheck)) {
+            count++;
+            messageWrnings += ' ביטוח';
+        }
+        else if (isDateBeforeToday1(format(res7, 'yyyy-MM-dd'))) {
+            count2++;
+            messageWrnings2 += ' ביטוח';
+        }
+        return {
+            message: messageWrnings,
+            numberWrnings: count,
+            message2: messageWrnings2,
+            numberWrnings2: count2
+        }
+    }
+    useEffect(() => {
+        setenddateCheck(discr2 ? discr2.enddate : props.car?.enddate);
+        sethazmatDateCheck(discr2 ? discr2.hazmatDate : props.car?.hazmatDate);
+        setmonthlyReviewCheck(discr2 ? discr2.monthlyReview : props.car?.monthlyReview);
+        setshockabsorbersCheck(discr2 ? discr2.shockabsorbers : props.car?.shockabsorbers);
+        settachographDateCheck(discr2 ? discr2.tachographDate : props.car?.tachographDate);
+        setwinterreviewCheck(discr2 ? discr2.winterreview : props.car?.winterreview);
+        setinsuranceCheck(discr2 ? discr2.insurance : props.car?.insurance);
+    }, [discr2, props.car])
+
     return (
         <div ref={ref} className={`bg-white p-5`}>
             {
-                showModalPage && <ModalPageFour car={props.car} typeShow={typeShow} show={showModalPage} disable={()  => setShowModalPage(false)}
-                saveDiscr1={(discr1) => setDiscr1(discr1)}
-                saveDiscr2={(discr2) => setDiscr2(discr2)}
+                showModalPage && <ModalPageFour car={props.car} typeShow={typeShow} show={showModalPage} disable={() => setShowModalPage(false)}
+                    saveDiscr1={(discr1) => setDiscr1(discr1)}
+                    saveDiscr2={(discr2) => setDiscr2(discr2)}
+                    dates={{
+                        monthlyReview: props.car.monthlyReview,
+                        enddate: enddateCheck,
+                        insurance: insuranceCheck,
+                        tachographDate: tachographDateCheck,
+                        hazmatDate: hazmatDateCheck,
+                        shockabsorbers: shockabsorbersCheck,
+                        winterreview: winterreviewCheck,
+                        hazmat: props.car?.hazmat,
+                        car_type: props.car?.car_type,
+                        tachograph: props.car?.tachograph
+                    }}
                 />
             }
             <div className="flex justify-center text-sm" dir="rtl">
@@ -175,7 +306,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">היתרים / אישור בלמים חצי שנתי לרכב מ: 16,000 ק"ג</th>
                             <th onClick={() => setIndex1('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index1 === '✓' ? index1 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex1('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index1 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex1('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index1 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -188,13 +319,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלמות דלתות / מראות / מושבים / ריפוד / חגורות בטיחות נהג - נוסע</th>
                             <th onClick={() => setIndex2('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index2 === '✓' ? index2 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex2('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index2 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex2('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index2 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">פגושים / התקן גלגל חילוף / שמשות / מחזרי אור / מרכב כללי</th>
                             <th onClick={() => setIndex3('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index3 === '✓' ? index3 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex3('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index3 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex3('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index3 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -207,13 +338,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">נזקי תאונה / אי הימצאות סדקים בקורות אורך / רוחב</th>
                             <th onClick={() => setIndex4('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index4 === '✓' ? index4 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex4('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index4 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex4('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index4 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הידוק - שלמות - הבטחת נעילה וביטחון התקן וו / צלחת גרירה (רק אם קיים)</th>
                             <th onClick={() => setIndex5('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index5 === '✓' ? index5 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex5('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index5 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex5('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index5 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -226,7 +357,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלמות סרנים / קפיצים / מתלי אוויר / בולמי זעזועים / נזילות בטבורים</th>
                             <th onClick={() => setIndex6('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index6 === '✓' ? index6 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex6('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index6 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex6('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index6 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -239,19 +370,19 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הידוק אומי אופנים / התאמת גודל צמיגים בהתאם לרישיון רכב</th>
                             <th onClick={() => setIndex7('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index7 === '✓' ? index7 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex7('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index7 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex7('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index7 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות צמיגים בסרן קדמי 2-1</th>
                             <th onClick={() => setIndex8('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index8 === '✓' ? index8 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex8('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index8 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex8('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index8 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות צמיגים בסרן אחורי 5-4-3-2-1</th>
                             <th onClick={() => setIndex9('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index9 === '✓' ? index9 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex9('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index9 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex9('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index9 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -264,7 +395,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלמות תיבת הגה / צנרת גמישה - קשיחה / חיבורי הגה</th>
                             <th onClick={() => setIndex10('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index10 === '✓' ? index10 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex10('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index10 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex10('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index10 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -277,7 +408,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלימות והידק מיכלי אוויר / צנרת אוויר גמישה / דליפות אוויר / תקינות בלם חנייה</th>
                             <th onClick={() => setIndex11('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index11 === '✓' ? index11 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex11('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index11 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex11('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index11 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -290,13 +421,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלימות והידוק מיכל דלק / צנרת גמישה - קשיחה / נזילון: דלק - שמן - מים</th>
                             <th onClick={() => setIndex12('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index12 === '✓' ? index12 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex12('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index12 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex12('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index12 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">פליטת עשן</th>
                             <th onClick={() => setIndex13('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index13 === '✓' ? index13 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex13('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index13 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex13('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index13 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -309,7 +440,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שלמות והידוק מתקן לשלדת רכב / נזילות שמן / אי הימצאות סדקים במתקן</th>
                             <th onClick={() => setIndex14('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index14 === '✓' ? index14 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex14('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index14 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex14('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index14 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -322,25 +453,25 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">נורות התרעה צהוב / כתום / אדום / ABS אחר :</th>
                             <th onClick={() => setIndex15('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index15 === '✓' ? index15 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex15('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index15 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex15('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index15 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות מד לחץ אוויר / לחץ שמן / טעינה / דלק / ADBLUE / בלם חנייה / אורות</th>
                             <th onClick={() => setIndex16('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index16 === '✓' ? index16 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex16('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index16 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex16('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index16 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות צופר / זמזם נסיעה לאחור</th>
                             <th onClick={() => setIndex17('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index17 === '✓' ? index17 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex17('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index17 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex17('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index17 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות מתג הפעלת תפריט ראשי : היסטורית תקלות / הודעות</th>
                             <th onClick={() => setIndex18('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index18 === '✓' ? index18 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex18('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index18 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex18('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index18 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -353,13 +484,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות ושלימות פנסים ראשיים / אחוריים / מהבהבים / תאור רוחב</th>
                             <th onClick={() => setIndex19('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index19 === '✓' ? index19 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex19('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index19 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex19('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index19 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות אור : בלם / חנייה / ערפל / עמם אורות / תא נהג</th>
                             <th onClick={() => setIndex20('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index20 === '✓' ? index20 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex20('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index20 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex20('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index20 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                     </tbody>
@@ -384,13 +515,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">מגבים וזרועות / מתזי מים / מראות / מטף כיבוי / אפוד זןהר / מגבה ומפתח גלגלים</th>
                             <th onClick={() => setIndex21('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index21 === '✓' ? index21 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex21('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index21 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex21('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index21 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">משולש אזהרה / תיק עזרה ראשונה</th>
                             <th onClick={() => setIndex22('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index22 === '✓' ? index22 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex22('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index22 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex22('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index22 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -403,7 +534,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות ושלימות מכשיר - מגש מסך / כיוון שעון זמן</th>
                             <th onClick={() => setIndex23('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index23 === '✓' ? index23 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex23('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index23 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex23('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index23 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -416,7 +547,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">תקינות ושלימות נקודות עיגון: ווי קשירה / טבעות הטייה / כבלי מתיחה / סוויסטלוקים</th>
                             <th onClick={() => setIndex24('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index24 === '✓' ? index24 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex24('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index24 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex24('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index24 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -429,7 +560,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">רעידות הגה / סטייה מנתיב תוך כדי בלימה / תקינות סייעני האטה / נורות בקרה</th>
                             <th onClick={() => setIndex25('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index25 === '✓' ? index25 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex25('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index25 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex25('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index25 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -442,13 +573,13 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">ערכת מיגון לנהג להובלת חומרים מסוכנים בהתאם לתקנות שירותי הובלה</th>
                             <th onClick={() => setIndex26('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index26 === '✓' ? index26 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex26('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index26 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex26('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index26 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">שילוט בהתאם לחומר המוביל ב- 3 הדופנות</th>
                             <th onClick={() => setIndex27('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index27 === '✓' ? index27 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex27('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index27 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex27('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index27 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -461,25 +592,25 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">נבדקו ___________ דיסקות סכוגרף נמצא כי</th>
                             <th onClick={() => setIndex28('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index28 === '✓' ? index28 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex28('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index28 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex28('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index28 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">א. יש ______ חריגות בהירות נסיעה</th>
                             <th onClick={() => setIndex29('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index29 === '✓' ? index29 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex29('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index29 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex29('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index29 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">ב. יש _____ חריגות בשעות עבודה ומנוחה בהתאם לתקנה 168 לת"ת</th>
                             <th onClick={() => setIndex30('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index30 === '✓' ? index30 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex30('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index30 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex30('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index30 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">ג. יש _____ אי סימון תקין של דיסקות סכוגרף</th>
                             <th onClick={() => setIndex31('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index31 === '✓' ? index31 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex31('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index31 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex31('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index31 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
@@ -492,49 +623,49 @@ export const PageFour = React.forwardRef((props, ref) => {
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">בוצעה שיחה פתוחה אודות מצבו המקצועי, הכלכלי, הרפואי והמשפחתי</th>
                             <th onClick={() => setIndex32('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index32 === '✓' ? index32 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex32('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index32 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex32('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index32 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הנהג נתקל בחודש האחרון בבעיה טכנית</th>
                             <th onClick={() => setIndex33('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index33 === '✓' ? index33 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex33('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index33 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex33('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index33 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הנהג נעצר בחודש האחרון לבדיקה בטיחות ע"י ניידות הבטיחות או המשטרה</th>
                             <th onClick={() => setIndex34('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index34 === '✓' ? index34 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex34('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index34 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex34('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index34 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הנהג שאל שאלות בנושא חוק ותקנות שירותי הובלה</th>
                             <th onClick={() => setIndex35('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index35 === '✓' ? index35 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex35('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index35 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex35('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index35 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">הנהג ביקש לברר בנושא תפעול הרכב בהתאם לתקנה 25 לת"ת</th>
                             <th onClick={() => setIndex36('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index36 === '✓' ? index36 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex36('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index36 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex36('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index36 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">קצב"ת את בקיאות הנהג בתקנות חדשות וביצע ריענון לתקנות ישנות</th>
                             <th onClick={() => setIndex37('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index37 === '✓' ? index37 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex37('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index37 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex37('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index37 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">קצב"ת בדק דיסקות סכוגרף יחד עם הנהג</th>
                             <th onClick={() => setIndex38('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index38 === '✓' ? index38 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex38('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index38 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex38('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index38 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                         <tr>
                             <th className="bordering_tebles_1 text-start pr-3 font-medium text-xs-ss-1">קצב"ת וידא הנהג בדרישות על פי דין של עבודה ומנוחה</th>
                             <th onClick={() => setIndex39('✓')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index39 === '✓' ? index39 : <div>&nbsp;</div>}</th>
-                            <th onClick={() => setIndex39('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index39 === '✓n' ?  "✓" : <div>&nbsp;</div>}</th>
+                            <th onClick={() => setIndex39('✓n')} className="bordering_tebles_1 cursor-pointer hover:bg-primary hover:bg-opacity-20">{index39 === '✓n' ? "✓" : <div>&nbsp;</div>}</th>
                             <th className="bordering_tebles_1">&nbsp;</th>
                         </tr>
                     </tbody>
@@ -548,28 +679,80 @@ export const PageFour = React.forwardRef((props, ref) => {
                     <div className="text-xs">הערות קצין בטיחות בתעבורה / הוראת תיקון</div>
                 </div>
                 {
-                    discr1 && 
+                    discr1 &&
                     <div className="absoulte_date_page_four1">{discr1}</div>
                 }
                 <div>____________________________________________________________________________________</div>
                 <div>____________________________________________________________________________________</div>
+            </div>
+            <div className="mr-32 ml-32 mt-5 mb-5">
+                {
+                    !props.showSave &&
+                    <>
+                        {
+                            CheckAllDates().numberWrnings != 0 &&
+                            <Card className="border-red-600 border-1">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <RiErrorWarningFill className="text-red-600 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4 text-red-600">
+                                            {CheckAllDates().numberWrnings} תאריכים פגים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                        {
+                            CheckAllDates().numberWrnings2 != 0 &&
+                            <Card className="border-yellow-500 border-1 mt-3">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <IoIosWarning className="text-yellow-500 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4 text-yellow-500">
+                                            {CheckAllDates().numberWrnings2} תאריכים חרגים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                        {
+                            (CheckAllDates().numberWrnings == 0) && (CheckAllDates().numberWrnings2 == 0) &&
+                            <Card className="border-green-600 border-1 mt-5">
+                                <CardBody>
+                                    <div className="flex items-center">
+                                        <div>
+                                            <FaCheck className="text-green-600 text-2xl" />
+                                        </div>
+                                        <div className="text-base mr-4 text-green-600">
+                                            כל התארכים תקנים
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        }
+                    </>
+                }
             </div>
             <div dir="rtl" className="mr-32 ml-32 text-xs mt-5">
                 {
                     !props.showSave && <Button onClick={() => { setTypeShow('2'); setShowModalPage(true) }} color="primary" variant="bordered" size="sm" className="ml-10">לכתוב<MdEdit className="text-sm" /></Button>
                 }
                 <div>תוקף רישיון מוביל הוחתם על ידי קצין בטיחות - כן / לא</div>
-                {discr2 && <div className="absoulte_date_page_four2">{discr2[0]}</div>}
+                {discr2 && <div className="absoulte_date_page_four2">{discr2.monthlyReview}</div>}
                 <div className="text-xs-xx">תוקף  האישור עד: _______________</div>
-                {discr2 && <div className="absoulte_date_page_four3">{discr2[1]}</div>}
+                {discr2 && <div className="absoulte_date_page_four3">{discr2.enddate}</div>}
                 <div className="text-xs-xx">תוקף רישיון כלי הרכב: _______________</div>
-                {discr2 && <div className="absoulte_date_page_four4">{discr2[2]}</div>}
+                {discr2 && <div className="absoulte_date_page_four4">{discr2.insurance}</div>}
                 <div className="text-xs-xx">תוקף הביטוח: _______________</div>
-                {discr2 && <div className="absoulte_date_page_four5">{discr2[3]}</div>}
+                {discr2 && <div className="absoulte_date_page_four5">{discr2.tachographDate}</div>}
                 <div className="text-xs-xx">תוקף תעודת כיול הטכוגרף: _______________</div>
-                {discr2 && <div className="absoulte_date_page_four6">{discr2[4]}</div>}
+                {discr2 && <div className="absoulte_date_page_four6">{discr2.hazmatDate}</div>}
                 <div className="text-xs-xx">תוקף היתר לנהג המוביל חומרים מסוכנים: _______________</div>
-                {discr2 && <div className="absoulte_date_page_four7">{discr2[5]}</div>}
+                {discr2 && <div className="absoulte_date_page_four7">{discr2.reshionMovel}</div>}
                 <div className="text-xs-xx">תוקף רישיון המוביל לכלי הרכב: _______________</div>
             </div>
             <div className="mr-32 ml-32 mt-5">
@@ -611,7 +794,7 @@ export const PageFour = React.forwardRef((props, ref) => {
                 </div>
             </div>
             <div className={`mt-10 flex justify-center ${props.showSave && "hidden"}`}>
-                <Button isDisabled={props.showSave} color="primary" onClick={() => {props.sendData(data,discr1,discr2,discr3);props.updateCar()}}>שמירה</Button>
+                <Button isDisabled={(props.showSave) || (CheckAllDates().numberWrnings != 0 ? true : false)} color="primary" onClick={() => { props.sendData(data, discr1, discr2, discr3); props.updateCar() }}>שמירה</Button>
             </div>
         </div>
     )

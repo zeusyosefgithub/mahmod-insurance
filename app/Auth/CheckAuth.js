@@ -13,6 +13,7 @@ export default function CheckAuth(props) {
     const { signUp, signIn, signOutt ,currentUser } = useAuth();
     const router = useRouter();
     const [contactName, setContactName] = useState(null);
+    const [customerSet,setCustomerSet] = useState(null);
 
 
     useEffect(() => {
@@ -36,7 +37,7 @@ export default function CheckAuth(props) {
                     :
                     !loading && currentUser ?
                         <div>
-                            <ContactContext.Provider value={{ contactName, setContactName }}>
+                            <ContactContext.Provider value={{ contactName, setContactName,customerSet,setCustomerSet }}>
                                 <div>
                                     <NavBar />
                                 </div>
