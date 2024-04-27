@@ -62,11 +62,11 @@ export default function AllFormsCar(props) {
                                         <div className="bg-gray-300 rounded-3xl">
                                             <div className="flex justify-between items-center">
                                                 <div className="p-3 tracking-widest font-black">
-                                                    <div>שם הנהג : {props.driver.driver_name}</div>
-                                                    <div>כתובת הנהג : {props.driver.address}</div>
-                                                    <div>ישוב הנהג : {props.driver.city}</div>
-                                                    <div>מס' זהות הנהג : {props.driver.driver_id_card}</div>
-                                                    <div>פלפון הנהג : {props.driver.driver_phone}</div>
+                                                    <div>שם הנהג : {props.driver?.driver_name}</div>
+                                                    <div>כתובת הנהג : {props.driver?.address}</div>
+                                                    <div>ישוב הנהג : {props.driver?.city}</div>
+                                                    <div>מס' זהות הנהג : {props.driver?.driver_id_card}</div>
+                                                    <div>פלפון הנהג : {props.driver?.driver_phone}</div>
                                                 </div>
                                                 <TbSteeringWheel className="text-8xl text-primary" />
                                             </div>

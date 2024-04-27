@@ -14,7 +14,7 @@ import { PageOneWithData } from "../PagesWithData/PageOneWithData";
 import { PageFourWithData } from "../PagesWithData/PageFourWithData";
 import { format } from "date-fns";
 
-export default function ShowForm({ withData,disable, car,driver,customer }) {
+export default function ShowForm({ withData,disable, car,driver,customer,check }) {
 
 
     const [gettingCarShowForm,setGittingCarShowForm] = useState(car);
@@ -154,7 +154,7 @@ export default function ShowForm({ withData,disable, car,driver,customer }) {
                         <div className="mb-32">
                             {
                                 gettingCarShowForm?.car_type === `ציוד הנדס'` && <div className="sdfsdf">
-                                    <PageTwoWithData car={gettingCarShowForm} ref={componentRef1} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                    <PageTwoWithData car={gettingCarShowForm} ref={componentRef1} date={props.check.date} driver={driver} checks={check.checks} data1={check.data2} data2={check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint1}>הדפסה</Button>
                                     </div>
@@ -162,7 +162,7 @@ export default function ShowForm({ withData,disable, car,driver,customer }) {
                             }
                             {
                                 gettingCarShowForm?.car_type === 'רכב עד 9,999 ק"ג' && <div className="sdfsdf">
-                                    <PageThreeWithData car={gettingCarShowForm} ref={componentRef3} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                    <PageThreeWithData car={gettingCarShowForm} ref={componentRef3} date={props.check.date} driver={driver} checks={check.checks} data1={check.data2} data2={check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint3}>הדפסה</Button>
                                     </div>
@@ -170,7 +170,7 @@ export default function ShowForm({ withData,disable, car,driver,customer }) {
                             }
                             {
                                 gettingCarShowForm?.car_type === 'גרור' && <div className="sdfsdf">
-                                    <PageOneWithData car={gettingCarShowForm} ref={componentRef2} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                    <PageOneWithData car={gettingCarShowForm} ref={componentRef2} date={props.check.date} driver={driver} checks={check.checks} data1={check.data2} data2={check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint2}>הדפסה</Button>
                                     </div>
@@ -178,7 +178,7 @@ export default function ShowForm({ withData,disable, car,driver,customer }) {
                             }
                             {
                                 gettingCarShowForm?.car_type === 'רכב מעל 10,000 ק"ג' && <div className="sdfsdf">
-                                    <PageFourWithData car={gettingCarShowForm} ref={componentRef4} date={props.check.date} driver={props.driver} checks={props.check.checks} data1={props.check.data2} data2={props.check.data3} />
+                                    <PageFourWithData car={gettingCarShowForm} ref={componentRef4} date={check.date} driver={driver} checks={check.checks} data1={check.data2} data2={check.data3} />
                                     <div className="flex justify-center">
                                         <Button color="primary" onClick={handlePrint4}>הדפסה</Button>
                                     </div>
