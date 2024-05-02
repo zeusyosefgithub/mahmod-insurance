@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Divider, Input, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, Divider, Input, Spinner, Switch } from "@nextui-org/react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import ModalCustomer from "../ModalsCom/ModalCustomer";
@@ -135,7 +135,10 @@ export default function AddCar() {
         contactName && setDriver(GetCurrentPropsDriver());
         contactName && setCustomer(GetCurrentPropsCustomer());
         contactName && setShowFormCar(GetCurrentPropsCar());
-    }, [GetCurrentPropsCar(), GetCurrentPropsDriver(), GetCurrentPropsCustomer()])
+    }, [GetCurrentPropsCar(), GetCurrentPropsDriver(), GetCurrentPropsCustomer()]);
+
+
+    const [isWithForm,setIsWithForm] = useState(false);
 
     const [typeCar, setTypeCar] = useState('');
     const [errorTypeCar, setErrorTypeCar] = useState('');
@@ -604,8 +607,6 @@ export default function AddCar() {
         //     left: 100,
         //     behavior: "smooth",
         //   },0, 1000);
-
-
         resetAllErrors();
         setStaticErrorMessage('');
         if (!car) {
@@ -797,13 +798,13 @@ export default function AddCar() {
             }
         }
         if (car) {
-            if (!customer && !driver) {
+            if (!customer && !driver && isWithDriver) {
                 return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה נהג ולקוח !');
             }
-            if (customer && !driver) {
+            if (customer && !driver && isWithDriver) {
                 return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה נהג !');
             }
-            if (!customer && driver) {
+            if (!customer && driver && isWithDriver) {
                 return setStaticErrorMessage('לא סמת עם הרכב שהוזן איזה לקוח !');
             }
         }
@@ -941,7 +942,7 @@ export default function AddCar() {
         setLoading(false);
         ResetAllFilesCar();
         ResetAllFilesDriver();
-        setShowForm(true);
+        isWithForm && setShowForm(true);
         setCar(null);
         setCustomer(null);
         setDriver(null);
@@ -1820,8 +1821,15 @@ export default function AddCar() {
                                         </CardBody>
                                     </Card>
                                 }
+                                <div className="flex justify-start m-5">
+                                    <div dir="ltr">
+                                        <Switch value={isWithForm} onValueChange={(val) => setIsWithForm(val)}>
+                                            עם טופס
+                                        </Switch>
+                                    </div>
+                                </div>
                                 <div className="flex justify-between m-14 items-center">
-                                    <Button onClick={() => { ResetAllFilesCar(); ResetAllFilesDriver(); resetAllDriver(); resetAllCar(); setShowPropsCustomer(true);setCustomerCheck(false);setShowCustomerModdal(true); setShowPropsCarDriver(false); }}>לחזור<FaArrowRight /></Button>
+                                    <Button onClick={() => { ResetAllFilesCar(); ResetAllFilesDriver(); resetAllDriver(); resetAllCar(); setShowPropsCustomer(true); setCustomerCheck(false); setShowCustomerModdal(true); setShowPropsCarDriver(false); }}>לחזור<FaArrowRight /></Button>
                                     <Button isDisabled={!disableAddCar} onClick={AddCar} size="lg" color="primary" >אישור</Button>
                                     <div className="w-[40px]"></div>
                                 </div>
